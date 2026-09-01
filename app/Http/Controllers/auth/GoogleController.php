@@ -45,8 +45,8 @@ class GoogleController extends Controller
 
                 // Kalau user lama belum punya nama_jalur atau foto_profile, wajib lengkapi dulu
                 if (!$user->nama_jalur || !$user->foto_profile) {
-                    // Jangan login dulu, arahkan ke halaman lengkapi data
-                    return $this->respondWithPopupScript('success', route('google.complete', ['user_id' => $user->id]));
+                    session(['google_pending_user_id' => $user->id]);
+                    return $this->respondWithPopupScript('success', route('google.complete'));
                 }
 
                 Auth::login($user);
@@ -67,8 +67,8 @@ class GoogleController extends Controller
                 'google_id' => $googleUser->getId(),
             ]);
 
-            // Redirect ke halaman lengkapi data, belum login
-            return $this->respondWithPopupScript('success', route('google.complete', ['user_id' => $user->id]));
+            session(['google_pending_user_id' => $user->id]);
+            return $this->respondWithPopupScript('success', route('google.complete'));
 
         } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
             // Handle invalid state exception dengan redirect dan alert
@@ -98,19 +98,42 @@ class GoogleController extends Controller
 
     public function showCompleteForm(Request $request)
     {
-        $user_id = $request->query('user_id');
-        $user = User::where('id', $user_id)->first();
+        $sessionUserId = session('google_pending_user_id');
+        $queryUserId = $request->query('user_id');
 
-        if (!$user) {
+        // Gunakan ID dari sesi jika ada, atau pastikan query ID cocok dengan sesi
+        $userId = $sessionUserId ?: $queryUserId;
+
+        if ($queryUserId && $sessionUserId && (string) $queryUserId !== (string) $sessionUserId) {
+            Alert::error('Akses Tidak Valid', 'Sesi login Google tidak cocok.');
+            return redirect('/login');
+        }
+
+        if (!$userId) {
             Alert::error('Data Google tidak ditemukan.', 'Silakan login dengan Google terlebih dahulu.');
             return redirect('/login');
         }
 
+        $user = User::find($userId);
+
+        if (!$user) {
+            Alert::error('User tidak ditemukan.', 'Silakan login dengan Google terlebih dahulu.');
+            return redirect('/login');
+        }
+
         // Kalau user sudah punya nama_jalur & foto_profile, profil sudah lengkap
-        // Login dan langsung redirect ke main-menu
         if ($user->nama_jalur && $user->foto_profile) {
-            Auth::login($user);
-            return redirect('/main-menu');
+            // PERBAIKAN KEAMANAN (Cegah IDOR): HANYA login jika request memiliki sesi Google OAuth yang sah
+            if ($sessionUserId && (string) $sessionUserId === (string) $user->id) {
+                session()->forget('google_pending_user_id');
+                Auth::login($user);
+                return redirect('/main-menu');
+            } else if (Auth::check() && Auth::id() == $user->id) {
+                return redirect('/main-menu');
+            } else {
+                Alert::error('Akses Ditolak', 'Silakan login dengan Google terlebih dahulu.');
+                return redirect('/login');
+            }
         }
 
         return view('auth.complete-google-register', ['user' => $user]);
@@ -118,7 +141,21 @@ class GoogleController extends Controller
 
     public function completeRegister(Request $request)
     {
-        $userId = $request->input('user_id');
+        $sessionUserId = session('google_pending_user_id');
+        $inputUserId = $request->input('user_id');
+
+        $userId = $sessionUserId ?: $inputUserId;
+
+        if ($inputUserId && $sessionUserId && (string) $inputUserId !== (string) $sessionUserId) {
+            Alert::error('Akses Tidak Valid', 'Sesi registrasi tidak cocok.');
+            return redirect('/login');
+        }
+
+        if (!$userId) {
+            Alert::error('User tidak ditemukan.', 'Silakan login dengan Google terlebih dahulu.');
+            return redirect('/login');
+        }
+
         $user = User::find($userId);
 
         if (!$user) {
@@ -132,13 +169,14 @@ class GoogleController extends Controller
                 Alert::error('Gagal', 'Akun Anda telah dinonaktifkan.');
                 return redirect('/login');
             }
+            session()->forget('google_pending_user_id');
             Auth::login($user);
             return redirect('/main-menu');
         }
 
         try {
             $data = $request->validate([
-                'user_id' => 'required|exists:users,id',
+                'user_id' => 'required',
                 'nama_jalur' => [
                     'required',
                     'string',
@@ -149,7 +187,6 @@ class GoogleController extends Controller
                 'agree-terms' => 'required',
             ], [
                 'user_id.required' => 'ID User tidak ditemukan.',
-                'user_id.exists' => 'User tidak ditemukan.',
                 'nama_jalur.required' => 'Nama Jalur wajib diisi.',
                 'nama_jalur.unique' => 'Nama Jalur sudah digunakan, coba nama lain.',
                 'nama_jalur.max' => 'Nama Jalur maksimal 50 karakter.',
@@ -160,23 +197,6 @@ class GoogleController extends Controller
             return back()->withErrors($e->errors())->withInput();
         }
 
-        $user = User::find($data['user_id']);
-
-        if (!$user) {
-            Alert::error('User tidak ditemukan.', 'Silakan login dengan Google terlebih dahulu.');
-            return redirect('/login');
-        }
-
-        // Kalau user sudah pernah complete register sebelumnya, langsung login saja
-        if ($user->nama_jalur && $user->foto_profile) {
-            if ($user->is_blocked) {
-                Alert::error('Gagal', 'Akun Anda telah dinonaktifkan.');
-                return redirect('/login');
-            }
-            Auth::login($user);
-            return redirect('/main-menu');
-        }
-
         try {
             $avatarKey = $data['foto_profile'];
             $finalPath = 'profiles/default.gif';
@@ -184,16 +204,21 @@ class GoogleController extends Controller
 
             if (file_exists($sourceFile)) {
                 $destFileName = time() . '_' . $avatarKey . '.gif';
-                $destPath = public_path("profiles/{$destFileName}");
+                $profilesDir = public_path('profiles');
 
-                if (!file_exists(public_path('profiles'))) {
-                    mkdir(public_path('profiles'), 0755, true);
+                if (!file_exists($profilesDir)) {
+                    @mkdir($profilesDir, 0755, true);
                 }
 
-                copy($sourceFile, $destPath);
-                $finalPath = 'profiles/' . $destFileName;
+                $destPath = $profilesDir . '/' . $destFileName;
+                if (@copy($sourceFile, $destPath)) {
+                    $finalPath = 'profiles/' . $destFileName;
+                } else {
+                    // Fallback jika VPS gagal menyalin file karena permission folder
+                    $finalPath = "game_pacu/assets/image/ui/{$avatarKey}.gif";
+                }
             } else {
-                if (strpos($avatarKey, 'profiles/') !== false) {
+                if (strpos($avatarKey, 'profiles/') !== false || strpos($avatarKey, 'game_pacu/') !== false) {
                     $finalPath = $avatarKey;
                 }
             }
@@ -202,6 +227,8 @@ class GoogleController extends Controller
                 'nama_jalur' => $data['nama_jalur'],
                 'foto_profile' => $finalPath,
             ]);
+
+            session()->forget('google_pending_user_id');
 
             // Login user SETELAH data profil lengkap tersimpan
             Auth::login($user);
