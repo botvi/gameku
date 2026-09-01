@@ -4,1297 +4,812 @@
 
 @push('styles')
 <style>
-    #game-container canvas {
-        z-index: 1;
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #0c111d;
+        color: #e2e8f0;
+        font-family: 'Pixelify Sans', monospace;
+        overflow: hidden;
+    }
+
+    #shop-dashboard {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: #0c111d url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
+        background-size: cover;
+        z-index: 10;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    /* Top Bar */
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 14px 16px 8px;
+        z-index: 15;
+        box-sizing: border-box;
+    }
+
+    .back-btn-container {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.15s ease;
+    }
+
+    .back-btn-container:hover {
+        transform: scale(1.1);
+    }
+
+    .back-btn-container:active {
+        transform: scale(0.9);
+    }
+
+    .back-btn-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
         image-rendering: pixelated;
-        image-rendering: crisp-edges;
+    }
+
+    .page-title {
+        font-family: 'Press Start 2P', monospace;
+        font-size: 13px;
+        color: #22c55e;
+        text-shadow: 0 0 10px rgba(34, 197, 94, 0.6), 2px 2px 0px #064e3b;
+        letter-spacing: 1px;
+        margin: 0;
+    }
+
+    .coin-display {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        z-index: 15;
+    }
+
+    .coin-icon-wrapper {
+        position: relative;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .coin-icon-wrapper img {
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
+    }
+
+    .coin-amount {
+        font-family: 'Pixelify Sans', monospace;
+        font-size: 13px;
+        font-weight: bold;
+        color: #FFD700;
+        line-height: 1;
+        text-shadow: 1px 1px 0px #15803d, -1px -1px 0px #15803d,
+                     1px -1px 0px #15803d, -1px 1px 0px #15803d;
+    }
+
+    /* Explanation Banner */
+    .banner-container {
+        margin: 4px 16px 10px;
+        padding: 10px 14px;
+        background: rgba(22, 163, 74, 0.25);
+        border: 2px solid #22c55e;
+        border-radius: 14px;
+        text-align: center;
+        box-sizing: border-box;
+        z-index: 12;
+    }
+
+    .banner-title {
+        font-family: 'Press Start 2P', monospace;
+        font-size: 10px;
+        font-weight: bold;
+        color: #22c55e;
+        text-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+        margin-bottom: 4px;
+    }
+
+    .banner-desc {
+        font-family: 'Pixelify Sans', monospace;
+        font-size: 11px;
+        color: #ffffff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        line-height: 1.3;
+    }
+
+    /* Tab Switcher Bar */
+    .tab-bar-container {
+        display: flex;
+        justify-content: center;
+        margin: 0 16px 12px;
+        background: rgba(15, 23, 42, 0.7);
+        border: 2px solid rgba(34, 197, 94, 0.4);
+        border-radius: 12px;
+        padding: 4px;
+        gap: 6px;
+        z-index: 12;
+        box-sizing: border-box;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 8px 0;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 9px;
+        color: #94a3b8;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: center;
+        user-select: none;
+    }
+
+    .tab-btn.active {
+        color: #ffffff;
+        background: #22c55e;
+        box-shadow: 0 2px 8px rgba(34, 197, 94, 0.5);
+    }
+
+    /* Scrollable Content Container */
+    .shop-content-scroll {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0 16px 30px;
+        box-sizing: border-box;
+        z-index: 12;
+    }
+
+    .shop-content-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .shop-content-scroll::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+    }
+
+    .shop-content-scroll::-webkit-scrollbar-thumb {
+        background: rgba(34, 197, 94, 0.6);
+        border-radius: 10px;
+    }
+
+    /* Cards Grid Layout */
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+        gap: 12px;
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+
+    /* Topup Package Card */
+    .topup-card {
+        background: #ffffff;
+        border: 3px solid #86efac;
+        border-radius: 16px;
+        padding: 12px 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .topup-card:hover {
+        transform: translateY(-2px);
+        border-color: #22c55e;
+        background: #f0fdf4;
+    }
+
+    .topup-coin-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 4px;
+        image-rendering: pixelated;
+    }
+
+    .topup-amount {
+        font-family: 'Pixelify Sans', monospace;
+        font-size: 16px;
+        font-weight: bold;
+        color: #d97706;
+        text-shadow: 0 1px 0px #fef3c7;
+        margin-bottom: 2px;
+    }
+
+    .topup-price {
+        font-family: 'Pixelify Sans', monospace;
+        font-size: 11px;
+        font-weight: bold;
+        color: #15803d;
+        margin-bottom: 8px;
+    }
+
+    .btn-action-green {
+        width: 100%;
+        padding: 7px 0;
+        background: #22c55e;
+        border: 2px solid #16a34a;
+        border-radius: 8px;
+        color: #ffffff;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 8px;
+        cursor: pointer;
+        text-shadow: 0 1px 2px #15803d;
+        box-shadow: 0 3px 0 #15803d;
+        transition: all 0.1s ease;
+        box-sizing: border-box;
+    }
+
+    .btn-action-green:hover {
+        background: #4ade80;
+    }
+
+    .btn-action-green:active {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 #15803d;
+    }
+
+    /* Item Card */
+    .item-card {
+        background: #ffffff;
+        border: 3px solid #93c5fd;
+        border-radius: 16px;
+        padding: 10px 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .item-card:hover {
+        transform: translateY(-2px);
+        border-color: #3b82f6;
+        background: #f0f9ff;
+    }
+
+    .item-img-container {
+        width: 60px;
+        height: 60px;
+        background: #eff6ff;
+        border: 2px solid #93c5fd;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 6px;
+        overflow: hidden;
+    }
+
+    .item-img-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        image-rendering: pixelated;
+    }
+
+    .item-title {
+        font-family: 'Press Start 2P', monospace;
+        font-size: 8px;
+        font-weight: bold;
+        color: #1e3a8a;
+        margin-bottom: 4px;
+        line-height: 1.2;
+    }
+
+    .item-desc {
+        font-family: 'Pixelify Sans', monospace;
+        font-size: 10px;
+        color: #64748b;
+        margin-bottom: 8px;
+        line-height: 1.2;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .btn-action-blue {
+        width: 100%;
+        padding: 7px 0;
+        background: #0ea5e9;
+        border: 2px solid #0284c7;
+        border-radius: 8px;
+        color: #ffffff;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 7px;
+        cursor: pointer;
+        text-shadow: 0 1px 2px #0369a1;
+        box-shadow: 0 3px 0 #0369a1;
+        transition: all 0.1s ease;
+        box-sizing: border-box;
+    }
+
+    .btn-action-blue:hover {
+        background: #38bdf8;
+    }
+
+    .btn-action-blue:active {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 #0369a1;
+    }
+
+    /* Modal Confirmation Dialog */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.8);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-card {
+        background: #ffffff;
+        border: 4px solid #22c55e;
+        border-radius: 16px;
+        width: 85%;
+        max-width: 320px;
+        padding: 20px 16px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        box-sizing: border-box;
+        animation: modalBounce 0.25s ease-out;
+    }
+
+    @keyframes modalBounce {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-text {
+        font-family: 'Pixelify Sans', monospace;
+        font-size: 14px;
+        font-weight: bold;
+        color: #15803d;
+        margin-bottom: 16px;
+        line-height: 1.4;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .modal-btn-yes {
+        flex: 1;
+        padding: 10px 0;
+        background: #22c55e;
+        border: 2px solid #16a34a;
+        border-radius: 8px;
+        color: white;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 9px;
+        cursor: pointer;
+        box-shadow: 0 3px 0 #15803d;
+    }
+
+    .modal-btn-no {
+        flex: 1;
+        padding: 10px 0;
+        background: #ef4444;
+        border: 2px solid #dc2626;
+        border-radius: 8px;
+        color: white;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 9px;
+        cursor: pointer;
+        box-shadow: 0 3px 0 #991b1b;
+    }
+
+    /* Toast Notification */
+    .toast-notice {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #16a34a;
+        border: 2px solid #ffffff;
+        border-radius: 10px;
+        padding: 10px 16px;
+        color: #ffffff;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 9px;
+        z-index: 200;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        text-align: center;
+    }
+
+    .toast-notice.show {
+        display: block;
+        animation: toastFade 0.3s ease-out;
+    }
+
+    @keyframes toastFade {
+        0% { transform: translate(-50%, 20px); opacity: 0; }
+        100% { transform: translate(-50%, 0); opacity: 1; }
+    }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 30px 10px;
+        color: #94a3b8;
+        font-family: 'Pixelify Sans', monospace;
+        font-size: 14px;
     }
 </style>
 @endpush
 
 @section('content')
-<!-- Page content will be populated inside game-container parent by Phaser -->
+<div id="shop-dashboard">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="back-btn-container" onclick="window.navigateToPage('/main-menu')">
+            <img src="/game_pacu/assets/image/ui/back.png" alt="Back" class="back-btn">
+        </div>
+        <div class="coin-display">
+            <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
+            <span id="shop-coin-count" class="coin-amount">{{ number_format(auth()->user()->kuansing_poin, 0, ',', '.') }}</span>
+        </div>
+    </div>
+
+    <!-- Explanation Banner -->
+    <div class="banner-container">
+        <div class="banner-title" id="banner-title"><i class="bi bi-lightning-charge-fill sprint-icon me-1"></i> APA ITU SPRINT?</div>
+        <div class="banner-desc" id="banner-desc">
+            Sprint adalah mata uang utama game ini. Kamu bisa mendapatkan Sprint secara gratis saat bermain, atau topup langsung melalui paket di bawah ini!
+        </div>
+    </div>
+
+    <!-- Tab Switcher Bar -->
+    <div class="tab-bar-container">
+        <button id="tab-koin-btn" class="tab-btn active" onclick="switchShopTab(0)">BELI SPRINT</button>
+        <button id="tab-item-btn" class="tab-btn" onclick="switchShopTab(1)">BELI ITEM</button>
+    </div>
+
+    <!-- Scrollable Shop Items Content -->
+    <div class="shop-content-scroll">
+        <!-- TAB 1: BELI KOIN -->
+        <div id="tab-koin-content">
+            <div class="cards-grid">
+                @forelse($packages as $pkg)
+                @php
+                    $scale = 1.0;
+                    if ($pkg->coin_amount >= 5000) $scale = 1.4;
+                    elseif ($pkg->coin_amount >= 2000) $scale = 1.25;
+                    elseif ($pkg->coin_amount >= 500) $scale = 1.1;
+                @endphp
+                <div class="topup-card">
+                    <div style="display:flex; justify-content:center; align-items:center; margin: 10px 0;">
+                        <i class="bi bi-lightning-charge-fill sprint-icon" style="font-size: {{ 2 * $scale }}rem;"></i>
+                    </div>
+                    <div class="topup-amount">+{{ number_format($pkg->coin_amount, 0, ',', '.') }} Sprint</div>
+                    <div class="topup-price">Rp {{ number_format($pkg->price, 0, ',', '.') }}</div>
+                    <button class="btn-action-green" onclick="promptTopup({{ $pkg->id }}, {{ $pkg->coin_amount }}, 'Rp {{ number_format($pkg->price, 0, ',', '.') }}')">BELI</button>
+                </div>
+                @empty
+                <div class="empty-state">Belum ada paket topup yang tersedia.</div>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- TAB 2: BELI ITEM -->
+        <div id="tab-item-content" style="display: none;">
+            <div class="cards-grid">
+                @forelse($shopItems as $item)
+                @php
+                    $isOwned = in_array($item->id, $purchasedIds ?? []);
+                @endphp
+                <div class="item-card" id="item-card-{{ $item->id }}">
+                    <div class="item-img-container">
+                        @if(!empty($item->image_path))
+                            <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}">
+                        @else
+                            <i class="bi bi-file-earmark-image text-info" style="font-size: 28px;"></i>
+                        @endif
+                    </div>
+                    <div class="item-title">{{ $item->name }}</div>
+                    <div class="item-desc">{{ $item->description ?? 'Template kustomisasi perahu.' }}</div>
+                    @if($isOwned)
+                        <button class="btn-action-blue" id="item-btn-{{ $item->id }}" onclick="downloadItem({{ $item->id }}, '{{ addslashes($item->filename) }}')">DOWNLOAD</button>
+                    @else
+                        <button class="btn-action-green" id="item-btn-{{ $item->id }}" onclick="promptBuyItem({{ $item->id }}, '{{ addslashes($item->name) }}', {{ $item->price_kp }}, '{{ addslashes($item->filename) }}')"><i class="bi bi-lock-fill me-1"></i> {{ number_format($item->price_kp, 0, ',', '.') }} Sprint</button>
+                    @endif
+                </div>
+                @empty
+                <div class="empty-state">Belum ada item di shop saat ini.</div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Dialog Confirmation -->
+<div class="modal-overlay" id="confirm-modal">
+    <div class="modal-card">
+        <div class="modal-text" id="modal-msg">Konfirmasi tindakan?</div>
+        <div class="modal-buttons">
+            <button class="modal-btn-no" onclick="closeConfirmModal()">BATAL</button>
+            <button class="modal-btn-yes" id="modal-btn-confirm">YA</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notice -->
+<div class="toast-notice" id="toast-notice">TINDAKAN BERHASIL</div>
 @endsection
 
 @push('scripts')
 <script>
-    window.coinPackages = [
-        @foreach($packages as $pkg)
-        {
-            id: {{ $pkg->id }},
-            coin_amount: {{ $pkg->coin_amount }},
-            price_string: 'Rp {{ number_format($pkg->price, 0, ",", ".") }}',
-            price_val: {{ $pkg->price }}
-        },
-        @endforeach
-    ];
-</script>
-<script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.min.js"></script>
-<script>
 {
-    const GAME_WIDTH = 360;
-    const GAME_HEIGHT = 760;
+    let currentCoinCount = {{ auth()->user()->kuansing_poin }};
+    const purchasedItemIds = new Set({!! json_encode($purchasedIds ?? []) !!});
+    let activeTab = 0;
 
-    // =====================================================
-    //  HELPER — Shimmer pada PNG icon (BitmapMask)
-    // =====================================================
-    function addIconShimmer(scene, img, delay) {
-        // Disabled for performance
-        return;
+    // Update Coin Display
+    function updateCoinDisplay(newCoins) {
+        currentCoinCount = newCoins;
+        const el = document.getElementById('shop-coin-count');
+        if (el) {
+            el.innerText = newCoins.toLocaleString('id-ID');
+        }
+        localStorage.setItem('coins', String(newCoins));
     }
 
-    // =====================================================
-    //  HELPER — Topup Option Card Creator
-    // =====================================================
-    function makeTopupCard(scene, x, y, width, height, kpAmount, priceString, priceVal, onBuyComplete) {
-        const container = scene.add.container(x, y);
-        container.setSize(width, height);
+    // Tab Switcher Logic
+    window.switchShopTab = function(tabIndex) {
+        if (activeTab === tabIndex) return;
+        activeTab = tabIndex;
 
-        const bg = scene.add.graphics();
-        const radius = 16;
-        const shadowOffset = 4;
+        if (window.playClickSound) window.playClickSound();
 
-        function drawCardBody(fill, border) {
-            bg.clear();
-            // Main panel
-            bg.fillStyle(fill, 1);
-            bg.lineStyle(3, border, 1);
-            bg.fillRoundedRect(-width / 2, -height / 2, width, height, radius);
-            bg.strokeRoundedRect(-width / 2, -height / 2, width, height, radius);
+        const btnKoin = document.getElementById('tab-koin-btn');
+        const btnItem = document.getElementById('tab-item-btn');
+        const contentKoin = document.getElementById('tab-koin-content');
+        const contentItem = document.getElementById('tab-item-content');
+
+        const bannerTitle = document.getElementById('banner-title');
+        const bannerDesc = document.getElementById('banner-desc');
+
+        if (tabIndex === 0) {
+            btnKoin.classList.add('active');
+            btnItem.classList.remove('active');
+            contentKoin.style.display = 'block';
+            contentItem.style.display = 'none';
+
+            bannerTitle.innerHTML = '<i class="bi bi-lightning-charge-fill sprint-icon me-1"></i> APA ITU SPRINT?';
+            bannerDesc.innerText = 'Sprint adalah mata uang utama game ini. Kamu bisa mendapatkan Sprint secara gratis saat bermain, atau topup langsung melalui paket di bawah ini!';
+        } else {
+            btnItem.classList.add('active');
+            btnKoin.classList.remove('active');
+            contentItem.style.display = 'block';
+            contentKoin.style.display = 'none';
+
+            bannerTitle.innerHTML = '<i class="bi bi-bag-fill me-1 text-warning"></i> BELI ITEM PREMIUM';
+            bannerDesc.innerText = 'Gunakan Sprint milikmu untuk membeli dan mengunduh berbagai template kustomisasi premium agar tampilan perahumu semakin keren di arena pacu!';
         }
+    };
 
-        // Palette: Sleek Green / Emerald
-        const defaultFill = 0xffffff;
-        const defaultBorder = 0x86efac;
-        const hoverFill = 0xf0fdf4;
-        const hoverBorder = 0x22c55e;
-
-        drawCardBody(defaultFill, defaultBorder);
-        container.add(bg);
-
-        // Card interactive hover effect
-        const hoverArea = scene.add.zone(0, 0, width, height)
-            .setInteractive({ useHandCursor: true });
-        container.add(hoverArea);
-
-        // Coin icon scaling based on package amount
-        let coinScale = 1.0;
-        if (kpAmount >= 5000) coinScale = 1.6;
-        else if (kpAmount >= 2000) coinScale = 1.3;
-        else if (kpAmount >= 500) coinScale = 1.15;
-        else coinScale = 0.95;
-
-        const coinImg = scene.add.image(0, -26, 'koin')
-            .setDisplaySize(36 * coinScale, 36 * coinScale);
-        container.add(coinImg);
-
-        addIconShimmer(scene, coinImg, Math.random() * 800 + 400);
-
-        // Amount text (Yellow Golden style)
-        const amountTxt = scene.add.text(0, 16, `+${kpAmount} KP`, {
-            fontFamily: '"Pixelify Sans", monospace',
-            fontSize: '18px',
-            fontStyle: 'bold',
-            color: '#d97706', // gold-darker
-            stroke: '#fef3c7',
-            strokeThickness: 3
-        }).setOrigin(0.5);
-        container.add(amountTxt);
-
-        // Price label
-        const priceTxt = scene.add.text(0, 36, priceString, {
-            fontFamily: '"Pixelify Sans", monospace',
-            fontSize: '12px',
-            fontStyle: 'bold',
-            color: '#15803d'
-        }).setOrigin(0.5);
-        container.add(priceTxt);
-
-        // Buy Button inside card
-        const btnW = 94;
-        const btnH = 26;
-        const btnContainer = scene.add.container(0, 60);
-        btnContainer.setSize(btnW, btnH);
-        btnContainer.setInteractive({ useHandCursor: true });
-
-        const btnBg = scene.add.graphics();
-        function drawBtn(fill, border) {
-            btnBg.clear();
-            btnBg.fillStyle(0x16a34a, 0.4);
-            btnBg.fillRoundedRect(-btnW / 2 + 2, -btnH / 2 + 2, btnW, btnH, 8);
-            btnBg.fillStyle(fill, 1);
-            btnBg.lineStyle(2, border, 1);
-            btnBg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 8);
-            btnBg.strokeRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 8);
-        }
-
-        const btnFill = 0x22c55e;
-        const btnBorder = 0x16a34a;
-        const btnHoverFill = 0x4ade80;
-        const btnHoverBorder = 0x22c55e;
-
-        drawBtn(btnFill, btnBorder);
-        btnContainer.add(btnBg);
-
-        const btnTxt = scene.add.text(0, 0, 'BELI', {
-            fontFamily: '"Press Start 2P", monospace',
-            fontSize: '8px',
-            color: '#ffffff',
-            stroke: '#15803d',
-            strokeThickness: 2
-        }).setOrigin(0.5);
-        btnContainer.add(btnTxt);
-        container.add(btnContainer);
-
-        // Hover events for the card
-        hoverArea.on('pointerover', () => {
-            drawCardBody(hoverFill, hoverBorder);
-            scene.tweens.add({ targets: container, scaleX: 1.04, scaleY: 1.04, duration: 80 });
-        });
-        hoverArea.on('pointerout', () => {
-            drawCardBody(defaultFill, defaultBorder);
-            scene.tweens.add({ targets: container, scaleX: 1, scaleY: 1, duration: 80 });
-        });
-
-        // Hover events for button specifically
-        btnContainer.on('pointerover', () => {
-            drawBtn(btnHoverFill, btnHoverBorder);
-            btnContainer.setScale(1.05);
-        });
-        btnContainer.on('pointerout', () => {
-            drawBtn(btnFill, btnBorder);
-            btnContainer.setScale(1);
-        });
-
-        let activeBuy = false;
-        btnContainer.on('pointerdown', () => {
-            btnBg.y = 2; btnTxt.y = 2;
-        });
-        btnContainer.on('pointerup', () => {
-            btnBg.y = 0; btnTxt.y = 0;
-            if (activeBuy) return;
-
-            activeBuy = true;
-            scene.tweens.add({
-                targets: container,
-                scaleX: 0.9, scaleY: 0.9,
-                duration: 80, yoyo: true,
-                onComplete: () => {
-                    activeBuy = false;
-                    onBuyComplete(kpAmount, priceString, priceVal, container);
-                }
-            });
-        });
-
-        return container;
+    // Modal Helpers
+    let confirmCallback = null;
+    function openConfirmModal(msg, onConfirm) {
+        document.getElementById('modal-msg').innerText = msg;
+        confirmCallback = onConfirm;
+        document.getElementById('confirm-modal').classList.add('active');
     }
 
-    // =====================================================
-    //  HELPER — Item Card Creator
-    // =====================================================
-    function makeItemCard(scene, x, y, width, height, itemId, itemName, itemDesc, priceKP, filename, onBuyOrDownload) {
-        const container = scene.add.container(x, y);
-        container.setSize(width, height);
-
-        const bg = scene.add.graphics();
-        const radius = 16;
-        const shadowOffset = 4;
-
-        function drawCardBody(fill, border) {
-            bg.clear();
-            // Main panel
-            bg.fillStyle(fill, 1);
-            bg.lineStyle(3, border, 1);
-            bg.fillRoundedRect(-width / 2, -height / 2, width, height, radius);
-            bg.strokeRoundedRect(-width / 2, -height / 2, width, height, radius);
-        }
-
-        const defaultFill = 0xffffff;
-        const defaultBorder = 0x93c5fd; // soft blue
-        const hoverFill = 0xf0f9ff; // glass light blue
-        const hoverBorder = 0x3b82f6; // vibrant blue
-
-        drawCardBody(defaultFill, defaultBorder);
-        container.add(bg);
-
-        // Hover area zone
-        const hoverArea = scene.add.zone(0, 0, width, height).setInteractive({ useHandCursor: true });
-        container.add(hoverArea);
-
-        // Icon container
-        const iconContainer = scene.add.container(0, -32);
-        const iconGfx = scene.add.graphics();
-
-        // Draw a document outline
-        const docW = 28;
-        const docH = 36;
-        iconGfx.fillStyle(0xdbeafe, 1);
-        iconGfx.lineStyle(2, 0x3b82f6, 1);
-        iconGfx.beginPath();
-        iconGfx.moveTo(-docW / 2, -docH / 2);
-        iconGfx.lineTo(docW / 2 - 8, -docH / 2);
-        iconGfx.lineTo(docW / 2, -docH / 2 + 8);
-        iconGfx.lineTo(docW / 2, docH / 2);
-        iconGfx.lineTo(-docW / 2, docH / 2);
-        iconGfx.closePath();
-        iconGfx.fillPath();
-        iconGfx.strokePath();
-
-        // Fold corner
-        iconGfx.fillStyle(0x93c5fd, 1);
-        iconGfx.beginPath();
-        iconGfx.moveTo(docW / 2 - 8, -docH / 2);
-        iconGfx.lineTo(docW / 2 - 8, -docH / 2 + 8);
-        iconGfx.lineTo(docW / 2, -docH / 2 + 8);
-        iconGfx.closePath();
-        iconGfx.fillPath();
-        iconGfx.strokePath();
-
-        // Draw line details
-        iconGfx.lineStyle(1.5, 0x3b82f6, 0.6);
-        iconGfx.lineBetween(-8, -4, 8, -4);
-        iconGfx.lineBetween(-8, 2, 8, 2);
-        iconGfx.lineBetween(-8, 8, 2, 8);
-
-        // Draw small download arrow in green
-        iconGfx.fillStyle(0x10b981, 1);
-        iconGfx.lineStyle(2, 0x10b981, 1);
-        iconGfx.lineBetween(6, 6, 6, 12);
-        iconGfx.beginPath();
-        iconGfx.moveTo(4, 10);
-        iconGfx.lineTo(6, 12);
-        iconGfx.lineTo(8, 10);
-        iconGfx.closePath();
-        iconGfx.fillPath();
-
-        iconContainer.add(iconGfx);
-        container.add(iconContainer);
-
-        addIconShimmer(scene, iconGfx, Math.random() * 800 + 400);
-
-        // Item Name
-        const nameTxt = scene.add.text(0, 10, itemName, {
-            fontFamily: '"Press Start 2P", monospace',
-            fontSize: '8px',
-            fontStyle: 'bold',
-            color: '#1e3a8a',
-            align: 'center'
-        }).setOrigin(0.5);
-        container.add(nameTxt);
-
-        // Item Description
-        const descTxt = scene.add.text(0, 30, itemDesc, {
-            fontFamily: '"Pixelify Sans", monospace',
-            fontSize: '9.5px',
-            color: '#64748b',
-            align: 'center',
-            wordWrap: { width: width - 18 }
-        }).setOrigin(0.5);
-        container.add(descTxt);
-
-        // Action Button Container (Buy/Download)
-        const btnW = 110;
-        const btnH = 26;
-        const btnContainer = scene.add.container(0, 60);
-        btnContainer.setSize(btnW, btnH);
-        btnContainer.setInteractive({ useHandCursor: true });
-
-        const btnBg = scene.add.graphics();
-        const btnTxt = scene.add.text(0, 0, '', {
-            fontFamily: '"Press Start 2P", monospace',
-            fontSize: '7px',
-            color: '#ffffff'
-        }).setOrigin(0.5);
-
-        btnContainer.add(btnBg);
-        btnContainer.add(btnTxt);
-        container.add(btnContainer);
-
-        container.updateState = (isUnlocked) => {
-            btnBg.clear();
-            if (isUnlocked) {
-                // Blue theme for Download
-                btnBg.fillStyle(0x0284c7, 0.4);
-                btnBg.fillRoundedRect(-btnW / 2 + 2, -btnH / 2 + 2, btnW, btnH, 8);
-
-                btnBg.fillStyle(0x0ea5e9, 1);
-                btnBg.lineStyle(2, 0x0284c7, 1);
-                btnBg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 8);
-                btnBg.strokeRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 8);
-
-                btnTxt.setText("DOWNLOAD");
-            } else {
-                // Green theme for purchase
-                btnBg.fillStyle(0x15803d, 0.4);
-                btnBg.fillRoundedRect(-btnW / 2 + 2, -btnH / 2 + 2, btnW, btnH, 8);
-
-                btnBg.fillStyle(0x22c55e, 1);
-                btnBg.lineStyle(2, 0x15803d, 1);
-                btnBg.fillRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 8);
-                btnBg.strokeRoundedRect(-btnW / 2, -btnH / 2, btnW, btnH, 8);
-
-                btnTxt.setText(`🔒 ${priceKP} KP`);
-            }
-        };
-
-        // Hover events
-        hoverArea.on('pointerover', () => {
-            drawCardBody(hoverFill, hoverBorder);
-            scene.tweens.add({ targets: container, scaleX: 1.04, scaleY: 1.04, duration: 80 });
-        });
-        hoverArea.on('pointerout', () => {
-            drawCardBody(defaultFill, defaultBorder);
-            scene.tweens.add({ targets: container, scaleX: 1, scaleY: 1, duration: 80 });
-        });
-
-        btnContainer.on('pointerover', () => {
-            btnContainer.setScale(1.05);
-        });
-        btnContainer.on('pointerout', () => {
-            btnContainer.setScale(1);
-        });
-
-        let activeAction = false;
-        btnContainer.on('pointerdown', () => {
-            btnBg.y = 2; btnTxt.y = 2;
-        });
-        btnContainer.on('pointerup', () => {
-            btnBg.y = 0; btnTxt.y = 0;
-            if (activeAction) return;
-
-            activeAction = true;
-            scene.tweens.add({
-                targets: container,
-                scaleX: 0.9, scaleY: 0.9,
-                duration: 80, yoyo: true,
-                onComplete: () => {
-                    activeAction = false;
-                    onBuyOrDownload(itemId, itemName, priceKP, filename, container);
-                }
-            });
-        });
-
-        return container;
-    }
-
-    // =====================================================
-    //  HELPER — Confirmation Modal
-    // =====================================================
-    function showConfirmModal(scene, text, onConfirm) {
-        const W = scene.scale.width;
-        const H = scene.scale.height;
-
-        const overlay = scene.add.graphics();
-        overlay.fillStyle(0x000000, 0.65);
-        overlay.fillRect(0, 0, W, H);
-        overlay.setInteractive(new Phaser.Geom.Rectangle(0, 0, W, H), Phaser.Geom.Rectangle.Contains);
-
-        const dialog = scene.add.container(W / 2, H / 2);
-
-        const dW = 270;
-        const dH = 150;
-
-        const dBg = scene.add.graphics();
-        dBg.fillStyle(0xffffff, 1); // white card
-        dBg.lineStyle(4, 0x22c55e, 1);
-        dBg.fillRoundedRect(-dW / 2, -dH / 2, dW, dH, 16);
-        dBg.strokeRoundedRect(-dW / 2, -dH / 2, dW, dH, 16);
-        dialog.add(dBg);
-
-        const dTxt = scene.add.text(0, -20, text, {
-            fontFamily: '"Pixelify Sans", monospace',
-            fontSize: '14px',
-            fontStyle: 'bold',
-            color: '#15803d',
-            align: 'center',
-            wordWrap: { width: dW - 40 }
-        }).setOrigin(0.5);
-        dialog.add(dTxt);
-
-        // Yes Button (Confirm)
-        const btnYes = scene.add.container(-60, 40);
-        btnYes.setSize(90, 30);
-        btnYes.setInteractive({ useHandCursor: true });
-
-        const btnYesBg = scene.add.graphics();
-        btnYesBg.fillStyle(0x22c55e, 1);
-        btnYesBg.lineStyle(2, 0x16a34a, 1);
-        btnYesBg.fillRoundedRect(-45, -15, 90, 30, 8);
-        btnYesBg.strokeRoundedRect(-45, -15, 90, 30, 8);
-        btnYes.add(btnYesBg);
-
-        const btnYesTxt = scene.add.text(0, 0, 'YA', {
-            fontFamily: '"Press Start 2P", monospace',
-            fontSize: '9px',
-            color: '#ffffff'
-        }).setOrigin(0.5);
-        btnYes.add(btnYesTxt);
-        dialog.add(btnYes);
-
-        // Cancel Button
-        const btnNo = scene.add.container(60, 40);
-        btnNo.setSize(90, 30);
-        btnNo.setInteractive({ useHandCursor: true });
-
-        const btnNoBg = scene.add.graphics();
-        btnNoBg.fillStyle(0xef4444, 1);
-        btnNoBg.lineStyle(2, 0xdc2626, 1);
-        btnNoBg.fillRoundedRect(-45, -15, 90, 30, 8);
-        btnNoBg.strokeRoundedRect(-45, -15, 90, 30, 8);
-        btnNo.add(btnNoBg);
-
-        const btnNoTxt = scene.add.text(0, 0, 'BATAL', {
-            fontFamily: '"Press Start 2P", monospace',
-            fontSize: '9px',
-            color: '#ffffff'
-        }).setOrigin(0.5);
-        btnNo.add(btnNoTxt);
-        dialog.add(btnNo);
-
-        // Button interactions
-        btnYes.on('pointerover', () => btnYes.setScale(1.05));
-        btnYes.on('pointerout', () => btnYes.setScale(1));
-        btnYes.on('pointerdown', () => {
-            overlay.destroy();
-            dialog.destroy();
-            onConfirm();
-        });
-
-        btnNo.on('pointerover', () => btnNo.setScale(1.05));
-        btnNo.on('pointerout', () => btnNo.setScale(1));
-        btnNo.on('pointerdown', () => {
-            overlay.destroy();
-            dialog.destroy();
-        });
-
-        // Fade-in animation
-        dialog.setScale(0);
-        scene.tweens.add({
-            targets: dialog,
-            scaleX: 1, scaleY: 1,
-            duration: 220,
-            ease: 'Back.easeOut'
-        });
-    }
-
-    // =====================================================
-    //  TOP UP SCENE CLASS
-    // =====================================================
-    class TopupScene extends Phaser.Scene {
-        constructor() { super({ key: 'TopupScene' }); }
-
-        preload() {
-            this.load.image('bgmenu', '/game_pacu/assets/image/bg/bgmenu.jpg');
-            this.load.image('koin', '/game_pacu/assets/image/ui/koin.png');
-            this.load.image('back', '/game_pacu/assets/image/ui/back.png');
-            this.load.image('bubblechat', '/game_pacu/assets/image/ui/bubblechat.png');
-        }
-
-        create() {
-            // Play click sound on any interactive Phaser object
-            this.input.on('pointerdown', (pointer, currentlyOver) => {
-                if (currentlyOver.length > 0 && window.playClickSound) {
-                    window.playClickSound();
-                }
-            });
-
-            const W = this.scale.width;
-            const H = this.scale.height;
-            const cx = W / 2;
-
-            this.cameras.main.fadeIn(500, 15, 23, 42);
-
-            // ---- Background cover ----
-            const bg = this.add.image(cx, H / 2, 'bgmenu');
-            const scaleX_bg = W / bg.width;
-            const scaleY_bg = H / bg.height;
-            bg.setScale(Math.max(scaleX_bg, scaleY_bg));
-
-            // =============================================
-            //  HEADER BAR & NAV
-            // =============================================
-            // ---- Tombol Kembali (Top Left) ----
-            const backBtnContainer = this.add.container(32, 34);
-            backBtnContainer.setSize(36, 36);
-            backBtnContainer.setInteractive({ useHandCursor: true });
-
-            // Icon kembali (display size 36x36)
-            const backIcon = this.add.image(0, 0, 'back').setDisplaySize(36, 36);
-            backBtnContainer.add(backIcon);
-
-            // Animasi bounce + aksi klik kembali
-            backBtnContainer.on('pointerdown', () => {
-                this.tweens.add({
-                    targets: backBtnContainer,
-                    scaleX: 0.9, scaleY: 0.9,
-                    duration: 80, ease: 'Power2',
-                    yoyo: true,
-                    onComplete: () => {
-                        this.cameras.main.fadeOut(300, 15, 23, 42);
-                        this.cameras.main.once('camerafadeoutcomplete', () => {
-                            window.navigateToPage('/main-menu');
-                        });
-                    }
-                });
-            });
-
-            // Hover effect
-            backBtnContainer.on('pointerover', () => {
-                this.tweens.add({ targets: backBtnContainer, scaleX: 1.05, scaleY: 1.05, duration: 90, ease: 'Power2' });
-            });
-            backBtnContainer.on('pointerout', () => {
-                this.tweens.add({ targets: backBtnContainer, scaleX: 1, scaleY: 1, duration: 90, ease: 'Power2' });
-            });
-
-            // =============================================
-            //  TOP RIGHT: KOIN
-            // =============================================
-            const BAR_Y = 34;
-            const COIN_ICON_X = W - 78;
-
-            const coinImgGlobal = this.add.image(COIN_ICON_X, BAR_Y, 'koin')
-                .setDisplaySize(36, 36)
-                .setInteractive({ useHandCursor: true });
-
-            coinImgGlobal.on('pointerdown', () => {
-                this.tweens.add({
-                    targets: coinImgGlobal,
-                    scaleX: 0.7, scaleY: 0.7,
-                    duration: 80, ease: 'Power2',
-                    yoyo: true
-                });
-            });
-            let coinCount = {{ auth()->user()->kuansing_poin }};
-            this.coinCount = coinCount;
-
-            const coinText = this.add.text(COIN_ICON_X + 22, BAR_Y + 1, String(this.coinCount), {
-                fontFamily: '"Pixelify Sans", monospace',
-                fontSize: '13px',
-                fontStyle: 'bold',
-                color: '#FFD700',
-                stroke: '#15803d',
-                strokeThickness: 3
-            }).setOrigin(0, 0.5);
-
-            // Fetch database customization details
-            this.unlocked_template_corak = false;
-            this.unlocked_template_lambai = false;
-            this.customizationData = null;
-
-            fetch('/tukang-jaluar/get')
-                .then(res => res.json())
-                .then(data => {
-                    this.customizationData = data;
-                    if (data.coins !== undefined) {
-                        this.coinCount = data.coins;
-                        coinText.setText(String(this.coinCount));
-                    }
-                    this.unlocked_template_corak = !!data.unlocked_template_corak;
-                    this.unlocked_template_lambai = !!data.unlocked_template_lambai;
-                    if (this.updateItemCards) this.updateItemCards();
-                })
-                .catch(err => {
-                    console.error('Failed to load customizations:', err);
-                });
-
-            addIconShimmer(this, coinImgGlobal, 1100);
-
-            // =============================================
-            //  EXPLANATION BANNER
-            // =============================================
-            const bannerContainer = this.add.container(cx, 134);
-            const bW = W - 44;
-            const bH = 100;
-
-            const bannerBg = this.add.graphics();
-            bannerBg.fillStyle(0x16a34a, 0.25);
-            bannerBg.fillRoundedRect(-bW / 2, -bH / 2, bW, bH, 16);
-            bannerBg.lineStyle(3, 0x22c55e, 1);
-            bannerBg.strokeRoundedRect(-bW / 2, -bH / 2, bW, bH, 16);
-            bannerContainer.add(bannerBg);
-
-            const bannerTitle = this.add.text(0, -30, '✦ APA ITU KP? ✦', {
-                fontFamily: '"Press Start 2P", monospace',
-                fontSize: '11px',
-                fontStyle: 'bold',
-                color: '#22c55e',
-                stroke: '#ffffff',
-                strokeThickness: 3
-            }).setOrigin(0.5);
-            bannerContainer.add(bannerTitle);
-
-            const bannerDesc = this.add.text(0, 10, 'KP (Kuansing Poin) adalah mata uang utama\ngame ini. Kamu bisa mendapatkan KP secara gratis\nsaat bermain di dalam game, atau melakukan\ntopup langsung melalui paket di bawah ini!', {
-                fontFamily: '"Pixelify Sans", monospace',
-                fontSize: '11px',
-                fontStyle: 'bold',
-                color: '#ffffff',
-                stroke: '#0f172a',
-                strokeThickness: 3,
-                align: 'center',
-                lineSpacing: 4
-            }).setOrigin(0.5);
-            bannerContainer.add(bannerDesc);
-
-            // =============================================
-            //  SLIDE SWITCHER (TAB BAR)
-            // =============================================
-            const tabContainer = this.add.container(cx, 215);
-            const tabBg = this.add.graphics();
-            tabBg.fillStyle(0x0f172a, 0.6);
-            tabBg.lineStyle(2, 0x22c55e, 0.4);
-            tabBg.fillRoundedRect(-158, -17, 316, 34, 10);
-            tabBg.strokeRoundedRect(-158, -17, 316, 34, 10);
-            tabContainer.add(tabBg);
-
-            const activeTabGfx = this.add.graphics();
-            const drawActiveTab = (xPos) => {
-                activeTabGfx.clear();
-                activeTabGfx.fillStyle(0x22c55e, 0.95);
-                activeTabGfx.fillRoundedRect(xPos - 77, -14, 154, 28, 8);
-                activeTabGfx.fillStyle(0xffffff, 0.15);
-                activeTabGfx.fillRoundedRect(xPos - 77, -14, 154, 10, { tl: 8, tr: 8, bl: 0, br: 0 });
-            };
-            drawActiveTab(-79);
-            tabContainer.add(activeTabGfx);
-
-            const tabKoinTxt = this.add.text(-79, 0, 'BELI KOIN', {
-                fontFamily: '"Press Start 2P", monospace',
-                fontSize: '9px',
-                fontStyle: 'bold',
-                color: '#ffffff'
-            }).setOrigin(0.5);
-
-            const tabItemTxt = this.add.text(79, 0, 'BELI ITEM', {
-                fontFamily: '"Press Start 2P", monospace',
-                fontSize: '9px',
-                fontStyle: 'bold',
-                color: '#94a3b8'
-            }).setOrigin(0.5);
-
-            tabContainer.add(tabKoinTxt);
-            tabContainer.add(tabItemTxt);
-
-            const hitKoin = this.add.zone(-79, 0, 158, 34).setInteractive({ useHandCursor: true });
-            const hitItem = this.add.zone(79, 0, 158, 34).setInteractive({ useHandCursor: true });
-            tabContainer.add(hitKoin);
-            tabContainer.add(hitItem);
-
-            // Setup Containers for slides
-            this.coinSlideContainer = this.add.container(0, 0);
-            this.itemSlideContainer = this.add.container(0, 0);
-            this.itemSlideContainer.setAlpha(0).setVisible(false);
-
-            // =============================================
-            //  TOP UP CARDS GRID (SLIDE 1)
-            // =============================================
-            const cardWidth = 140;
-            const cardHeight = 166;
-            const startY = 320;
-            const rowGap = 180;
-
-            const triggerCoinParticles = (kpAmount, nextCoins, cardSource) => {
-                const startX = cardSource.x;
-                const startY = cardSource.y;
-
-                for (let i = 0; i < 12; i++) {
-                    this.time.delayedCall(i * 60, () => {
-                        const particle = this.add.image(startX, startY, 'koin')
-                            .setDisplaySize(20, 20)
-                            .setDepth(10);
-
-                        const randX = startX + Phaser.Math.Between(-30, 30);
-                        const randY = startY + Phaser.Math.Between(-30, 30);
-
-                        this.tweens.add({
-                            targets: particle,
-                            x: randX,
-                            y: randY,
-                            duration: 180,
-                            ease: 'Quad.easeOut',
-                            onComplete: () => {
-                                this.tweens.add({
-                                    targets: particle,
-                                    x: COIN_ICON_X,
-                                    y: BAR_Y,
-                                    duration: 550,
-                                    ease: 'Cubic.easeIn',
-                                    onComplete: () => {
-                                        particle.destroy();
-
-                                        const displayedCoins = parseInt(coinText.text);
-                                        const difference = nextCoins - displayedCoins;
-                                        coinText.setText(String(displayedCoins + Math.ceil(difference * 0.22)));
-
-                                        this.tweens.add({
-                                            targets: [coinImgGlobal, coinText],
-                                            scaleX: 1.25, scaleY: 1.25,
-                                            duration: 70, yoyo: true,
-                                            onComplete: () => {
-                                                if (i === 11) {
-                                                    coinText.setText(String(nextCoins));
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    });
-                }
-
-                const successLabel = this.add.text(cx, H - 100, 'TOPUP BERHASIL! + ' + kpAmount + ' KP', {
-                    fontFamily: '"Press Start 2P", monospace',
-                    fontSize: '9px',
-                    color: '#ffffff',
-                    stroke: '#16a34a',
-                    strokeThickness: 4,
-                    align: 'center'
-                }).setOrigin(0.5).setDepth(20).setScale(0);
-
-                this.tweens.add({
-                    targets: successLabel,
-                    scaleX: 1, scaleY: 1,
-                    y: `-=40`,
-                    duration: 350,
-                    ease: 'Back.easeOut',
-                    onComplete: () => {
-                        this.time.delayedCall(1500, () => {
-                            this.tweens.add({
-                                targets: successLabel,
-                                alpha: 0,
-                                duration: 400,
-                                onComplete: () => successLabel.destroy()
-                            });
-                        });
-                    }
-                });
-            };
-
-            const startPollingStatus = (orderId, kpAmount, cardSource) => {
-                let pollInterval = setInterval(() => {
-                    fetch(`/topup/status/${orderId}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            if (data.status === 'SUCCESS') {
-                                clearInterval(pollInterval);
-                                
-                                const nextCoins = data.coins;
-                                this.coinCount = nextCoins;
-                                localStorage.setItem('coins', String(nextCoins));
-
-                                if (this.customizationData) {
-                                    this.customizationData.coins = nextCoins;
-                                }
-
-                                triggerCoinParticles(kpAmount, nextCoins, cardSource);
-                            } else if (data.status === 'EXPIRED') {
-                                clearInterval(pollInterval);
-                                alert('Waktu pembayaran QRIS telah habis (Expired).');
-                            }
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Polling status error:', err);
-                    });
-                }, 3000);
-
-                this.events.once('shutdown', () => {
-                    clearInterval(pollInterval);
-                });
-                this.events.once('destroy', () => {
-                    clearInterval(pollInterval);
-                });
-            };
-
-            const handlePurchase = (packageId, kpAmount, priceString, priceVal, cardSource) => {
-                showConfirmModal(this, `Apakah Anda ingin membeli +${kpAmount} KP seharga ${priceString}?`, () => {
-                    this.cameras.main.flash(400, 34, 197, 94, 0.18);
-
-                    const loadingLabel = this.add.text(cx, H / 2, 'Menghubungkan KlikQRIS...', {
-                        fontFamily: '"Pixelify Sans", monospace',
-                        fontSize: '12px',
-                        fontStyle: 'bold',
-                        color: '#ffffff',
-                        backgroundColor: '#16a34a',
-                        padding: { x: 10, y: 10 }
-                    }).setOrigin(0.5).setDepth(30);
-
-                    fetch('/topup/create', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({ package_id: packageId })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        loadingLabel.destroy();
-                        if (data.success) {
-                            let payBtn = document.getElementById('btnPay');
-                            if (!payBtn) {
-                                payBtn = document.createElement('button');
-                                payBtn.id = 'btnPay';
-                                payBtn.style.display = 'none';
-                                document.body.appendChild(payBtn);
-                            }
-                            payBtn.setAttribute('data-signature', data.signature);
-
-                            let snapScript = document.getElementById('klikqris-snap-script');
-                            if (snapScript) {
-                                snapScript.remove();
-                            }
-                            
-                            snapScript = document.createElement('script');
-                            snapScript.id = 'klikqris-snap-script';
-                            snapScript.src = "https://klikqris.com/js/payment-snap.js?t=" + new Date().getTime();
-                            document.body.appendChild(snapScript);
-
-                            snapScript.onload = () => {
-                                setTimeout(() => {
-                                    payBtn.click();
-                                }, 300);
-                            };
-
-                            startPollingStatus(data.order_id, kpAmount, cardSource);
-                        } else {
-                            alert(data.message || 'Gagal memulai transaksi topup.');
-                        }
-                    })
-                    .catch(err => {
-                        loadingLabel.destroy();
-                        console.error('Error topup init:', err);
-                        alert('Gagal menghubungi gateway pembayaran.');
-                    });
-                });
-            };
-
-            const activePackages = window.coinPackages || [];
-            activePackages.forEach((pkg, index) => {
-                const col = index % 2;
-                const row = Math.floor(index / 2);
-                const cardX = cx + (col === 0 ? -80 : 80);
-                const cardY = startY + (row * rowGap);
-
-                const card = makeTopupCard(
-                    this, 
-                    cardX, 
-                    cardY, 
-                    cardWidth, 
-                    cardHeight, 
-                    pkg.coin_amount, 
-                    pkg.price_string, 
-                    pkg.price_val, 
-                    (kpAmount, priceString, priceVal, cardSource) => {
-                        handlePurchase(pkg.id, kpAmount, priceString, priceVal, cardSource);
-                    }
-                );
-                this.coinSlideContainer.add(card);
-            });
-
-            // =============================================
-            //  ITEM SHOP (SLIDE 2)
-            // =============================================
-            const itemStartY = 330;
-            const itemCardWidth = 140;
-            const itemCardHeight = 186;
-
-            const handleBuyOrDownload = (itemId, itemName, priceKP, filename, cardSource) => {
-                const isUnlocked = (itemId === 'corak') ? this.unlocked_template_corak : this.unlocked_template_lambai;
-
-                if (isUnlocked) {
-                    const link = document.createElement('a');
-                    link.href = `/game_pacu/assets/template/${filename}`;
-                    link.download = filename;
-                    link.click();
-                } else {
-                    showConfirmModal(this, `Beli ${itemName} seharga ${priceKP} KP?`, () => {
-                        if (this.coinCount < priceKP) {
-                            showConfirmModal(this, "Koin KP tidak cukup! Ingin top up koin?", () => {
-                                switchSlide(0);
-                            });
-                        } else {
-                            this.cameras.main.flash(400, 34, 197, 94, 0.18);
-
-                            this.coinCount -= priceKP;
-                            if (itemId === 'corak') {
-                                this.unlocked_template_corak = true;
-                            } else {
-                                this.unlocked_template_lambai = true;
-                            }
-
-                            localStorage.setItem('coins', String(this.coinCount));
-                            coinText.setText(String(this.coinCount));
-                            this.updateItemCards();
-
-                            if (this.customizationData) {
-                                this.customizationData.coins = this.coinCount;
-                                if (itemId === 'corak') {
-                                    this.customizationData.unlocked_template_corak = true;
-                                } else {
-                                    this.customizationData.unlocked_template_lambai = true;
-                                }
-
-                                fetch('/tukang-jaluar/save', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                    },
-                                    body: JSON.stringify(this.customizationData)
-                                })
-                                .then(res => res.json())
-                                .then(data => {
-                                    console.log('Purchase saved:', data);
-                                })
-                                .catch(err => {
-                                    console.error('Error saving purchase:', err);
-                                });
-                            }
-
-                            const successLabel = this.add.text(cx, H - 100, 'PEMBELIAN BERHASIL!', {
-                                fontFamily: '"Press Start 2P", monospace',
-                                fontSize: '9px',
-                                color: '#ffffff',
-                                stroke: '#1e3a8a',
-                                strokeThickness: 4,
-                                align: 'center'
-                            }).setOrigin(0.5).setDepth(20).setScale(0);
-
-                            this.tweens.add({
-                                targets: successLabel,
-                                scaleX: 1, scaleY: 1,
-                                y: `-=40`,
-                                duration: 350,
-                                ease: 'Back.easeOut',
-                                onComplete: () => {
-                                    this.time.delayedCall(1500, () => {
-                                        this.tweens.add({
-                                            targets: successLabel,
-                                            alpha: 0,
-                                            duration: 400,
-                                            onComplete: () => successLabel.destroy()
-                                        });
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-            };
-
-            const itemCard1 = makeItemCard(this, cx - 80, itemStartY, itemCardWidth, itemCardHeight, 'corak', 'TEMPLATE CORAK', 'Desain body perahu\ncustom sanak!', 100, 'template_corak.png', handleBuyOrDownload);
-            const itemCard2 = makeItemCard(this, cx + 80, itemStartY, itemCardWidth, itemCardHeight, 'lambai', 'TEMPLATE LAMBAI', 'Hiasan melambai\nekor perahu!', 250, 'template_lambai.png', handleBuyOrDownload);
-
-            this.itemSlideContainer.add([itemCard1, itemCard2]);
-
-            this.updateItemCards = () => {
-                itemCard1.updateState(this.unlocked_template_corak);
-                itemCard2.updateState(this.unlocked_template_lambai);
-            };
-            this.updateItemCards();
-
-            // =============================================
-            //  SWITCH SLIDE LOGIC
-            // =============================================
-            this.currentSlide = 0; 
-
-            const switchSlide = (slideIndex) => {
-                if (this.currentSlide === slideIndex) return;
-                this.currentSlide = slideIndex;
-
-                if (window.playClickSound) window.playClickSound();
-
-                const targetX = (slideIndex === 0) ? -79 : 79;
-                this.tweens.add({
-                    targets: { x: activeTabGfx.x },
-                    x: targetX,
-                    duration: 250,
-                    ease: 'Cubic.easeOut',
-                    onUpdate: (tween, target) => {
-                        drawActiveTab(target.x);
-                    }
-                });
-
-                if (slideIndex === 0) {
-                    bannerTitle.setText('✦ APA ITU KP? ✦');
-                    bannerDesc.setText('KP (Kuansing Poin) adalah mata uang utama\ngame ini. Kamu bisa mendapatkan KP secara gratis\nsaat bermain di dalam game, atau melakukan\ntopup langsung melalui paket di bawah ini!');
-
-                    tabKoinTxt.setColor('#ffffff');
-                    tabItemTxt.setColor('#94a3b8');
-
-                    this.coinSlideContainer.setVisible(true);
-                    this.tweens.add({
-                        targets: this.coinSlideContainer,
-                        alpha: 1,
-                        scaleX: 1, scaleY: 1,
-                        duration: 200,
-                        ease: 'Quad.easeOut'
-                    });
-
-                    this.tweens.add({
-                        targets: this.itemSlideContainer,
-                        alpha: 0,
-                        scaleX: 0.95, scaleY: 0.95,
-                        duration: 200,
-                        ease: 'Quad.easeIn',
-                        onComplete: () => {
-                            if (this.currentSlide === 0) {
-                                this.itemSlideContainer.setVisible(false);
-                            }
-                        }
-                    });
-                } else {
-                    bannerTitle.setText('✦ BELI ITEM PREMIUM ✦');
-                    bannerDesc.setText('Gunakan KP (Kuansing Poin) milikmu untuk membeli\ndan mengunduh berbagai template kustomisasi premium\nagar tampilan perahumu semakin keren di arena pacu!');
-
-                    tabKoinTxt.setColor('#94a3b8');
-                    tabItemTxt.setColor('#ffffff');
-
-                    this.itemSlideContainer.setVisible(true);
-                    this.tweens.add({
-                        targets: this.itemSlideContainer,
-                        alpha: 1,
-                        scaleX: 1, scaleY: 1,
-                        duration: 200,
-                        ease: 'Quad.easeOut'
-                    });
-
-                    this.tweens.add({
-                        targets: this.coinSlideContainer,
-                        alpha: 0,
-                        scaleX: 0.95, scaleY: 0.95,
-                        duration: 200,
-                        ease: 'Quad.easeIn',
-                        onComplete: () => {
-                            if (this.currentSlide === 1) {
-                                this.coinSlideContainer.setVisible(false);
-                            }
-                        }
-                    });
-                }
-            };
-
-            hitKoin.on('pointerdown', () => switchSlide(0));
-            hitItem.on('pointerdown', () => switchSlide(1));
-
-            // Native event listener to bypass Safari/iOS gesture block for downloads
-            const canvas = this.sys.game.canvas;
-            const handleNativeInteraction = (e) => {
-                if (this.currentSlide !== 1) return;
-
-                const rect = canvas.getBoundingClientRect();
-                const clientX = e.clientX !== undefined ? e.clientX : (e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : undefined);
-                const clientY = e.clientY !== undefined ? e.clientY : (e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientY : undefined);
-
-                if (clientX === undefined || clientY === undefined) return;
-
-                const x = (clientX - rect.left) * (this.scale.width / rect.width);
-                const y = (clientY - rect.top) * (this.scale.height / rect.height);
-
-                const btnY = 390;
-                const btnW = 110;
-                const btnH = 26;
-
-                const btn1X = cx - 80;
-                if (x >= btn1X - btnW / 2 && x <= btn1X + btnW / 2 && y >= btnY - btnH / 2 && y <= btnY + btnH / 2) {
-                    if (this.unlocked_template_corak) {
-                        const filename = 'template_corak.png';
-                        const link = document.createElement('a');
-                        link.href = `/game_pacu/assets/template/${filename}`;
-                        link.download = filename;
-                        link.click();
-                    }
-                    return;
-                }
-
-                const btn2X = cx + 80;
-                if (x >= btn2X - btnW / 2 && x <= btn2X + btnW / 2 && y >= btnY - btnH / 2 && y <= btnY + btnH / 2) {
-                    if (this.unlocked_template_lambai) {
-                        const filename = 'template_lambai.png';
-                        const link = document.createElement('a');
-                        link.href = `/game_pacu/assets/template/${filename}`;
-                        link.download = filename;
-                        link.click();
-                    }
-                    return;
-                }
-            };
-
-            canvas.addEventListener('click', handleNativeInteraction);
-            canvas.addEventListener('touchend', handleNativeInteraction);
-
-            this.events.once('shutdown', () => {
-                canvas.removeEventListener('click', handleNativeInteraction);
-                canvas.removeEventListener('touchend', handleNativeInteraction);
-            });
-
-            // =============================================
-            //  BOUNCING COIN ANIMATION
-            // =============================================
-            const bouncingCoin = this.add.image(W + 100, H - 100, 'koin')
-                .setDisplaySize(64, 64)
-                .setOrigin(0.5);
-
-            const coinBaseScaleX = bouncingCoin.scaleX;
-            const coinBaseScaleY = bouncingCoin.scaleY;
-
-            addIconShimmer(this, bouncingCoin, 600);
-
-            const playImpact = (targetCoin) => {
-                if (!targetCoin.active) return;
-
-                this.tweens.add({
-                    targets: targetCoin,
-                    scaleX: coinBaseScaleX * 1.18,
-                    scaleY: coinBaseScaleY * 0.82,
-                    duration: 60,
-                    yoyo: true,
-                    ease: 'Quad.easeOut',
-                    onComplete: () => {
-                        if (targetCoin.active) {
-                            targetCoin.scaleX = coinBaseScaleX;
-                            targetCoin.scaleY = coinBaseScaleY;
-                        }
-                    }
-                });
-            };
-
-            const bubble = this.add.container(cx + 40, H - 185);
-            bubble.setScale(0);
-
-            const bubbleBg = this.add.image(0, 0, 'bubblechat').setDisplaySize(136, 66);
-            bubble.add(bubbleBg);
-            addIconShimmer(this, bubbleBg, 1200);
-
-            const bubbleTxt = this.add.text(0, -2, "Top up KP,\nsanak!", {
-                fontFamily: '"Press Start 2P", monospace',
-                fontSize: '9px',
-                color: '#000000',
-                align: 'center',
-                lineSpacing: 4
-            }).setOrigin(0.5);
-            bubble.add(bubbleTxt);
-
-            this.tweens.add({
-                targets: bouncingCoin,
-                x: cx,
-                duration: 1600,
-                ease: 'Linear',
-                onComplete: () => {
-                    this.tweens.add({
-                        targets: bubble,
-                        scaleX: 1,
-                        scaleY: 1,
-                        duration: 350,
-                        ease: 'Back.easeOut'
-                    });
-
-                    const bubbleFloat = this.tweens.add({
-                        targets: bubble,
-                        y: H - 189,
-                        duration: 800,
-                        yoyo: true,
-                        repeat: -1,
-                        ease: 'Sine.easeInOut'
-                    });
-
-                    const coinFloat = this.tweens.add({
-                        targets: bouncingCoin,
-                        y: H - 105,
-                        duration: 800,
-                        yoyo: true,
-                        repeat: -1,
-                        ease: 'Sine.easeInOut'
-                    });
-
-                    this.time.delayedCall(5000, () => {
-                        bubbleFloat.stop();
-                        coinFloat.stop();
-
-                        bubble.y = H - 185;
-                        bouncingCoin.y = H - 100;
-
-                        this.tweens.add({
-                            targets: bubble,
-                            scaleX: 0,
-                            scaleY: 0,
-                            duration: 300,
-                            ease: 'Back.easeIn'
-                        });
-
-                        this.tweens.add({
-                            targets: bouncingCoin,
-                            x: -100,
-                            duration: 1600,
-                            ease: 'Linear',
-                            onComplete: () => {
-                                bouncingCoin.destroy();
-                                bubble.destroy();
-                            }
-                        });
-
-                        this.tweens.add({
-                            targets: bouncingCoin,
-                            y: H - 160,
-                            duration: 200,
-                            yoyo: true,
-                            repeat: 3,
-                            ease: 'Power1.easeOut',
-                            onRepeat: () => {
-                                playImpact(bouncingCoin);
-                            },
-                            onComplete: () => {
-                                playImpact(bouncingCoin);
-                            }
-                        });
-                    });
-                }
-            });
-
-            this.tweens.add({
-                targets: bouncingCoin,
-                y: H - 160,
-                duration: 200,
-                yoyo: true,
-                repeat: 3,
-                ease: 'Power1.easeOut',
-                onRepeat: () => {
-                    playImpact(bouncingCoin);
-                },
-                onComplete: () => {
-                    playImpact(bouncingCoin);
-                }
-            });
-        }
-    }
-
-    // =====================================================
-    //  INIT PHASER GAME
-    // =====================================================
-    window.activeShopGame = new Phaser.Game({
-        type: Phaser.AUTO,
-        width: GAME_WIDTH,
-        height: GAME_HEIGHT,
-        backgroundColor: '#0f172a',
-        parent: 'game-container',
-        pixelArt: true,
-        scene: [TopupScene],
-        scale: {
-            mode: Phaser.Scale.RESIZE,
-            autoCenter: Phaser.Scale.CENTER_BOTH
+    window.closeConfirmModal = function() {
+        document.getElementById('confirm-modal').classList.remove('active');
+        confirmCallback = null;
+    };
+
+    document.getElementById('modal-btn-confirm').addEventListener('click', () => {
+        if (confirmCallback) {
+            const cb = confirmCallback;
+            closeConfirmModal();
+            cb();
         }
     });
 
-    // Cleanup Phaser Game instance on navigation to prevent memory leaks
-    document.addEventListener('livewire:navigating', () => {
-        if (window.activeShopGame) {
-            window.activeShopGame.destroy(true);
-            window.activeShopGame = null;
-            console.log('Shop page active Phaser game destroyed.');
+    // Toast Notice Helper
+    function showToast(text) {
+        const toast = document.getElementById('toast-notice');
+        if (!toast) return;
+        toast.innerText = text;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2200);
+    }
+
+    // Topup Logic
+    window.promptTopup = function(packageId, kpAmount, priceString) {
+        if (window.playClickSound) window.playClickSound();
+
+        openConfirmModal(`Apakah Anda ingin membeli +${kpAmount.toLocaleString('id-ID')} KP seharga ${priceString}?`, () => {
+            fetch('/topup/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ package_id: packageId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    let payBtn = document.getElementById('btnPay');
+                    if (!payBtn) {
+                        payBtn = document.createElement('button');
+                        payBtn.id = 'btnPay';
+                        payBtn.style.display = 'none';
+                        document.body.appendChild(payBtn);
+                    }
+                    payBtn.setAttribute('data-signature', data.signature);
+
+                    let snapScript = document.getElementById('klikqris-snap-script');
+                    if (snapScript) snapScript.remove();
+
+                    snapScript = document.createElement('script');
+                    snapScript.id = 'klikqris-snap-script';
+                    snapScript.src = "https://klikqris.com/js/payment-snap.js?t=" + new Date().getTime();
+                    document.body.appendChild(snapScript);
+
+                    snapScript.onload = () => {
+                        setTimeout(() => payBtn.click(), 300);
+                    };
+
+                    startPollingStatus(data.order_id, kpAmount);
+                } else {
+                    alert(data.message || 'Gagal memulai transaksi topup.');
+                }
+            })
+            .catch(err => {
+                console.error('Error topup init:', err);
+                alert('Gagal menghubungi gateway pembayaran.');
+            });
+        });
+    };
+
+    function startPollingStatus(orderId, kpAmount) {
+        let pollInterval = setInterval(() => {
+            fetch(`/topup/status/${orderId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.status === 'SUCCESS') {
+                        clearInterval(pollInterval);
+                        updateCoinDisplay(data.coins);
+                        showToast(`TOPUP BERHASIL! +${kpAmount.toLocaleString('id-ID')} KP`);
+                    } else if (data.status === 'EXPIRED') {
+                        clearInterval(pollInterval);
+                        alert('Waktu pembayaran QRIS telah habis (Expired).');
+                    }
+                }
+            })
+            .catch(err => console.error('Polling status error:', err));
+        }, 3000);
+    }
+
+    // Download Item Logic
+    window.downloadItem = function(itemId, filename) {
+        if (window.playClickSound) window.playClickSound();
+        const link = document.createElement('a');
+        link.href = `/shop/download-item/${itemId}`;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    // Buy Item Logic
+    window.promptBuyItem = function(itemId, itemName, priceKP, filename) {
+        if (window.playClickSound) window.playClickSound();
+
+        if (purchasedItemIds.has(Number(itemId))) {
+            downloadItem(itemId, filename);
+            return;
         }
-    }, { once: true });
+
+        openConfirmModal(`Beli ${itemName} seharga ${priceKP.toLocaleString('id-ID')} KP?`, () => {
+            if (currentCoinCount < priceKP) {
+                openConfirmModal("KP tidak cukup! Ingin top up koin?", () => {
+                    switchShopTab(0);
+                });
+                return;
+            }
+
+            fetch('/shop/buy-item', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ item_id: itemId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    updateCoinDisplay(data.kuansing_poin);
+                    purchasedItemIds.add(Number(itemId));
+
+                    // Update button UI
+                    const btn = document.getElementById(`item-btn-${itemId}`);
+                    if (btn) {
+                        btn.className = 'btn-action-blue';
+                        btn.innerText = 'DOWNLOAD';
+                        btn.onclick = () => downloadItem(itemId, filename);
+                    }
+
+                    showToast('PEMBELIAN BERHASIL!');
+
+                    // Trigger immediate download
+                    setTimeout(() => {
+                        downloadItem(itemId, filename);
+                    }, 500);
+                } else {
+                    alert(data.message || 'Gagal membeli item.');
+                }
+            })
+            .catch(err => {
+                console.error('Error buying item:', err);
+                alert('Terjadi kesalahan saat membeli item.');
+            });
+        });
+    };
+
+    // Initial Sync from server
+    fetch('/tukang-jaluar/get')
+        .then(res => res.json())
+        .then(data => {
+            if (data.coins !== undefined) {
+                updateCoinDisplay(data.coins);
+            }
+        })
+        .catch(err => console.error('Failed to sync coins:', err));
 }
 </script>
 @endpush

@@ -22,12 +22,24 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         background: url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
         background-size: cover;
         z-index: 10;
         padding-bottom: 20px;
         box-sizing: border-box;
         overflow: hidden;
+    }
+
+    .menu-main-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: auto 0;
+        width: 100%;
+        max-width: 360px;
+        z-index: 12;
     }
 
     /* --- Dynamic Backdrop Glow --- */
@@ -205,74 +217,15 @@
         background: linear-gradient(180deg, #ffffff 0%, #a5f3fc 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.8));
-        margin-top: 76px;
-        margin-bottom: 8px;
+        margin-top: 0;
+        margin-bottom: 12px;
         text-align: center;
         line-height: 1.4;
         letter-spacing: 2px;
         z-index: 11;
     }
 
-    /* --- Glassmorphic Jalur Preview Widget --- */
-    .jalur-preview-box {
-        margin-top: 4px;
-        margin-bottom: 10px !important;
-        width: calc(100% - 32px);
-        max-width: 320px;
-        background: rgba(0, 0, 0, 0.45) !important;
-        border: 2px solid rgba(255, 255, 255, 0.15) !important;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        border-radius: 16px;
-        padding: 8px 12px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-        box-sizing: border-box;
-        z-index: 12;
-    }
-
-    .jalur-preview-box .preview-title {
-        font-family: 'Press Start 2P', monospace;
-        font-size: 8px;
-        color: #00ffff !important;
-        margin-bottom: 6px;
-        letter-spacing: 0.5px;
-        text-shadow: 0 0 5px rgba(0, 255, 255, 0.5) !important;
-    }
-
-    .jalur-preview-box .canvas-container {
-        width: 250px;
-        height: 85px;
-        overflow: hidden;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 8px;
-        background: rgba(0, 0, 0, 0.3) !important;
-        border: 2px solid rgba(0, 255, 255, 0.2) !important;
-    }
-
-    .jalur-preview-box .canvas-container canvas {
-        display: block;
-        image-rendering: pixelated;
-        image-rendering: crisp-edges;
-    }
-
-    .jalur-preview-box .preview-name {
-        font-family: 'Pixelify Sans', monospace;
-        font-size: 12px;
-        font-weight: bold;
-        color: #e59e0b !important;
-        margin-top: 6px;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6) !important;
-    }
+    
 
     /* --- PS5 Carousel Slider --- */
     .ps5-carousel-container {
@@ -301,7 +254,7 @@
         display: flex;
         align-items: center;
         gap: 20px;
-        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        transition: transform 0.35s ease;
         will-change: transform;
     }
 
@@ -311,9 +264,7 @@
         flex-shrink: 0;
         border-radius: 16px;
         border: 2px solid rgba(255, 255, 255, 0.15);
-        background: rgba(15, 23, 42, 0.5);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        background: rgba(15, 23, 42, 0.85);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -322,10 +273,10 @@
         box-sizing: border-box;
         cursor: pointer;
         position: relative;
-        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        opacity: 0.45;
+        transition: transform 0.3s ease, opacity 0.3s ease, border-color 0.3s ease;
+        opacity: 0.5;
         transform: scale(0.85);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         overflow: hidden;
     }
 
@@ -333,8 +284,8 @@
         opacity: 1;
         transform: scale(1.1);
         border-color: #ffffff;
-        background: rgba(255, 255, 255, 0.12);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 15px var(--glow-color);
+        background: rgba(30, 41, 59, 0.95);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
     }
 
     .ps5-card.card-green {
@@ -368,7 +319,6 @@
         align-items: center;
         justify-content: center;
         margin-bottom: 10px;
-        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
         transition: transform 0.3s ease;
     }
 
@@ -438,7 +388,6 @@
 
     .carousel-nav-btn:hover {
         transform: translateY(-50%) scale(1.15);
-        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
     }
 
     .carousel-nav-btn:active {
@@ -554,13 +503,12 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(15, 23, 42, 0.85);
+        background: rgba(15, 23, 42, 0.9);
         display: none;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         z-index: 30;
-        backdrop-filter: blur(4px);
     }
 
     .search-container {
@@ -621,7 +569,6 @@
         top: 20px;
         left: 20px;
         box-shadow: inset 4px 4px 0 rgba(255, 255, 255, 0.6), 0 6px 12px rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(2px);
     }
 
     .handle {
@@ -1084,91 +1031,83 @@
     </div>
 
     <!-- Coin Display (Top Right) -->
-    <div class="coin-display">
-        <div class="coin-icon-wrapper">
-            <img src="/game_pacu/assets/image/ui/koin.png" alt="Coin">
-        </div>
+    <div class="coin-display" onclick="window.navigateToPage('/shop')">
+        <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
         <span id="header-coin-count">{{ number_format(auth()->user()->kuansing_poin, 0, ',', '.') }}</span>
     </div>
     <div id="ps5-backdrop" class="ps5-backdrop-glow bg-slide-0"></div>
-    <canvas id="ps5-particles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.5;"></canvas>
 
-    <div class="title-banner"></div>
+    <div class="menu-main-wrapper">
+        <div class="title-banner"></div>
 
-    <!-- JALUR PREVIEW BOX -->
-    <div id="jalur-preview-container" class="jalur-preview-box"
-        style="background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; margin-bottom: 5px !important;">
-        <div class="preview-title">PERAHU SAAT INI</div>
-        <div class="canvas-container" id="jalur-preview-canvas" style="width: 250px; height: 85px; border: none; background: transparent;"></div>
-        <div class="preview-name" id="jalur-preview-name">LOADING...</div>
-    </div>
-
-    <!-- Carousel Menu PS5 -->
-    <div class="ps5-carousel-container">
-        <button class="carousel-nav-btn prev-btn" onclick="prevSlide(event)">
-            <img src="/game_pacu/assets/image/ui/btn_kiri.png" alt="Left">
-        </button>
-        <div class="ps5-carousel-view">
-            <div class="ps5-carousel-track" id="carousel-track">
-                <!-- Slide 0: MAIN PACU -->
-                <div class="ps5-card card-green active" data-index="0" onclick="selectSlide(0, event)">
-                    <div class="ps5-card-icon">
-                        <img src="/game_pacu/assets/image/ui/kayuah.png" alt="Main">
+        <!-- Carousel Menu PS5 -->
+        <div class="ps5-carousel-container">
+            <button class="carousel-nav-btn prev-btn" onclick="prevSlide(event)">
+                <img src="/game_pacu/assets/image/ui/btn_kiri.png" alt="Left">
+            </button>
+            <div class="ps5-carousel-view">
+                <div class="ps5-carousel-track" id="carousel-track">
+                    <!-- Slide 0: MAIN PACU -->
+                    <div class="ps5-card card-green active" data-index="0" onclick="selectSlide(0, event)">
+                        <div class="ps5-card-icon">
+                            <img src="/game_pacu/assets/image/ui/kayuah.png" alt="Main">
+                        </div>
+                        <div class="ps5-card-label">MAIN PACU</div>
+                        <div class="ps5-pattern">&#9587;</div>
                     </div>
-                    <div class="ps5-card-label">MAIN PACU</div>
-                    <div class="ps5-pattern">&#9587;</div>
-                </div>
-                <!-- Slide 1: SHOP -->
-                <div class="ps5-card card-purple" data-index="1" onclick="selectSlide(1, event)">
-                    <div class="ps5-card-icon">
-                        <img src="/game_pacu/assets/image/ui/tentang.png" alt="Shop">
+                    <!-- Slide 1: SHOP -->
+                    <div class="ps5-card card-purple" data-index="1" onclick="selectSlide(1, event)">
+                        <div class="ps5-card-icon">
+                            <img src="/game_pacu/assets/image/ui/tentang.png" alt="Shop">
+                        </div>
+                        <div class="ps5-card-label">SHOP</div>
+                        <div class="ps5-pattern">&#9587;</div>
                     </div>
-                    <div class="ps5-card-label">SHOP</div>
-                    <div class="ps5-pattern">&#9587;</div>
-                </div>
-                <!-- Slide 2: TUKANG JALUAR -->
-                <div class="ps5-card card-orange" data-index="2" onclick="selectSlide(2, event)">
-                    <div class="ps5-card-icon">
-                        <img src="/game_pacu/assets/image/ui/tukang.png" alt="Tukang">
+                    <!-- Slide 2: TUKANG JALUAR -->
+                    <div class="ps5-card card-orange" data-index="2" onclick="selectSlide(2, event)">
+                        <div class="ps5-card-icon">
+                            <img src="/game_pacu/assets/image/ui/tukang.png" alt="Tukang">
+                        </div>
+                        <div class="ps5-card-label">TUKANG JALUAR</div>
+                        <div class="ps5-pattern">&#9711;</div>
                     </div>
-                    <div class="ps5-card-label">TUKANG JALUAR</div>
-                    <div class="ps5-pattern">&#9711;</div>
-                </div>
-                <!-- Slide 3: CARI PEMAIN -->
-                <div class="ps5-card card-red" data-index="3" onclick="selectSlide(3, event)">
-                    <div class="ps5-card-icon">
-                        <img src="/game_pacu/assets/image/ui/magnifer.png" alt="Search">
+                    <!-- Slide 3: CARI PEMAIN -->
+                    <div class="ps5-card card-red" data-index="3" onclick="selectSlide(3, event)">
+                        <div class="ps5-card-icon">
+                            <img src="/game_pacu/assets/image/ui/magnifer.png" alt="Search">
+                        </div>
+                        <div class="ps5-card-label">CARI PEMAIN</div>
+                        <div class="ps5-pattern">&#9651;</div>
                     </div>
-                    <div class="ps5-card-label">CARI PEMAIN</div>
-                    <div class="ps5-pattern">&#9651;</div>
-                </div>
-                <!-- Slide 4: LEADERBOARD -->
-                <div class="ps5-card card-yellow" data-index="4" onclick="selectSlide(4, event)">
-                    <div class="ps5-card-icon">
-                        <img src="/game_pacu/assets/image/ui/piala.png" alt="Trophy">
+                    <!-- Slide 4: LEADERBOARD -->
+                    <div class="ps5-card card-yellow" data-index="4" onclick="selectSlide(4, event)">
+                        <div class="ps5-card-icon">
+                            <img src="/game_pacu/assets/image/ui/piala.png" alt="Trophy">
+                        </div>
+                        <div class="ps5-card-label">LEADERBOARD</div>
+                        <div class="ps5-pattern">&#9633;</div>
                     </div>
-                    <div class="ps5-card-label">LEADERBOARD</div>
-                    <div class="ps5-pattern">&#9633;</div>
                 </div>
             </div>
+            <button class="carousel-nav-btn next-btn" onclick="nextSlide(event)">
+                <img src="/game_pacu/assets/image/ui/btn_kanan.png" alt="Right">
+            </button>
         </div>
-        <button class="carousel-nav-btn next-btn" onclick="nextSlide(event)">
-            <img src="/game_pacu/assets/image/ui/btn_kanan.png" alt="Right">
-        </button>
+
+        <!-- Slide Details & Button -->
+        <div class="ps5-details-container">
+            <div class="ps5-details-title" id="active-title" style="--glow-color: rgba(34, 197, 94, 0.6)">MAIN PACU</div>
+            <div class="ps5-details-desc" id="active-desc">Cari lawan & mulai balapan jalur</div>
+            <div class="ps5-indicators">
+                <span class="ps5-dot active" onclick="jumpToSlide(0)"></span>
+                <span class="ps5-dot" onclick="jumpToSlide(1)"></span>
+                <span class="ps5-dot" onclick="jumpToSlide(2)"></span>
+                <span class="ps5-dot" onclick="jumpToSlide(3)"></span>
+                <span class="ps5-dot" onclick="jumpToSlide(4)"></span>
+            </div>
+        </div>
     </div>
 
-    <!-- Slide Details & Button -->
-    <div class="ps5-details-container">
-        <div class="ps5-details-title" id="active-title" style="--glow-color: rgba(34, 197, 94, 0.6)">MAIN PACU</div>
-        <div class="ps5-details-desc" id="active-desc">Cari lawan & mulai balapan jalur</div>
-        <div class="ps5-indicators">
-            <span class="ps5-dot active" onclick="jumpToSlide(0)"></span>
-            <span class="ps5-dot" onclick="jumpToSlide(1)"></span>
-            <span class="ps5-dot" onclick="jumpToSlide(2)"></span>
-            <span class="ps5-dot" onclick="jumpToSlide(3)"></span>
-            <span class="ps5-dot" onclick="jumpToSlide(4)"></span>
-        </div>
-    </div>
     <div class="loading-overlay" id="loading-overlay">
         <div class="search-container">
             <div class="radar"></div>
@@ -1183,10 +1122,10 @@
 
     <!-- Custom Coming Soon Modal -->
     <div id="coming-soon-modal"
-        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(6px); z-index: 210; align-items: center; justify-content: center; box-sizing: border-box;">
+        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); z-index: 210; align-items: center; justify-content: center; box-sizing: border-box;">
         <div class="coming-soon-card"
             style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
-            <div style="font-size: 10px; color: #a855f7; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">✦ FITUR DUMMY ✦</div>
+            <div style="font-size: 10px; color: #a855f7; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;"><i class="bi bi-gear-fill me-1"></i> FITUR DUMMY</div>
             <p style="font-family: 'Pixelify Sans', monospace; font-size: 13px; color: #374151; margin-bottom: 20px; line-height: 1.5;">Menu ini adalah simulasi dummy dan akan segera dikembangkan di masa mendatang!</p>
             <button class="pixel-btn" onclick="closeComingSoon()"
                 style="margin-top: 0; background-color: #a855f7; border: 3px solid #000000; box-shadow: inset 0 2px 0px rgba(255,255,255,0.4), 0px 4px 0px #000000; color: white; padding: 12px; font-size: 9px; cursor: pointer; text-transform: uppercase; width: 100%; text-shadow: 1.5px 1.5px 0px #000000;">OKE</button>
@@ -1195,10 +1134,10 @@
 
     <!-- Custom Audio Settings Modal -->
     <div id="audio-settings-modal"
-        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 44, 34, 0.85); backdrop-filter: blur(6px); z-index: 200; align-items: center; justify-content: center; box-sizing: border-box;">
+        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 44, 34, 0.85); z-index: 200; align-items: center; justify-content: center; box-sizing: border-box;">
         <div class="audio-modal-card"
             style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
-            <div class="audio-modal-title" style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">✦ PENGATURAN SUARA ✦</div>
+            <div class="audio-modal-title" style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;"><i class="bi bi-volume-up-fill me-1"></i> PENGATURAN SUARA</div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <span style="font-size: 8px; color: #15803d; text-align: left; text-shadow: 1px 1px 0px rgba(0,0,0,0.05);">MUSIK (BGM)</span>
                 <button id="bgm-toggle-btn" onclick="toggleBGMSetting()" style="font-family: 'Press Start 2P', monospace; font-size: 8px; width: 80px; padding: 8px 0; border: 3px solid #000000; border-radius: 6px; cursor: pointer; text-shadow: 1.5px 1.5px 0px #000000; color: white; transition: all 0.1s; box-shadow: 0px 3px 0px #000000;">ON</button>
@@ -1214,13 +1153,13 @@
 
 <!-- ===== GLOBAL CHAT SIDEBAR ===== -->
 <div id="chat-toggle-btn" onclick="toggleChat()">
-    <span class="chat-icon">💬</span>
+    <span class="chat-icon"><i class="bi bi-chat-dots-fill"></i></span>
     <span id="chat-unread-dot"></span>
 </div>
 
 <div id="chat-sidebar">
     <div class="chat-header">
-        <div class="chat-header-title">💬 GLOBAL CHAT</div>
+        <div class="chat-header-title"><i class="bi bi-chat-fill me-1"></i> GLOBAL CHAT</div>
         <div class="chat-online-badge">
             <span class="chat-online-dot"></span>
             <span id="chat-online-count">0</span> online
@@ -1231,7 +1170,7 @@
     </div>
     <div class="chat-input-area">
         <input type="text" id="chat-input" placeholder="Ketik pesan..." maxlength="200" onkeydown="if(event.key==='Enter') sendChat()">
-        <button id="chat-send-btn" onclick="sendChat()" title="Kirim">➤</button>
+        <button id="chat-send-btn" onclick="sendChat()" title="Kirim"><i class="bi bi-send-fill"></i></button>
     </div>
 </div>
 
@@ -1240,12 +1179,12 @@
     <div class="pwa-alert-header">
         <img src="/game_pacu/assets/image/ui/pwa-icon-192.png" alt="Icon Game" class="pwa-alert-icon">
         <div class="pwa-alert-title-group">
-            <h4 class="pwa-alert-title">✦ PASANG GAME ✦</h4>
+            <h4 class="pwa-alert-title"><i class="bi bi-download me-1"></i> PASANG GAME</h4>
             <p class="pwa-alert-desc">Pasang game Pacu Jalur di Home Screen kamu untuk bermain lebih lancar, cepat, dan layar penuh!</p>
         </div>
     </div>
     <div id="pwa-ios-guide" class="pwa-ios-instructions" style="display: none;">
-        <span class="pwa-ios-icon">📤</span>
+        <span class="pwa-ios-icon"><i class="bi bi-share-fill"></i></span>
         <span>Ketuk tombol <strong>Bagikan (Share)</strong> di Safari lalu pilih <strong>'Tambahkan ke Layar Utama (Add to Home Screen)'</strong>.</span>
     </div>
     <div class="pwa-alert-buttons">
@@ -1256,8 +1195,6 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.min.js"></script>
-<script src="/game_pacu/assets/js/jalur-preview-phaser.js?v={{ time() }}"></script>
 <script>
 {
     // Close existing global chat WebSocket connection to prevent duplication
@@ -1365,67 +1302,9 @@
         }
     };
 
-    // Initialize Jalur Preview Canvas
-    if (typeof window.initJalurPreview === 'function') {
-        window.initJalurPreview('jalur-preview-canvas', 'jalur-preview-name');
-    }
 
-    document.addEventListener('livewire:navigated', () => {
-        if (typeof window.initJalurPreview === 'function' && document.getElementById('jalur-preview-canvas')) {
-            window.initJalurPreview('jalur-preview-canvas', 'jalur-preview-name');
-        }
-    }, { once: true });
 
-    // Floating particles background effect
-    (function () {
-        const canvas = document.getElementById('ps5-particles');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        let width = canvas.width = canvas.offsetWidth;
-        let height = canvas.height = canvas.offsetHeight;
 
-        const particles = [];
-        const particleCount = 25;
-
-        for (let i = 0; i < particleCount; i++) {
-            particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height + height,
-                size: Math.random() * 3 + 1,
-                speed: Math.random() * 0.4 + 0.15,
-                opacity: Math.random() * 0.4 + 0.2
-            });
-        }
-
-        function animate() {
-            const canvasEl = document.getElementById('ps5-particles');
-            if (!canvasEl) return; // Stop loop if canvas is gone on navigation
-
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = '#ffffff';
-
-            particles.forEach(p => {
-                ctx.globalAlpha = p.opacity;
-                ctx.fillRect(p.x, p.y, p.size, p.size);
-                p.y -= p.speed;
-                if (p.y < -10) {
-                    p.y = height + 10;
-                    p.x = Math.random() * width;
-                }
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        window.addEventListener('resize', () => {
-            if (canvas.offsetWidth) {
-                width = canvas.width = canvas.offsetWidth;
-                height = canvas.height = canvas.offsetHeight;
-            }
-        });
-
-        animate();
-    })();
 
     // Carousel Menu PS5
     const slidesData = [
@@ -1742,20 +1621,7 @@
 
     initGlobalChat();
 
-    // Cleanup global chat WS connection on navigation
-    document.addEventListener('livewire:navigating', () => {
-        if (window.chatWs) {
-            window.chatWs.close();
-            window.chatWs = null;
-            console.log('Main menu global chat WebSocket connection closed.');
-        }
-        
-        // Also cleanup active preview game if any is active on this page
-        if (window.activePreviewGame) {
-            window.activePreviewGame.destroy(true);
-            window.activePreviewGame = null;
-        }
-    }, { once: true });
+
 
     // ---- PWA Service Worker & Install Prompt Logic ----
     let deferredPrompt;

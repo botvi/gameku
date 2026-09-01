@@ -9,6 +9,7 @@ use App\Http\Controllers\{
 
 use App\Http\Controllers\superadmin\{
     DashboardSuperAdminController,
+    ShopItemController,
 };
 
 use App\Http\Controllers\auth\{
@@ -56,23 +57,30 @@ Route::post('/auth/google/complete-register', [GoogleController::class, 'complet
 
 Route::group(['middleware' => ['auth', 'role:admin', 'check.blocked']], function () {
     Route::get('/dashboard-superadmin', [DashboardSuperAdminController::class, 'index'])->name('dashboard-superadmin');
-    
+
     // User management
     Route::get('/dashboard-superadmin/users', [DashboardSuperAdminController::class, 'users'])->name('superadmin.users');
     Route::post('/dashboard-superadmin/users/{id}/toggle-block', [DashboardSuperAdminController::class, 'toggleBlock'])->name('superadmin.users.toggle-block');
-    
+
     // Settings management (API Key & Merchant ID)
     Route::get('/dashboard-superadmin/settings', [DashboardSuperAdminController::class, 'settings'])->name('superadmin.settings');
     Route::post('/dashboard-superadmin/settings/save', [DashboardSuperAdminController::class, 'saveSettings'])->name('superadmin.settings.save');
-    
+
     // Coin packages CRUD
     Route::get('/dashboard-superadmin/coin-packages', [DashboardSuperAdminController::class, 'packages'])->name('superadmin.packages');
     Route::post('/dashboard-superadmin/coin-packages/store', [DashboardSuperAdminController::class, 'storePackage'])->name('superadmin.packages.store');
     Route::post('/dashboard-superadmin/coin-packages/{id}/update', [DashboardSuperAdminController::class, 'updatePackage'])->name('superadmin.packages.update');
     Route::post('/dashboard-superadmin/coin-packages/{id}/delete', [DashboardSuperAdminController::class, 'deletePackage'])->name('superadmin.packages.delete');
-    
+
     // Transactions history
     Route::get('/dashboard-superadmin/transactions', [DashboardSuperAdminController::class, 'transactions'])->name('superadmin.transactions');
+
+    // Shop Items CRUD
+    Route::get('/dashboard-superadmin/shop-items', [ShopItemController::class, 'index'])->name('superadmin.shop-items');
+    Route::post('/dashboard-superadmin/shop-items/store', [ShopItemController::class, 'store'])->name('superadmin.shop-items.store');
+    Route::post('/dashboard-superadmin/shop-items/{id}/update', [ShopItemController::class, 'update'])->name('superadmin.shop-items.update');
+    Route::post('/dashboard-superadmin/shop-items/{id}/delete', [ShopItemController::class, 'destroy'])->name('superadmin.shop-items.delete');
+    Route::post('/dashboard-superadmin/shop-items/{id}/toggle', [ShopItemController::class, 'toggleActive'])->name('superadmin.shop-items.toggle');
 });
 
 // Webhook KlikQRIS (no CSRF, public)
@@ -96,6 +104,8 @@ Route::middleware(['auth', 'check.blocked'])->group(function () {
     Route::get('/room/list', [RoomController::class, 'list'])->name('room.list');
     Route::get('/shop', [ShopController::class, 'index'])->name('shop');
     Route::post('/shop/add-points', [ShopController::class, 'addPoints'])->name('shop.add-points');
+    Route::post('/shop/buy-item', [ShopController::class, 'buyItem'])->name('shop.buy-item');
+    Route::get('/shop/download-item/{id}', [ShopController::class, 'downloadItem'])->name('shop.download-item');
     Route::get('/tukang-jaluar', [TukangJaluarController::class, 'index'])->name('tukang-jaluar');
     Route::post('/tukang-jaluar/save', [TukangJaluarController::class, 'save'])->name('tukang-jaluar.save');
     Route::get('/tukang-jaluar/get', [TukangJaluarController::class, 'get'])->name('tukang-jaluar.get');

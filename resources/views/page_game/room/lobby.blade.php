@@ -490,17 +490,17 @@
     <canvas id="ps5-particles"
         style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.5;"></canvas>
 
-    <div class="title-banner">✦ ROOM LOBBY ✦</div>
+    <div class="title-banner"><i class="bi bi-people-fill me-1"></i> ROOM LOBBY</div>
 
     <!-- Panel Lobby -->
     <div class="panel">
-        <div class="panel-title" id="lobby-room-name">✦ ROOM: {{ strtoupper($room->name) }} ✦</div>
+        <div class="panel-title" id="lobby-room-name"><i class="bi bi-door-open-fill me-1"></i> ROOM: {{ strtoupper($room->name) }}</div>
 
         <!-- Room Code Display -->
         <div class="room-code-box">
             <span class="room-code-label">KODE:</span>
             <span class="room-code-value" id="room-code-display">{{ strtoupper($room->room_code) }}</span>
-            <button class="room-code-copy" id="copy-code-btn" onclick="copyRoomCode()" title="Salin kode room">📋 SALIN</button>
+            <button class="room-code-copy" id="copy-code-btn" onclick="copyRoomCode()" title="Salin kode room"><i class="bi bi-copy me-1"></i> SALIN</button>
         </div>
 
         <div class="players-container">
@@ -547,12 +547,12 @@
 
 <!-- ===== GLOBAL CHAT SIDEBAR ===== -->
 <div id="chat-toggle-btn" onclick="toggleChat()">
-    <span class="chat-icon">💬</span>
+    <span class="chat-icon"><i class="bi bi-chat-dots-fill"></i></span>
     <span id="chat-unread-dot"></span>
 </div>
 <div id="chat-sidebar">
     <div class="chat-header">
-        <div class="chat-header-title">💬 GLOBAL CHAT</div>
+        <div class="chat-header-title"><i class="bi bi-chat-fill me-1"></i> GLOBAL CHAT</div>
         <div class="chat-online-badge">
             <span class="chat-online-dot"></span>
             <span id="chat-online-count">0</span> online
@@ -560,14 +560,14 @@
     </div>
     <!-- Share Room Button -->
     <button class="chat-share-btn" onclick="shareRoomToChat()">
-        📎 BAGIKAN KODE ROOM INI KE CHAT
+        <i class="bi bi-share-fill me-1"></i> BAGIKAN KODE ROOM INI KE CHAT
     </button>
     <div id="chat-messages">
         <div class="chat-system-msg">— Global Chat —</div>
     </div>
     <div class="chat-input-area">
         <input type="text" id="chat-input" placeholder="Ketik pesan..." maxlength="200" onkeydown="if(event.key==='Enter') sendChat()">
-        <button id="chat-send-btn" onclick="sendChat()" title="Kirim">➤</button>
+        <button id="chat-send-btn" onclick="sendChat()" title="Kirim"><i class="bi bi-send-fill"></i></button>
     </div>
 </div>
 <!-- ================================= -->
@@ -577,7 +577,7 @@
 <script>
 {
     // Custom HTML Modals (Confirm & Alert) using existing game-layout.css styles
-    window.showHTMLAlert = function(message, title = "✦ INFORMASI ✦") {
+    window.showHTMLAlert = function(message, title = "INFORMASI") {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.id = 'fullscreen-modal-overlay';
@@ -604,7 +604,7 @@
         });
     };
 
-    window.showHTMLConfirm = function(message, title = "✦ KONFIRMASI ✦") {
+    window.showHTMLConfirm = function(message, title = "KONFIRMASI") {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.id = 'fullscreen-modal-overlay';

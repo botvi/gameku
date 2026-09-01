@@ -383,10 +383,8 @@ $user = auth()->user();
         <div class="back-btn-container" onclick="goBack()">
             <img class="back-btn" src="/game_pacu/assets/image/back.png" alt="Kembali" onerror="this.src='/game_pacu/assets/image/ui/back.png'">
         </div>
-        <div class="coin-display">
-            <div class="coin-icon-wrapper">
-                <img src="/game_pacu/assets/image/ui/koin.png" alt="Coin">
-            </div>
+        <div class="coin-display" onclick="window.navigateToPage('/shop')">
+            <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
             <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
         </div>
     </div>
@@ -395,7 +393,7 @@ $user = auth()->user();
     <div class="search-container">
         <!-- Search Box -->
         <div class="search-card">
-            <div class="search-title">CARI PAMACU</div>
+            <div class="search-title"><i class="bi bi-search me-1"></i> CARI PAMACU</div>
             <form action="/cari-pemain" method="GET" class="search-form">
                 <input
                     type="text"
@@ -418,7 +416,7 @@ $user = auth()->user();
         <div class="players-list">
             @if (empty($players) || count($players) == 0)
                 <div class="players-empty">
-                    <div class="empty-icon">🔍</div>
+                    <div class="empty-icon"><i class="bi bi-search text-secondary" style="font-size: 28px;"></i></div>
                     <div class="empty-title">TIDAK DITEMUKAN</div>
                     <div class="empty-subtitle">Silakan cari dengan kata kunci lain.</div>
                 </div>
@@ -446,7 +444,7 @@ $user = auth()->user();
                             </div>
                             <div class="player-details">
                                 <div class="player-name">{{ $player->nama_jalur ?? $player->email }}</div>
-                                <div class="player-wins">🏆 {{ $playerWins }} Wins</div>
+                                <div class="player-wins"><i class="bi bi-trophy-fill text-warning me-1"></i>{{ $playerWins }} Wins</div>
                             </div>
                         </div>
                         <button class="detail-btn" onclick="viewDetail({{ $player->id }})">PROFIL</button>

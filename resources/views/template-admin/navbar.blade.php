@@ -44,6 +44,17 @@
                     </li>
 
                     <li class="pc-item pc-caption">
+                        <label>Manajemen Shop</label>
+                        <i class="ti ti-shopping-bag"></i>
+                    </li>
+                    <li class="pc-item">
+                        <a href="{{ route('superadmin.shop-items') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-shopping-cart"></i></span>
+                            <span class="pc-mtext">Item Shop</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item pc-caption">
                         <label>Pengaturan</label>
                         <i class="ti ti-settings"></i>
                     </li>

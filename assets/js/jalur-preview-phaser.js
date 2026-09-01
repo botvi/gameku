@@ -56,7 +56,7 @@ function recolorCharacterImage(scene, sourceKey, customColors) {
     return canvas;
 }
 
-function createJalurPreview(scene, cx, cy, scaleMult = 1.0) {
+function createJalurPreview(scene, cx, cy, scaleMult = 1.0, nameElId = null) {
     scene.customColors = {
         boat: '#8b4513',
         hair: '#e53e3e',
@@ -111,7 +111,7 @@ function createJalurPreview(scene, cx, cy, scaleMult = 1.0) {
         if (!dataUrl) return;
         const img = new Image();
         img.onload = () => {
-            if (!scene.sys.isActive()) return;
+            if (!scene.sys || !scene.sys.isActive()) return;
             const boatSource = scene.textures.get('jalur_boat').getSourceImage();
             const CORAK_SCALE = 2.3 * scaleMult;
             const CORAK_OFFSET_X = 0;
@@ -176,7 +176,7 @@ function createJalurPreview(scene, cx, cy, scaleMult = 1.0) {
         if (!dataUrl) return;
         const img = new Image();
         img.onload = () => {
-            if (!scene.sys.isActive()) return;
+            if (!scene.sys || !scene.sys.isActive()) return;
             const LAMBAI_SCALE = 1.3 * scaleMult;
             const LAMBAI_OFFSET_X = 125 * scaleMult;
             const LAMBAI_OFFSET_Y = -18 * scaleMult;
@@ -278,6 +278,13 @@ function createJalurPreview(scene, cx, cy, scaleMult = 1.0) {
     fetch('/tukang-jaluar/get')
         .then(res => res.json())
         .then(data => {
+            if (!scene.sys || !scene.sys.isActive()) return;
+            if (nameElId) {
+                const nameEl = document.getElementById(nameElId);
+                if (nameEl) {
+                    nameEl.innerText = data.nama_jalur || 'Jalur Kuansing';
+                }
+            }
             if (data.customColors) {
                 scene.customColors = data.customColors;
             }
@@ -292,7 +299,9 @@ function createJalurPreview(scene, cx, cy, scaleMult = 1.0) {
         })
         .catch(err => {
             console.error('Error loading customization from DB:', err);
-            scene.applyRecolor();
+            if (scene.sys && scene.sys.isActive()) {
+                scene.applyRecolor();
+            }
         });
 
     return boatGroup;
@@ -303,7 +312,7 @@ window.initJalurPreview = function (containerId, nameElId) {
 
     if (!window.Phaser) {
         const script = document.createElement('script');
-        script.src = "https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.min.js";
+        script.src = "/game_pacu/assets/js/phaser.min.js";
         script.onload = function () {
             window.initJalurPreview(containerId, nameElId);
         };
@@ -311,7 +320,22 @@ window.initJalurPreview = function (containerId, nameElId) {
         return;
     }
 
-    const game = new Phaser.Game({
+    if (window.activePreviewGame) {
+        try {
+            window.activePreviewGame.destroy(true);
+        } catch (e) {
+            console.error('Error destroying activePreviewGame:', e);
+        }
+        window.activePreviewGame = null;
+    }
+
+    const container = document.getElementById(containerId);
+    if (container) {
+        const oldCanvas = container.querySelector('canvas');
+        if (oldCanvas) oldCanvas.remove();
+    }
+
+    window.activePreviewGame = new Phaser.Game({
         type: Phaser.AUTO,
         width: 250,
         height: 85,
@@ -323,19 +347,7 @@ window.initJalurPreview = function (containerId, nameElId) {
                 preloadJalurAssets(this);
             },
             create: function () {
-                const scene = this;
-
-                fetch('/tukang-jaluar/get')
-                    .then(res => res.json())
-                    .then(data => {
-                        const nameEl = document.getElementById(nameElId);
-                        if (nameEl) {
-                            nameEl.innerText = data.nama_jalur || 'Jalur Kuansing';
-                        }
-                    })
-                    .catch(err => console.error(err));
-
-                createJalurPreview(this, 125, 40, 0.8);
+                createJalurPreview(this, 125, 40, 0.8, nameElId);
             }
         }
     });

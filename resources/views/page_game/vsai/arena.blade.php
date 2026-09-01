@@ -146,8 +146,8 @@
 @section('content')
 {{-- ── ARENA LOADING SCREEN (VS AI) ── --}}
 <div id="arena-loading-screen">
-    <div class="arena-loading-title">✦ VS AI ARENA ✦</div>
-    <div class="arena-loading-boat">🚣</div>
+    <div class="arena-loading-title"><i class="bi bi-cpu-fill me-1"></i> VS AI ARENA</div>
+    <div class="arena-loading-boat"><i class="bi bi-water text-info" style="font-size: 32px;"></i></div>
     <div class="arena-loading-bar-wrap">
         <div id="arena-loading-bar"></div>
     </div>
@@ -172,7 +172,7 @@ if ($winsCount >= 100) {
 <!-- Custom Audio Settings Modal -->
 <div id="audio-settings-modal" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 44, 34, 0.85); backdrop-filter: blur(6px); z-index: 200; align-items: center; justify-content: center; box-sizing: border-box;">
     <div class="audio-modal-card" style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
-        <div class="audio-modal-title" style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">✦ PENGATURAN SUARA ✦</div>
+        <div class="audio-modal-title" style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;"><i class="bi bi-volume-up-fill me-1"></i> PENGATURAN SUARA</div>
         
         <!-- BGM Toggle Row -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -193,7 +193,6 @@ if ($winsCount >= 100) {
 @endsection
 
 @push('scripts')
-<script src="/game_pacu/assets/js/phaser.min.js"></script>
 <script>
 {
     const AI_LEVEL = {{ $level }};

@@ -335,17 +335,15 @@ $user = auth()->user();
             <img class="back-btn" src="/game_pacu/assets/image/back.png" alt="Kembali"
                  onerror="this.src='/game_pacu/assets/image/ui/back.png'">
         </div>
-        <div class="coin-display">
-            <div class="coin-icon-wrapper">
-                <img src="/game_pacu/assets/image/ui/koin.png" alt="Coin">
-            </div>
+        <div class="coin-display" onclick="window.navigateToPage('/shop')">
+            <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
             <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
         </div>
     </div>
 
     <!-- Title -->
     <div class="lb-title-wrap">
-        <div class="lb-main-title">🏆 LEADERBOARD</div>
+        <div class="lb-main-title"><i class="bi bi-trophy-fill me-1 text-warning"></i> LEADERBOARD</div>
         <div class="lb-subtitle">Peringkat Pamacu Terbaik</div>
     </div>
 
@@ -353,15 +351,15 @@ $user = auth()->user();
     <div class="filter-tabs">
         <a href="/leaderboard?filter=wins" wire:navigate
            class="filter-tab {{ $filter === 'wins' ? 'active' : '' }}">
-            🥇 WINS
+            <i class="bi bi-trophy-fill me-1 text-warning"></i> WINS
         </a>
         <a href="/leaderboard?filter=losses" wire:navigate
            class="filter-tab {{ $filter === 'losses' ? 'active' : '' }}">
-            💀 LOSSES
+            <i class="bi bi-x-circle-fill me-1 text-danger"></i> LOSSES
         </a>
         <a href="/leaderboard?filter=winrate" wire:navigate
            class="filter-tab {{ $filter === 'winrate' ? 'active' : '' }}">
-            📊 WIN RATE
+            <i class="bi bi-graph-up-arrow me-1 text-info"></i> WIN RATE
         </a>
     </div>
 
@@ -425,7 +423,7 @@ $user = auth()->user();
 
         @if ($leaderboard->isEmpty())
             <div class="lb-empty">
-                <div class="lb-empty-icon">🏁</div>
+                <div class="lb-empty-icon"><i class="bi bi-flag-fill text-muted" style="font-size: 28px;"></i></div>
                 <div class="lb-empty-title">BELUM ADA DATA</div>
             </div>
         @else
@@ -447,11 +445,11 @@ $user = auth()->user();
                 elseif ($rank === 2) $rankClass .= ' r2';
                 elseif ($rank === 3) $rankClass .= ' r3';
 
-                // Crown
+                // Crown / Rank icon HTML
                 $rankLabel = '#' . $rank;
-                if ($rank === 1) $rankLabel = '👑';
-                elseif ($rank === 2) $rankLabel = '🥈';
-                elseif ($rank === 3) $rankLabel = '🥉';
+                if ($rank === 1) $rankLabel = '<i class="bi bi-award-fill text-warning"></i>';
+                elseif ($rank === 2) $rankLabel = '<i class="bi bi-award-fill text-secondary"></i>';
+                elseif ($rank === 3) $rankLabel = '<i class="bi bi-award-fill" style="color:#b45309;"></i>';
 
                 // Avatar
                 $dbAvatar = $player->foto_profile;
@@ -472,7 +470,7 @@ $user = auth()->user();
                 <div class="{{ $rowClass }}"
                      onclick="viewDetail({{ $player->id }})">
                     <!-- Rank -->
-                    <div class="{{ $rankClass }}">{{ $rankLabel }}</div>
+                    <div class="{{ $rankClass }}">{!! $rankLabel !!}</div>
 
                     <!-- Avatar -->
                     <div class="lb-avatar-wrap">
@@ -485,7 +483,7 @@ $user = auth()->user();
                         <div class="lb-name">
                             {{ $player->nama_jalur ?? $player->email }}
                             @if ($isMe)
-                                <span class="lb-badge-me">★</span>
+                                <span class="lb-badge-me"><i class="bi bi-star-fill text-warning"></i></span>
                             @endif
                         </div>
                         <div class="lb-totalmatch">{{ $player->total_matches }} match</div>

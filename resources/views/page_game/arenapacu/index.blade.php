@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Franchise Game — Arena Pacu Jalur')
+@section('title', 'Permainan Pacu Jalur')
 
 @push('styles')
 <style>
@@ -286,8 +286,8 @@
 @section('content')
 {{-- ── ARENA LOADING SCREEN (tampil sebelum Phaser siap) ── --}}
 <div id="arena-loading-screen">
-    <div class="arena-loading-title">✦ ARENA PACU ✦</div>
-    <div class="arena-loading-boat">🚣</div>
+    <div class="arena-loading-title"><i class="bi bi-water me-1"></i> ARENA PACU</div>
+    <div class="arena-loading-boat"><i class="bi bi-water text-info" style="font-size: 32px;"></i></div>
     <div class="arena-loading-bar-wrap">
         <div id="arena-loading-bar"></div>
     </div>
@@ -316,7 +316,7 @@ if ($winsCount >= 100) {
         style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
         <div class="audio-modal-title"
             style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">
-            ✦ PENGATURAN SUARA ✦</div>
+            <i class="bi bi-volume-up-fill me-1"></i> PENGATURAN SUARA</div>
 
         <!-- BGM Toggle Row -->
         <div
@@ -346,7 +346,7 @@ if ($winsCount >= 100) {
 
 <!-- ===== READY OVERLAY (Multiplayer only) ===== -->
 <div id="ready-overlay" style="display: none;">
-    <div class="ready-title">✦ ARENA PACU ✦</div>
+    <div class="ready-title"><i class="bi bi-flag-fill me-1"></i> ARENA PACU</div>
 
     <div class="vs-badge">
         <div class="vs-player">
@@ -369,7 +369,6 @@ if ($winsCount >= 100) {
 @endsection
 
 @push('scripts')
-<script src="/game_pacu/assets/js/phaser.min.js"></script>
 <script>
 {
     const GAME_WIDTH = 360;

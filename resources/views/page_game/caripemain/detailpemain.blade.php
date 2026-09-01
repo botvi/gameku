@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Franchise Game — Profil Pamacu')
+@section('title', 'Permainan Pacu Jalur')
 
 @section('content')
 <style>
@@ -599,10 +599,8 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
             <img class="back-btn" src="/game_pacu/assets/image/back.png" alt="Kembali"
                 onerror="this.src='/game_pacu/assets/image/ui/back.png'">
         </div>
-        <div class="coin-display">
-            <div class="coin-icon-wrapper">
-                <img src="/game_pacu/assets/image/ui/koin.png" alt="Coin">
-            </div>
+        <div class="coin-display" onclick="window.navigateToPage('/shop')">
+            <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
             <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
         </div>
     </div>
@@ -637,22 +635,22 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
 
             <!-- Identity -->
             <div class="profile-name">{{ $targetUser->nama_jalur ?? $targetUser->email }}</div>
-            <div class="profile-badge">⚡ {{ $statusText }} ⚡</div>
+            <div class="profile-badge"><i class="bi bi-lightning-charge-fill sprint-icon me-1"></i> {{ $statusText }}</div>
 
             <!-- Trophy Stats Grid -->
             <div class="stats-row">
                 <div class="stat-card stat-card-gold">
-                    <span class="stat-icon">🏆</span>
+                    <span class="stat-icon"><i class="bi bi-trophy-fill text-warning"></i></span>
                     <span class="stat-label">Wins</span>
                     <span class="stat-value">{{ $winsCount }}</span>
                 </div>
                 <div class="stat-card stat-card-silver">
-                    <span class="stat-icon">💀</span>
+                    <span class="stat-icon"><i class="bi bi-x-circle-fill text-danger"></i></span>
                     <span class="stat-label">Losses</span>
                     <span class="stat-value">{{ $lossesCount }}</span>
                 </div>
                 <div class="stat-card stat-card-bronze">
-                    <span class="stat-icon">🔥</span>
+                    <span class="stat-icon"><i class="bi bi-fire text-danger"></i></span>
                     <span class="stat-label">Win Rate</span>
                     <span class="stat-value">
                         @php
@@ -665,14 +663,14 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
 
             <!-- Boat Preview Panel -->
             <div class="preview-panel">
-                <div class="preview-panel-title">✦ JALUR AKTIF ✦</div>
+                <div class="preview-panel-title"><i class="bi bi-water me-1 text-info"></i> JALUR AKTIF</div>
                 <div id="jalur-preview-container"></div>
-                <div id="jalur-name">{{ $targetUser->nama_jalur ?? 'Jalur Kuansing' }}</div>
+                <div id="jalur-name">{{ $targetUser->nama_jalur ?? 'Jalur Pacu' }}</div>
             </div>
         </div>
 
         <!-- Game History Slider Section -->
-        <div class="section-header">✦ Riwayat Permainan ✦</div>
+        <div class="section-header"><i class="bi bi-clock-history me-1 text-info"></i> Riwayat Permainan</div>
 
         <div class="history-slider scrollable">
             @if ($history->isEmpty())
@@ -712,7 +710,6 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.min.js"></script>
 <script>
 {
     const customColors = @json($customColors);

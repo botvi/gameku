@@ -8,10 +8,82 @@
     #game-container canvas {
         z-index: 1;
     }
+
+    /* Top Bar Header */
+    .top-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 14px 16px 8px;
+        z-index: 15;
+        box-sizing: border-box;
+        pointer-events: none;
+    }
+
+    .back-btn-container, .coin-display {
+        pointer-events: auto;
+    }
+
+    .back-btn-container {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.15s ease;
+    }
+
+    .back-btn-container:hover {
+        transform: scale(1.1);
+    }
+
+    .back-btn-container:active {
+        transform: scale(0.9);
+    }
+
+    .back-btn-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        image-rendering: pixelated;
+    }
+
+    .coin-display {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        z-index: 15;
+    }
+
+    .coin-amount {
+        font-family: 'Pixelify Sans', monospace;
+        font-size: 13px;
+        font-weight: bold;
+        color: #FFD700;
+        line-height: 1;
+        text-shadow: 1px 1px 0px #15803d, -1px -1px 0px #15803d,
+                     1px -1px 0px #15803d, -1px 1px 0px #15803d;
+    }
 </style>
 @endpush
 
 @section('content')
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="back-btn-container" onclick="if(window.playClickSound) window.playClickSound(); window.navigateToPage('/main-menu')">
+        <img src="/game_pacu/assets/image/ui/back.png" alt="Back" class="back-btn">
+    </div>
+    <div class="coin-display">
+        <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
+        <span id="tukangjaluar-coin-count" class="coin-amount">{{ number_format(auth()->user()->kuansing_poin, 0, ',', '.') }}</span>
+    </div>
+</div>
+
 <!-- Input file tersembunyi untuk upload corak jalur (dipicu oleh tombol Phaser) -->
 <input type="file" id="corak-upload-input" accept="image/*" style="display:none;">
 <!-- Input file tersembunyi untuk upload lambai-lambai (dipicu oleh tombol Phaser) -->
@@ -19,7 +91,6 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.min.js"></script>
 <script>
 {
     const GAME_WIDTH = 360;
@@ -341,16 +412,26 @@
     //  HELPER — Dynamic Pixel Art Recoloring
     // =====================================================
     function recolorCharacterImage(scene, sourceKey, customColors) {
-        const sourceTexture = scene.textures.get(sourceKey);
-        const sourceImage = sourceTexture.getSourceImage();
+        if (!scene.charCanvasCache) scene.charCanvasCache = {};
 
-        const canvas = document.createElement('canvas');
-        canvas.width = sourceImage.width;
-        canvas.height = sourceImage.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(sourceImage, 0, 0);
+        if (!scene.charCanvasCache[sourceKey]) {
+            const sourceTexture = scene.textures.get(sourceKey);
+            const sourceImage = sourceTexture.getSourceImage();
+            const canvas = document.createElement('canvas');
+            canvas.width = sourceImage.width;
+            canvas.height = sourceImage.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(sourceImage, 0, 0);
+            const originalImgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            scene.charCanvasCache[sourceKey] = { canvas, ctx, originalImgData };
+        }
 
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const { canvas, ctx, originalImgData } = scene.charCanvasCache[sourceKey];
+        const imgData = new ImageData(
+            new Uint8ClampedArray(originalImgData.data),
+            originalImgData.width,
+            originalImgData.height
+        );
         const data = imgData.data;
 
         const targetHair = Phaser.Display.Color.HexStringToColor(customColors.hair);
@@ -359,13 +440,12 @@
         const targetPaddle = Phaser.Display.Color.HexStringToColor(customColors.paddle);
 
         for (let i = 0; i < data.length; i += 4) {
+            const a = data[i + 3];
+            if (a < 10) continue; 
+
             const r = data[i];
             const g = data[i + 1];
             const b = data[i + 2];
-            const a = data[i + 3];
-
-            if (a < 10) continue; 
-
             if (r < 40 && g < 40 && b < 40) continue;
 
             if (r - g > 100 && r - b > 100) {
@@ -408,7 +488,7 @@
             lambai_data_url: localStorage.getItem('lambai_data_url'),
             boat_unlocked: scene.boatUnlocked ? true : false,
             lambai_unlocked: scene.lambaiUnlocked ? true : false,
-            coins: parseInt(localStorage.getItem('coins') || '100000')
+            coins: scene.coinCount !== undefined ? scene.coinCount : parseInt(localStorage.getItem('coins') || '0')
         };
 
         fetch('/tukang-jaluar/save', {
@@ -1214,7 +1294,7 @@
                     lockBg.strokeRoundedRect(-panelWidth / 2 + 10, -18, panelWidth - 20, 36, 10);
                     lockOverlay.add(lockBg);
 
-                    const lockTxt = this.add.text(0, 0, '🔒 BUKA UPLOAD CORAK (200 KP)', {
+                    const lockTxt = this.add.text(0, 0, 'BUKA UPLOAD CORAK (200 SPRINT)', {
                         fontFamily: '"Press Start 2P", monospace',
                         fontSize: '7.5px',
                         color: '#38bdf8',
@@ -1235,14 +1315,15 @@
                     });
 
                     lockOverlay.on('pointerdown', () => {
-                        showCustomConfirmModal(this, "Buka Upload Corak seharga\n200 Kuansing Poin?", () => {
+                        showCustomConfirmModal(this, "Buka Upload Corak seharga\n200 Sprint?", () => {
                             if (this.coinCount < 200) {
-                                showCustomAlertModal(this, "Poin Kuansing tidak cukup!\nSilakan lakukan top up.", true);
+                                showCustomAlertModal(this, "Sprint tidak cukup!\nSilakan lakukan top up.", true);
                             } else {
                                 this.coinCount -= 200;
                                 this.boatUnlocked = true;
                                 localStorage.setItem('coins', String(this.coinCount));
-                                this.coinText.setText(String(this.coinCount));
+                                const coinEl = document.getElementById('tukangjaluar-coin-count');
+                                if (coinEl) coinEl.innerText = Number(this.coinCount).toLocaleString('id-ID');
                                 saveCustomizationsToServer(this);
                                 lockOverlay.destroy();
                                 showCustomAlertModal(this, "Berhasil membuka\nUpload Corak!");
@@ -1265,7 +1346,7 @@
                     lockBg.strokeRoundedRect(-panelWidth / 2 + 10, -18, panelWidth - 20, 36, 10);
                     lockOverlay.add(lockBg);
 
-                    const lockTxt = this.add.text(0, 0, '🔒 BUKA LAMBAI-LAMBAI (500 KP)', {
+                    const lockTxt = this.add.text(0, 0, 'BUKA LAMBAI-LAMBAI (500 SPRINT)', {
                         fontFamily: '"Press Start 2P", monospace',
                         fontSize: '7.5px',
                         color: '#38bdf8',
@@ -1286,14 +1367,15 @@
                     });
 
                     lockOverlay.on('pointerdown', () => {
-                        showCustomConfirmModal(this, "Buka Lambai-lambai seharga\n500 Kuansing Poin?", () => {
+                        showCustomConfirmModal(this, "Buka Lambai-lambai seharga\n500 Sprint?", () => {
                             if (this.coinCount < 500) {
-                                showCustomAlertModal(this, "Poin Kuansing tidak cukup!\nSilakan lakukan top up.", true);
+                                showCustomAlertModal(this, "Sprint tidak cukup!\nSilakan lakukan top up.", true);
                             } else {
                                 this.coinCount -= 500;
                                 this.lambaiUnlocked = true;
                                 localStorage.setItem('coins', String(this.coinCount));
-                                this.coinText.setText(String(this.coinCount));
+                                const coinEl = document.getElementById('tukangjaluar-coin-count');
+                                if (coinEl) coinEl.innerText = Number(this.coinCount).toLocaleString('id-ID');
                                 saveCustomizationsToServer(this);
                                 lockOverlay.destroy();
                                 showCustomAlertModal(this, "Berhasil membuka\nLambai-lambai!");
@@ -1583,61 +1665,7 @@
                 canvas.removeEventListener('touchend', handleNativeInteraction);
             });
 
-            const backBtnContainer = this.add.container(32, 34);
-            backBtnContainer.setSize(36, 36);
-            backBtnContainer.setInteractive({ useHandCursor: true });
-
-            const backIcon = this.add.image(0, 0, 'back').setDisplaySize(36, 36);
-            backBtnContainer.add(backIcon);
-
-            backBtnContainer.on('pointerdown', () => {
-                this.tweens.add({
-                    targets: backBtnContainer,
-                    scaleX: 0.9, scaleY: 0.9,
-                    duration: 80, ease: 'Power2',
-                    yoyo: true,
-                    onComplete: () => {
-                        this.cameras.main.fadeOut(300, 15, 23, 42);
-                        this.cameras.main.once('camerafadeoutcomplete', () => {
-                            window.navigateToPage('/main-menu');
-                        });
-                    }
-                });
-            });
-
-            backBtnContainer.on('pointerover', () => {
-                this.tweens.add({ targets: backBtnContainer, scaleX: 1.05, scaleY: 1.05, duration: 90, ease: 'Power2' });
-            });
-            backBtnContainer.on('pointerout', () => {
-                this.tweens.add({ targets: backBtnContainer, scaleX: 1, scaleY: 1, duration: 90, ease: 'Power2' });
-            });
-
-            const BAR_Y = 34;
-            const COIN_ICON_X = W - 78;
-
-            const coinImg = this.add.image(COIN_ICON_X, BAR_Y, 'koin')
-                .setDisplaySize(36, 36)
-                .setInteractive({ useHandCursor: true });
-
-            coinImg.on('pointerdown', () => {
-                this.tweens.add({
-                    targets: coinImg,
-                    scaleX: 0.7, scaleY: 0.7,
-                    duration: 80, ease: 'Power2',
-                    yoyo: true
-                });
-            });
-
-            this.coinText = this.add.text(COIN_ICON_X + 22, BAR_Y + 1, String(this.coinCount), {
-                fontFamily: '"Pixelify Sans", monospace',
-                fontSize: '13px',
-                fontStyle: 'bold',
-                color: '#FFD700',
-                stroke: '#15803d',
-                strokeThickness: 3
-            }).setOrigin(0, 0.5);
-
-            addIconShimmer(this, coinImg, 1100);
+            // Header top-bar handled by HTML overlay (.top-bar)
 
             const tukangImg = this.add.image(W + 100, H - 100, 'tukang')
                 .setDisplaySize(96, 96)
@@ -1890,6 +1918,10 @@
             }
             if (data.coins !== undefined) {
                 localStorage.setItem('coins', String(data.coins));
+                const coinEl = document.getElementById('tukangjaluar-coin-count');
+                if (coinEl) {
+                    coinEl.innerText = Number(data.coins).toLocaleString('id-ID');
+                }
             }
 
             bootPhaser();
@@ -1900,6 +1932,15 @@
         });
 
     function bootPhaser() {
+        if (window.activeTukangJaluarGame) {
+            try { window.activeTukangJaluarGame.destroy(true); } catch(e) {}
+            window.activeTukangJaluarGame = null;
+        }
+        const container = document.getElementById('game-container');
+        if (container) {
+            const oldCanvas = container.querySelector('canvas');
+            if (oldCanvas) oldCanvas.remove();
+        }
         window.activeTukangJaluarGame = new Phaser.Game({
             type: Phaser.AUTO,
             width: GAME_WIDTH,

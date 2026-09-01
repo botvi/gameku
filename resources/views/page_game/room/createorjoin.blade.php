@@ -418,11 +418,11 @@
         <img src="/game_pacu/assets/image/ui/back.png" alt="Back">
     </div>
 
-    <div class="title-banner">✦ CUSTOM ROOM ✦</div>
+    <div class="title-banner"><i class="bi bi-door-open-fill me-1"></i> CUSTOM ROOM</div>
 
     <!-- Panel Buat Room -->
     <div class="panel">
-        <div class="panel-title">✦ BUAT ROOM BARU ✦</div>
+        <div class="panel-title"><i class="bi bi-plus-circle-fill me-1"></i> BUAT ROOM BARU</div>
         <div class="input-group">
             <label class="input-label">Nama Room</label>
             <input type="text" id="room-name-input" class="pixel-input" placeholder="Masukkan nama room...">
@@ -436,7 +436,7 @@
 
     <!-- Panel Room Tersedia -->
     <div class="panel" style="flex: 1; max-height: 45%;">
-        <div class="panel-title">✦ ROOM TERSEDIA ✦</div>
+        <div class="panel-title"><i class="bi bi-collection-fill me-1"></i> ROOM TERSEDIA</div>
 
         <!-- Cari Kode Room -->
         <div style="display:flex; gap:8px; margin-bottom:12px; position:relative; z-index:1;">
@@ -463,7 +463,7 @@
 <!-- Password Modal -->
 <div id="password-modal">
     <div class="modal-content">
-        <div class="panel-title" id="modal-room-name">✦ MASUK ROOM ✦</div>
+        <div class="panel-title" id="modal-room-name"><i class="bi bi-box-arrow-in-right me-1"></i> MASUK ROOM</div>
         <div class="input-group" style="margin-top: 20px;">
             <label class="input-label">Masukkan Password</label>
             <input type="password" class="pixel-input" id="join-password" placeholder="Password...">
@@ -480,7 +480,7 @@
 <script>
 {
     // Custom HTML Modals (Confirm & Alert) using existing game-layout.css styles
-    window.showHTMLAlert = function(message, title = "✦ INFORMASI ✦") {
+    window.showHTMLAlert = function(message, title = "INFORMASI") {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.id = 'fullscreen-modal-overlay';

@@ -29,13 +29,38 @@ class TukangJaluarController extends Controller
             unset($data['coins']);
         }
 
+        $existing = ModelJalur::where('user_id', $user->id)->first();
+        $existingData = $existing ? ($existing->model_jalur ?? []) : [];
+
+        // If request specifies boat_unlocked, use request value. Otherwise fallback to existing JSON / DB column.
+        if (array_key_exists('boat_unlocked', $data)) {
+            $boatUnlocked = filter_var($data['boat_unlocked'], FILTER_VALIDATE_BOOLEAN);
+        } elseif (array_key_exists('boat_unlocked', $existingData)) {
+            $boatUnlocked = filter_var($existingData['boat_unlocked'], FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $boatUnlocked = $existing && $existing->fitur_corak === 'active';
+        }
+
+        // If request specifies lambai_unlocked, use request value. Otherwise fallback to existing JSON / DB column.
+        if (array_key_exists('lambai_unlocked', $data)) {
+            $lambaiUnlocked = filter_var($data['lambai_unlocked'], FILTER_VALIDATE_BOOLEAN);
+        } elseif (array_key_exists('lambai_unlocked', $existingData)) {
+            $lambaiUnlocked = filter_var($existingData['lambai_unlocked'], FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $lambaiUnlocked = $existing && $existing->fitur_lambai === 'active';
+        }
+
+        // Explicitly set boolean true/false in JSON data payload
+        $data['boat_unlocked'] = (bool) $boatUnlocked;
+        $data['lambai_unlocked'] = (bool) $lambaiUnlocked;
+
         // Save customization details to database model_jalurs table
         $modelJalur = ModelJalur::updateOrCreate(
             ['user_id' => $user->id],
             [
                 'model_jalur' => $data,
-                'fitur_corak' => ($data['boat_unlocked'] ?? false) ? 'active' : 'inactive',
-                'fitur_lambai' => ($data['lambai_unlocked'] ?? false) ? 'active' : 'inactive',
+                'fitur_corak' => $boatUnlocked ? 'active' : 'inactive',
+                'fitur_lambai' => $lambaiUnlocked ? 'active' : 'inactive',
             ]
         );
 
@@ -57,9 +82,21 @@ class TukangJaluarController extends Controller
         $data['coins'] = $user->kuansing_poin;
         $data['nama_jalur'] = $user->nama_jalur;
         
-        // Overwrite lock status based on DB fields
-        $data['boat_unlocked'] = $modelJalur ? ($modelJalur->fitur_corak === 'active') : false;
-        $data['lambai_unlocked'] = $modelJalur ? ($modelJalur->fitur_lambai === 'active') : false;
+        // Read lock status directly from JSON model_jalur (if key exists) or DB column
+        if (array_key_exists('boat_unlocked', $data)) {
+            $boatUnlocked = filter_var($data['boat_unlocked'], FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $boatUnlocked = $modelJalur ? ($modelJalur->fitur_corak === 'active') : false;
+        }
+
+        if (array_key_exists('lambai_unlocked', $data)) {
+            $lambaiUnlocked = filter_var($data['lambai_unlocked'], FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $lambaiUnlocked = $modelJalur ? ($modelJalur->fitur_lambai === 'active') : false;
+        }
+
+        $data['boat_unlocked'] = (bool) $boatUnlocked;
+        $data['lambai_unlocked'] = (bool) $lambaiUnlocked;
         
         if (empty($data['customColors'])) {
             $data['customColors'] = [

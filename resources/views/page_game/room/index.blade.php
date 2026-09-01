@@ -94,9 +94,7 @@
         flex-shrink: 0;
         border-radius: 16px;
         border: 2px solid rgba(255, 255, 255, 0.15);
-        background: rgba(15, 23, 42, 0.5);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        background: rgba(15, 23, 42, 0.85);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -105,10 +103,10 @@
         box-sizing: border-box;
         cursor: pointer;
         position: relative;
-        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        opacity: 0.45;
+        transition: transform 0.3s ease, opacity 0.3s ease, border-color 0.3s ease;
+        opacity: 0.5;
         transform: scale(0.85);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         overflow: hidden;
     }
 
@@ -116,8 +114,8 @@
         opacity: 1;
         transform: scale(1.1);
         border-color: #ffffff;
-        background: rgba(255, 255, 255, 0.12);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+        background: rgba(30, 41, 59, 0.95);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
     }
 
     .ps5-card.card-green {
@@ -143,7 +141,6 @@
         align-items: center;
         justify-content: center;
         margin-bottom: 10px;
-        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
         transition: transform 0.3s ease;
     }
 
@@ -214,7 +211,6 @@
 
     .carousel-nav-btn:hover {
         transform: translateY(-50%) scale(1.15);
-        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
     }
 
     .carousel-nav-btn:active {
@@ -320,8 +316,7 @@
         background: linear-gradient(180deg, #ffffff 0%, #a5f3fc 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.8));
-        margin-top: 76px;
+        margin-top: 0;
         margin-bottom: 15px;
         text-align: center;
         line-height: 1.4;
@@ -330,22 +325,19 @@
     }
 
     .menu-panel {
-        background: rgba(10, 18, 36, 0.72);
+        background: rgba(10, 18, 36, 0.85);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 20px;
-        width: 85%;
-        padding: 30px 24px;
-        box-shadow:
-            0 12px 40px rgba(0, 0, 0, 0.6),
-            0 0 0 1px rgba(255, 255, 255, 0.04),
-            inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        width: 90%;
+        max-width: 360px;
+        margin: auto 0;
+        padding: 24px 16px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 18px;
         z-index: 11;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         box-sizing: border-box;
         position: relative;
         overflow: hidden;
@@ -653,21 +645,13 @@
 @section('content')
 <div id="game-ui">
     <div id="ps5-backdrop" class="ps5-backdrop-glow bg-slide-0"></div>
-    <canvas id="ps5-particles"
-        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.5;"></canvas>
 
     <div class="back-btn" onclick="window.navigateToPage('/main-menu')">
         <img src="/game_pacu/assets/image/ui/back.png" alt="Back">
     </div>
 
-    <div class="menu-panel" style="width: 90%;">
-        <!-- JALUR PREVIEW INSIDE PANEL -->
-        <div class="preview-name" id="jalur-preview-name"
-            style="font-family: 'Pixelify Sans', monospace; font-size: 12px; font-weight: bold; color: #ffaa00 !important; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6) !important;">
-            LOADING...</div>
-        <div class="canvas-container" id="jalur-preview-canvas"
-            style="width: 250px; height: 85px; border: none; background: transparent; margin-bottom: 10px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
-        </div>
+    <div class="menu-panel">
+       
 
         <!-- Carousel Menu PS5 -->
         <div class="ps5-carousel-container">
@@ -730,7 +714,7 @@
 
     <!-- Custom Coming Soon Modal -->
     <div id="coming-soon-modal"
-        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(6px); z-index: 210; align-items: center; justify-content: center; box-sizing: border-box;">
+        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); z-index: 210; align-items: center; justify-content: center; box-sizing: border-box;">
         <div class="coming-soon-card"
             style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
             <div style="font-size: 10px; color: #a855f7; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">
@@ -765,7 +749,6 @@
 @endsection
 
 @push('scripts')
-<script src="/game_pacu/assets/js/jalur-preview-phaser.js?v={{ time() }}"></script>
 <script>
 {
     // Custom HTML Modals (Confirm & Alert) using existing game-layout.css styles
@@ -1040,31 +1023,12 @@
         }
     });
 
-    const initPage = () => {
-        if (typeof window.initJalurPreview === 'function' && document.getElementById('jalur-preview-canvas')) {
-            window.initJalurPreview('jalur-preview-canvas', 'jalur-preview-name');
-        }
-        setTimeout(updateCarousel, 100);
-    };
+    setTimeout(updateCarousel, 100);
 
-    initPage();
-
-    document.addEventListener('livewire:navigated', () => {
-        if (document.getElementById('jalur-preview-canvas')) {
-            initPage();
-        }
-    }, { once: true });
-
-    // Clean up timers & active previews
     document.addEventListener('livewire:navigating', () => {
         if (searchTimerInterval) {
             clearInterval(searchTimerInterval);
             searchTimerInterval = null;
-        }
-        if (window.activePreviewGame) {
-            window.activePreviewGame.destroy(true);
-            window.activePreviewGame = null;
-            console.log('Room index page active preview game destroyed.');
         }
     }, { once: true });
 }

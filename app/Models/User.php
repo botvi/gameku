@@ -85,4 +85,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Room::class, 'loser_id');
     }
+
+    public function purchasedShopItems()
+    {
+        return $this->belongsToMany(ShopItem::class, 'user_shop_items', 'user_id', 'shop_item_id')
+                    ->withTimestamps();
+    }
 }
