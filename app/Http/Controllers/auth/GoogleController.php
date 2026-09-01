@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -117,10 +118,33 @@ class GoogleController extends Controller
 
     public function completeRegister(Request $request)
     {
+        $userId = $request->input('user_id');
+        $user = User::find($userId);
+
+        if (!$user) {
+            Alert::error('User tidak ditemukan.', 'Silakan login dengan Google terlebih dahulu.');
+            return redirect('/login');
+        }
+
+        // Jika user sudah pernah menyelesaikan registrasi (misal karena double submit/enter)
+        if ($user->nama_jalur && $user->foto_profile) {
+            if ($user->is_blocked) {
+                Alert::error('Gagal', 'Akun Anda telah dinonaktifkan.');
+                return redirect('/login');
+            }
+            Auth::login($user);
+            return redirect('/main-menu');
+        }
+
         try {
             $data = $request->validate([
                 'user_id' => 'required|exists:users,id',
-                'nama_jalur' => 'required|string|max:50|unique:users,nama_jalur',
+                'nama_jalur' => [
+                    'required',
+                    'string',
+                    'max:50',
+                    Rule::unique('users', 'nama_jalur')->ignore($user->id),
+                ],
                 'foto_profile' => 'required|string',
                 'agree-terms' => 'required',
             ], [

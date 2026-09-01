@@ -69,15 +69,13 @@
         margin-bottom: 36px;
         text-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
-    /* Glassmorphism Login Card */
+    /* Login Card */
     .login-card {
         width: 100%;
-        background: rgba(15, 23, 42, 0.65);
-        border: 1.5px solid rgba(255,255,255,0.12);
+        background: rgba(15, 23, 42, 0.92);
+        border: 1.5px solid rgba(255,255,255,0.15);
         border-radius: 20px;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         padding: 28px 24px;
         box-sizing: border-box;
         display: flex;
@@ -100,27 +98,24 @@
         align-items: center;
         justify-content: center;
         gap: 12px;
-        background: rgba(255,255,255,0.96);
+        background: #ffffff;
         border: none;
         border-radius: 12px;
         padding: 14px 20px;
         cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.2);
-        transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        transition: transform 0.15s ease;
         position: relative;
         overflow: hidden;
         text-decoration: none;
         box-sizing: border-box;
     }
     .google-btn:hover {
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        transform: translateY(-2px);
     }
     .google-btn:active {
-        transform: translateY(1px) scale(0.98);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        transform: translateY(1px);
     }
-    .google-btn-shimmer { display: none; }
     .google-logo {
         width: 22px;
         height: 22px;
@@ -144,7 +139,7 @@
     .card-footer {
         font-family: 'Pixelify Sans', monospace;
         font-size: 11px;
-        color: rgba(255,255,255,0.35);
+        color: rgba(255,255,255,0.4);
         text-align: center;
         line-height: 1.5;
     }
@@ -154,8 +149,7 @@
         position: absolute;
         top: 0; left: 0;
         width: 100%; height: 100%;
-        background: rgba(15, 23, 42, 0.85);
-        backdrop-filter: blur(8px);
+        background: rgba(15, 23, 42, 0.92);
         z-index: 100;
         align-items: center;
         justify-content: center;
@@ -180,11 +174,6 @@
         font-family: 'Press Start 2P', monospace;
         font-size: 9px;
         color: #22c55e;
-        animation: pulse-text 1.2s ease-in-out infinite;
-    }
-    @keyframes pulse-text {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
     }
 
     /* PWA Install Alert Banner */
@@ -194,15 +183,13 @@
         left: 5%;
         width: 90%;
         background: rgba(15, 23, 42, 0.95);
-        border: 3px solid #22c55e;
+        border: 2px solid #22c55e;
         border-radius: 16px;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         padding: 18px 16px;
         box-sizing: border-box;
         z-index: 1050;
-        transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: top 0.3s ease;
         display: flex;
         flex-direction: column;
         gap: 14px;
@@ -249,27 +236,20 @@
         font-family: 'Press Start 2P', monospace;
         font-size: 8px;
         padding: 12px 0;
-        border: 3px solid #000000;
+        border: 2px solid #000000;
         border-radius: 8px;
         cursor: pointer;
         text-align: center;
         transition: all 0.1s;
-        box-shadow: 0px 4px 0px #000000;
     }
     .pwa-btn-install {
         background-color: #22c55e;
         color: white;
-        text-shadow: 1.5px 1.5px 0px #000000;
     }
-    .pwa-btn-install:hover { background-color: #4ade80; }
-    .pwa-btn-install:active { transform: translateY(4px); box-shadow: 0px 0px 0px #000000; }
     .pwa-btn-cancel {
         background-color: #475569;
         color: #cbd5e1;
-        text-shadow: 1px 1px 0px #000000;
     }
-    .pwa-btn-cancel:hover { background-color: #64748b; }
-    .pwa-btn-cancel:active { transform: translateY(4px); box-shadow: 0px 0px 0px #000000; }
     .pwa-ios-instructions {
         font-family: 'Pixelify Sans', monospace;
         font-size: 11px;
@@ -295,9 +275,6 @@
 @section('content')
 <!-- PS5 Styled Login UI -->
 <div id="game-ui">
-    <div class="ps5-backdrop"></div>
-    <canvas id="ps5-particles" style="display: none;"></canvas>
-
     <div class="login-content">
         <!-- Game Title -->
         <div class="game-title">PACU JALUR</div>
@@ -305,11 +282,10 @@
 
         <!-- Login Card -->
         <div class="login-card">
-            <div class="card-header">✦ MASUK GAME ✦</div>
+            <div class="card-header"><i class="bi bi-controller me-1"></i> MASUK GAME</div>
 
             <!-- Google Sign In Button -->
             <a id="google-login-btn" href="#" class="google-btn" onclick="handleGoogleLogin(event)">
-                <div class="google-btn-shimmer"></div>
                 <img src="{{ asset('game_pacu/assets/image/ui/google.png') }}" alt="Google" class="google-logo">
                 <span class="google-btn-text">MASUK DENGAN GOOGLE</span>
             </a>
@@ -330,13 +306,13 @@
         <div class="pwa-alert-header">
             <img src="/game_pacu/assets/image/ui/pwa-icon-192.png" alt="Icon Game" class="pwa-alert-icon">
             <div class="pwa-alert-title-group">
-                <h4 class="pwa-alert-title">✦ PASANG GAME ✦</h4>
+                <h4 class="pwa-alert-title"><i class="bi bi-download me-1"></i> PASANG GAME</h4>
                 <p class="pwa-alert-desc">Pasang game Pacu Jalur di Home Screen kamu untuk bermain lebih lancar, cepat, dan layar penuh!</p>
             </div>
         </div>
         <!-- iOS specific message (hidden by default) -->
         <div id="pwa-ios-guide" class="pwa-ios-instructions" style="display: none;">
-            <span class="pwa-ios-icon">📤</span>
+            <i class="bi bi-box-arrow-up pwa-ios-icon me-1"></i>
             <span>Ketuk tombol <strong>Bagikan (Share)</strong> di Safari lalu pilih <strong>'Tambahkan ke Layar Utama (Add to Home Screen)'</strong>.</span>
         </div>
         <div class="pwa-alert-buttons">

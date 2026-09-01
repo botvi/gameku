@@ -72,23 +72,16 @@
     /* Main Registration Card */
     .reg-card {
         width: 100%;
-        background: rgba(15, 23, 42, 0.65);
-        border: 1.5px solid rgba(255,255,255,0.12);
+        background: rgba(15, 23, 42, 0.92);
+        border: 1.5px solid rgba(255,255,255,0.15);
         border-radius: 20px;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         padding: 24px 20px;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 0;
-        animation: cardEntrance 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-    }
-    @keyframes cardEntrance {
-        0% { transform: scale(0.85); opacity: 0; }
-        100% { transform: scale(1); opacity: 1; }
     }
     .card-section-label {
         font-family: 'Press Start 2P', monospace;
@@ -114,7 +107,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: border-color 0.15s ease, background 0.15s ease;
         position: relative;
         overflow: hidden;
     }
@@ -127,14 +120,10 @@
     }
     .avatar-slot:hover {
         border-color: rgba(56, 189, 248, 0.5);
-        transform: translateY(-3px) scale(1.06);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
     .avatar-slot.selected {
         border-color: #f59e0b;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        transform: translateY(-2px);
-        background: rgba(245, 158, 11, 0.1);
+        background: rgba(245, 158, 11, 0.15);
     }
     .avatar-slot.selected::after {
         content: '✓';
@@ -175,7 +164,7 @@
         outline: none;
         text-align: center;
         box-sizing: border-box;
-        transition: all 0.2s ease;
+        transition: border-color 0.15s ease;
         caret-color: #38bdf8;
     }
     #jalur-name-input-visible::placeholder {
@@ -188,13 +177,6 @@
     }
     #jalur-name-input-visible.error {
         border-color: #ef4444;
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
-        animation: shake 0.3s ease;
-    }
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        20% { transform: translateX(-6px); }
-        60% { transform: translateX(6px); }
     }
     .warning-txt {
         font-family: 'Pixelify Sans', monospace;
@@ -203,7 +185,6 @@
         text-align: center;
         min-height: 20px;
         margin-top: 8px;
-        transition: all 0.2s ease;
     }
     /* Start Button */
     .start-btn {
@@ -213,23 +194,22 @@
         font-family: 'Press Start 2P', monospace;
         font-size: 10px;
         color: #ffffff;
-        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        background: #16a34a;
         border: none;
         border-radius: 12px;
         cursor: pointer;
-        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.35);
-        transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+        transition: background 0.15s ease, transform 0.15s ease;
         letter-spacing: 1px;
         position: relative;
         overflow: hidden;
     }
     .start-btn:hover {
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 8px 25px rgba(34, 197, 94, 0.45);
+        background: #22c55e;
+        transform: translateY(-2px);
     }
     .start-btn:active {
-        transform: translateY(1px) scale(0.98);
-        box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+        transform: translateY(1px);
     }
 </style>
 @endpush
@@ -243,14 +223,11 @@
     <input type="hidden" name="agree-terms" value="1">
 </form>
 
-<!-- PS5 Styled Registration UI -->
+<!-- Registration UI -->
 <div id="game-ui">
-    <div class="ps5-backdrop"></div>
-    <canvas id="ps5-particles" style="display: none;"></canvas>
-
     <div class="register-content">
         <!-- Header -->
-        <div class="reg-title">✦ DATA DIRIMU ✦</div>
+        <div class="reg-title"><i class="bi bi-person-vcard me-1"></i> DATA DIRIMU</div>
         <div class="reg-subtitle">Tentukan identitas dan nama jaluarmu</div>
 
         <!-- Registration Card -->
@@ -293,7 +270,7 @@
             </div>
 
             <!-- Start Button -->
-            <button class="start-btn" id="start-btn" onclick="handleStart()">▶ MULAI BERMAIN</button>
+            <button type="button" class="start-btn" id="start-btn" onclick="handleStart()"><i class="bi bi-play-fill me-1"></i> MULAI BERMAIN</button>
         </div>
     </div>
 </div>
@@ -334,12 +311,20 @@
 
         // Enter key submit
         nameInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') handleStart();
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                handleStart();
+            }
         });
     })();
 
     // ---- Submit Handler ----
+    var isSubmitting = false;
+
     function handleStart() {
+        if (isSubmitting) return;
+
         var nameInput = document.getElementById('jalur-name-input-visible');
         var warningEl = document.getElementById('warning-txt');
         var nameValue = nameInput ? nameInput.value.trim() : '';
@@ -349,9 +334,11 @@
                 nameInput.classList.add('error');
                 nameInput.focus();
             }
-            if (warningEl) warningEl.textContent = '⚠️ Silakan masukkan Nama Jalurmu!';
+            if (warningEl) warningEl.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-1"></i> Silakan masukkan Nama Jalurmu!';
             return;
         }
+
+        isSubmitting = true;
 
         // Save to localStorage
         localStorage.setItem('jalurName', nameValue);
@@ -366,12 +353,10 @@
         var btn = document.getElementById('start-btn');
         if (btn) {
             btn.disabled = true;
-            btn.textContent = '⏳ MENYIMPAN...';
+            btn.innerHTML = '<i class="bi bi-arrow-repeat spin-icon me-1"></i> MENYIMPAN...';
         }
 
-        setTimeout(function () {
-            document.getElementById('complete-register-form').submit();
-        }, 300);
+        document.getElementById('complete-register-form').submit();
     }
 </script>
 @endpush
