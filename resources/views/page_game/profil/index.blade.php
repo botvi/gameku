@@ -116,17 +116,17 @@
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         font-weight: bold;
-        color: #FFD700;
+        color: #000000;
         line-height: 1;
         text-shadow:
-            1px 1px 0px #15803d,
-            -1px -1px 0px #15803d,
-            1px -1px 0px #15803d,
-            -1px 1px 0px #15803d,
-            0px 1px 0px #15803d,
-            0px -1px 0px #15803d,
-            1px 0px 0px #15803d,
-            -1px 0px 0px #15803d;
+            1px 1px 0px #ffffff,
+            -1px -1px 0px #ffffff,
+            1px -1px 0px #ffffff,
+            -1px 1px 0px #ffffff,
+            0px 1px 0px #ffffff,
+            0px -1px 0px #ffffff,
+            1px 0px 0px #ffffff,
+            -1px 0px 0px #ffffff;
     }
 
     @keyframes htmlShimmer {
@@ -550,13 +550,15 @@
 
 <div id="profile-dashboard">
     <!-- Top bar: Back and Coin display -->
-    <div class="top-bar">
-        <div class="back-btn-container" onclick="goBack()">
-            <img class="back-btn" src="/game_pacu/assets/image/back.png" alt="Kembali" onerror="this.src='/game_pacu/assets/image/ui/back.png'">
-        </div>
-        <div class="coin-display" onclick="window.navigateToPage('/shop')">
-            <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
-            <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
+    <div>
+        <div class="top-bar">
+            <div class="back-btn-container" onclick="goBack()">
+                <img class="back-btn" src="/game_pacu/assets/image/ui/back.png" alt="Kembali">
+            </div>
+            <div class="coin-display" onclick="window.navigateToPage('/shop')">
+                <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+                <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
+            </div>
         </div>
     </div>
 
@@ -575,7 +577,7 @@
 
             <!-- Identity -->
             <div class="profile-name">{{ $user->nama_jalur ?? $user->email }}</div>
-            <div class="profile-badge"><i class="bi bi-lightning-charge-fill sprint-icon me-1"></i> {{ $statusText }}</div>
+            <div class="profile-badge"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 16px; height: 16px; object-fit: contain; vertical-align: middle;" class="me-1"> {{ $statusText }}</div>
 
             <!-- Trophy Stats Grid -->
             <div class="stats-row">

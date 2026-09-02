@@ -8,14 +8,13 @@ const ASSETS_TO_CACHE = [
   '/game_pacu/assets/image/ui/google.png',
   '/game_pacu/assets/image/ui/pwa-icon-192.png',
   '/game_pacu/assets/image/ui/pwa-icon-512.png',
-  '/game_pacu/assets/image/ui/koin.png',
+  '/game_pacu/assets/image/ui/sprint.png',
   '/game_pacu/assets/image/ui/piala.png',
   '/game_pacu/assets/image/ui/back.png',
   '/game_pacu/assets/image/ui/sound_on.png',
   '/game_pacu/assets/image/ui/sound_off.png',
   '/game_pacu/assets/image/bg/bgmenu.jpg',
   '/game_pacu/assets/fonts/BlockBlueprint.ttf',
-  '/game_pacu/assets/sound/klik_btn.ogg',
 ];
 
 

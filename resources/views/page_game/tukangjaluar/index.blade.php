@@ -64,23 +64,25 @@
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         font-weight: bold;
-        color: #FFD700;
+        color: #000000;
         line-height: 1;
-        text-shadow: 1px 1px 0px #15803d, -1px -1px 0px #15803d,
-                     1px -1px 0px #15803d, -1px 1px 0px #15803d;
+        text-shadow: 1px 1px 0px #ffffff, -1px -1px 0px #ffffff,
+                     1px -1px 0px #ffffff, -1px 1px 0px #ffffff;
     }
 </style>
 @endpush
 
 @section('content')
 <!-- Top Bar -->
-<div class="top-bar">
-    <div class="back-btn-container" onclick="if(window.playClickSound) window.playClickSound(); window.navigateToPage('/main-menu')">
-        <img src="/game_pacu/assets/image/ui/back.png" alt="Back" class="back-btn">
-    </div>
-    <div class="coin-display">
-        <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
-        <span id="tukangjaluar-coin-count" class="coin-amount">{{ number_format(auth()->user()->kuansing_poin, 0, ',', '.') }}</span>
+<div>
+    <div class="top-bar">
+        <div class="back-btn-container" onclick="window.navigateToPage('/main-menu')">
+            <img src="/game_pacu/assets/image/ui/back.png" alt="Back" class="back-btn">
+        </div>
+        <div class="coin-display">
+            <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+            <span id="tukangjaluar-coin-count" class="coin-amount">{{ number_format(auth()->user()->kuansing_poin, 0, ',', '.') }}</span>
+        </div>
     </div>
 </div>
 
@@ -517,7 +519,7 @@
             this.load.image('tukang', '/game_pacu/assets/image/ui/animasitukang.png');
             this.load.image('bubblechat', '/game_pacu/assets/image/ui/bubblechat.png');
             this.load.image('back', '/game_pacu/assets/image/ui/back.png');
-            this.load.image('koin', '/game_pacu/assets/image/ui/koin.png');
+            this.load.image('koin', '/game_pacu/assets/image/ui/sprint.png');
             this.load.image('btn_kiri', '/game_pacu/assets/image/ui/btn_kiri.png');
             this.load.image('btn_kanan', '/game_pacu/assets/image/ui/btn_kanan.png');
             this.load.image('jalur_boat', '/game_pacu/assets/image/jalur/jalur.png');
@@ -754,11 +756,7 @@
         }
 
         create() {
-            this.input.on('pointerdown', (pointer, currentlyOver) => {
-                if (currentlyOver.length > 0 && window.playClickSound) {
-                    window.playClickSound();
-                }
-            });
+
 
             const W = this.scale.width;
             const H = this.scale.height;

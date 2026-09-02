@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Permainan Pacu Jalur')
+@section('title', 'Franchise Game — Arena Pacu Jalur')
 
 @push('styles')
 <style>
@@ -286,8 +286,8 @@
 @section('content')
 {{-- ── ARENA LOADING SCREEN (tampil sebelum Phaser siap) ── --}}
 <div id="arena-loading-screen">
-    <div class="arena-loading-title"><i class="bi bi-water me-1"></i> ARENA PACU</div>
-    <div class="arena-loading-boat"><i class="bi bi-water text-info" style="font-size: 32px;"></i></div>
+    <div class="arena-loading-title">✦ ARENA PACU ✦</div>
+    <div class="arena-loading-boat">🚣</div>
     <div class="arena-loading-bar-wrap">
         <div id="arena-loading-bar"></div>
     </div>
@@ -316,17 +316,7 @@ if ($winsCount >= 100) {
         style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
         <div class="audio-modal-title"
             style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">
-            <i class="bi bi-volume-up-fill me-1"></i> PENGATURAN SUARA</div>
-
-        <!-- BGM Toggle Row -->
-        <div
-            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <span
-                style="font-size: 8px; color: #15803d; text-align: left; text-shadow: 1px 1px 0px rgba(0,0,0,0.05);">MUSIK
-                (BGM)</span>
-            <button id="bgm-toggle-btn" onclick="toggleBGMSetting()"
-                style="font-family: 'Press Start 2P', monospace; font-size: 8px; width: 80px; padding: 8px 0; border: 3px solid #000000; border-radius: 6px; cursor: pointer; text-shadow: 1.5px 1.5px 0px #000000; color: white; transition: all 0.1s; box-shadow: 0px 3px 0px #000000;">ON</button>
-        </div>
+            ✦ PENGATURAN SUARA ✦</div>
 
         <!-- SFX Toggle Row -->
         <div
@@ -346,7 +336,7 @@ if ($winsCount >= 100) {
 
 <!-- ===== READY OVERLAY (Multiplayer only) ===== -->
 <div id="ready-overlay" style="display: none;">
-    <div class="ready-title"><i class="bi bi-flag-fill me-1"></i> ARENA PACU</div>
+    <div class="ready-title">✦ ARENA PACU ✦</div>
 
     <div class="vs-badge">
         <div class="vs-player">
@@ -369,6 +359,7 @@ if ($winsCount >= 100) {
 @endsection
 
 @push('scripts')
+<script src="/game_pacu/assets/js/phaser.min.js"></script>
 <script>
 {
     const GAME_WIDTH = 360;
@@ -699,7 +690,7 @@ if ($winsCount >= 100) {
             // Load semua assets arena
             this.load.image('bgmenu',     '/game_pacu/assets/image/bg/bgmenu.jpg');
             this.load.image('back',       '/game_pacu/assets/image/ui/back.png');
-            this.load.image('koin',       '/game_pacu/assets/image/ui/koin.png');
+            this.load.image('koin',       '/game_pacu/assets/image/ui/sprint.png');
             this.load.image('jalur_boat', '/game_pacu/assets/image/jalur/jalur.png');
 
             for (let i = 1; i <= 5; i++) {
@@ -914,6 +905,7 @@ if ($winsCount >= 100) {
 
             this.sound.mute = (localStorage.getItem('sfx_muted') === 'true');
             this.sound.stopAll();
+            if (typeof window.ensureArenaBGMOff === 'function') window.ensureArenaBGMOff();
 
             this.allowExit = false;
             this.beforeUnloadHandler = (e) => {
@@ -1584,18 +1576,52 @@ if ($winsCount >= 100) {
                 this.tweens.add({ targets: backBtnContainer, scaleX: 1, scaleY: 1, duration: 90 });
             });
 
-            // KOIN TOP RIGHT
-            const COIN_ICON_X = W - 78;
-            this.coinImg = this.add.image(COIN_ICON_X, 34, 'koin').setDisplaySize(36, 36);
-            let coinCount = parseInt(localStorage.getItem('coins') || '100000');
-            this.coinText = this.add.text(COIN_ICON_X + 22, 35, String(coinCount), {
+            // KOIN / SPRINT TOP RIGHT (RESPONSIF)
+            this.coinBgGraphics = this.add.graphics().setDepth(100);
+            this.coinImg = this.add.image(0, 0, 'koin').setDisplaySize(28, 28).setDepth(101);
+            
+            this.coinText = this.add.text(0, 0, '', {
                 fontFamily: '"Pixelify Sans", monospace',
                 fontSize: '13px',
                 fontStyle: 'bold',
                 color: '#FFD700',
-                stroke: '#15803d',
+                stroke: '#000000',
                 strokeThickness: 3
-            }).setOrigin(0, 0.5);
+            }).setDepth(101);
+
+            this.updateCoinDisplay = (amount) => {
+                const val = (amount !== undefined) ? amount : parseInt(localStorage.getItem('coins') || '{{ auth()->user()->kuansing_poin ?? 0 }}');
+                const formatted = val.toLocaleString('id-ID');
+                this.coinText.setText(formatted);
+                
+                const textWidth = this.coinText.width;
+                const iconSize = 28;
+                const paddingX = 10;
+                const gap = 6;
+                const totalWidth = iconSize + gap + textWidth + (paddingX * 2);
+                
+                const rightX = W - 14;
+                const bgX = rightX - totalWidth;
+                const bgY = 16;
+                const bgH = 34;
+                const centerY = bgY + (bgH / 2);
+                
+                this.coinBgGraphics.clear();
+                this.coinBgGraphics.fillStyle(0x000000, 0.65);
+                this.coinBgGraphics.fillRoundedRect(bgX, bgY, totalWidth, bgH, 17);
+                this.coinBgGraphics.lineStyle(2, 0xffd700, 0.9);
+                this.coinBgGraphics.strokeRoundedRect(bgX, bgY, totalWidth, bgH, 17);
+                
+                const iconX = bgX + paddingX + (iconSize / 2);
+                this.coinImg.setPosition(iconX, centerY);
+                this.coinImg.setDisplaySize(iconSize, iconSize);
+                
+                const textX = iconX + (iconSize / 2) + gap;
+                this.coinText.setPosition(textX, centerY).setOrigin(0, 0.5);
+            };
+
+            let initialCoins = parseInt(localStorage.getItem('coins') || '{{ auth()->user()->kuansing_poin ?? 0 }}');
+            this.updateCoinDisplay(initialCoins);
 
             // --- 8. COUNTDOWN 3, 2, 1, GO! ---
             this.countdownText = this.add.text(cx, 350, this.isMultiplayer ? 'MENUNGGU LAWAN...' : 'READY?', {
@@ -1798,7 +1824,7 @@ if ($winsCount >= 100) {
                             }
                         }
 
-                        this.sound.play('sound_pluit', { volume: 0.03, loop: true });
+                        this.startRaceAmbientSounds();
 
                         this.gameState = 'racing';
                         count--;
@@ -1808,6 +1834,16 @@ if ($winsCount >= 100) {
                     }
                 }
             });
+        }
+
+        startRaceAmbientSounds() {
+            this.sound.play('sound_pluit', { volume: 0.03, loop: true });
+            this.sound.play('sound_suporter', { volume: 0.03, loop: true });
+        }
+
+        stopRaceAmbientSounds() {
+            this.sound.stopByKey('sound_pluit');
+            this.sound.stopByKey('sound_suporter');
         }
 
         applyOpponentCorak(boatImg, boatGroup, dataUrl) {
@@ -2056,36 +2092,35 @@ if ($winsCount >= 100) {
             tempCoin.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
             tempCoin.setDepth(3000);
 
-            const COIN_ICON_X = W - 78;
-            const targetX = COIN_ICON_X;
-            const targetY = 34;
+            const targetX = this.coinImg ? this.coinImg.x : W - 34;
+            const targetY = this.coinImg ? this.coinImg.y : 33;
 
             this.tweens.add({
                 targets: tempCoin,
                 x: targetX,
                 y: targetY,
-                displayWidth: 36,
-                displayHeight: 36,
+                displayWidth: 32,
+                displayHeight: 32,
                 duration: 800,
                 ease: 'Quad.easeOut',
                 onComplete: () => {
                     tempCoin.destroy();
 
-                    let currentCoins = parseInt(localStorage.getItem('coins') || '100000');
+                    let currentCoins = parseInt(localStorage.getItem('coins') || '0');
                     currentCoins += 1;
                     localStorage.setItem('coins', String(currentCoins));
-                    this.coinText.setText(String(currentCoins));
+                    this.updateCoinDisplay(currentCoins);
 
                     this.coinsEarnedThisMatch = (this.coinsEarnedThisMatch || 0) + 1;
 
                     this.tweens.add({
                         targets: this.coinImg,
-                        displayWidth: 48,
-                        displayHeight: 48,
+                        displayWidth: 38,
+                        displayHeight: 38,
                         duration: 100,
                         yoyo: true,
                         onComplete: () => {
-                            this.coinImg.setDisplaySize(36, 36);
+                            this.coinImg.setDisplaySize(28, 28);
                         }
                     });
                     this.tweens.add({
@@ -2104,7 +2139,7 @@ if ($winsCount >= 100) {
             this.playerSpeed = 0;
             this.opponentSpeed = 0;
 
-            this.sound.stopByKey('sound_pluit');
+            this.stopRaceAmbientSounds();
 
             let coinsReward = 0;
 
@@ -2204,16 +2239,26 @@ if ($winsCount >= 100) {
             }).setOrigin(0.5);
             modal.add(msgTxt);
 
-            const coinGroup = this.add.container(0, 32);
+            const coinGroup = this.add.container(0, 30);
             modal.add(coinGroup);
             if (isWinner) {
-                const coinIcon = this.add.image(-25, 0, 'koin').setDisplaySize(28, 28);
-                const rewardTxt = this.add.text(10, 0, `+${coinsReward} KP`, {
+                const iconSize = 24;
+                const gap = 8;
+
+                const rewardTxt = this.add.text(0, 0, `+${coinsReward} Sprint`, {
                     fontFamily: '"Press Start 2P", monospace',
-                    fontSize: '12px',
-                    color: '#d97706',
-                    fontStyle: 'bold'
+                    fontSize: '11px',
+                    color: '#FFD700',
+                    stroke: '#000000',
+                    strokeThickness: 3
                 }).setOrigin(0.5);
+
+                const totalW = iconSize + gap + rewardTxt.width;
+                const startX = -totalW / 2;
+
+                const coinIcon = this.add.image(startX + iconSize / 2, 0, 'koin').setDisplaySize(iconSize, iconSize);
+                rewardTxt.setX(startX + iconSize + gap + rewardTxt.width / 2);
+
                 coinGroup.add(coinIcon);
                 coinGroup.add(rewardTxt);
             } else {
@@ -2333,13 +2378,6 @@ if ($winsCount >= 100) {
                 this.playerDistance = Math.max(0, this.playerDistance - this.playerSpeed * (delta / 1000));
                 this.opponentDistance = Math.max(0, this.opponentDistance - this.opponentSpeed * (delta / 1000));
 
-                this.pancangs.forEach(p => {
-                    if (!p.soundPlayed && this.playerDistance <= p.dist) {
-                        p.soundPlayed = true;
-                        this.sound.play('sound_suporter', { volume: 0.03 });
-                    }
-                });
-
                 this.scrollSpeed = this.playerSpeed * 0.3;
 
                 this.speedText.setText(`SPEED: ${Math.round(this.playerSpeed * 3.6)} km/h`);
@@ -2423,11 +2461,41 @@ if ($winsCount >= 100) {
         }
     }
 
-    // Sound & BGM Management
-    (() => {
-        if (localStorage.getItem('bgm_muted') === null) {
-            localStorage.setItem('bgm_muted', 'false');
+    window._arenaBgmSuppressed = true;
+
+    function ensureArenaBGMOff() {
+        if (!window.globalBGM) return;
+        window.globalBGM.pause();
+        window.globalBGM.volume = 0;
+        window.globalBGM.muted = true;
+    }
+
+    function resumeArenaBGM() {
+        window._arenaBgmSuppressed = false;
+        if (typeof window.applyBGMMute === 'function') {
+            window.applyBGMMute();
         }
+    }
+
+    window.ensureArenaBGMOff = ensureArenaBGMOff;
+    ensureArenaBGMOff();
+
+    const arenaBgmWatcher = setInterval(function () {
+        if (window.globalBGM) {
+            ensureArenaBGMOff();
+            clearInterval(arenaBgmWatcher);
+        }
+    }, 80);
+    setTimeout(function () { clearInterval(arenaBgmWatcher); }, 10000);
+
+    document.addEventListener('livewire:navigated', ensureArenaBGMOff);
+    document.addEventListener('game:page-ready', ensureArenaBGMOff);
+    document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) ensureArenaBGMOff();
+    });
+
+    // Sound & SFX Management
+    (() => {
         if (localStorage.getItem('sfx_muted') === null) {
             localStorage.setItem('sfx_muted', 'false');
         }
@@ -2436,15 +2504,12 @@ if ($winsCount >= 100) {
     })();
 
     function updateSoundIcon() {
-        const bgmMuted = localStorage.getItem('bgm_muted') === 'true';
         const sfxMuted = localStorage.getItem('sfx_muted') === 'true';
         const soundIcon = document.getElementById('sound-icon');
         if (soundIcon) {
-            if (bgmMuted && sfxMuted) {
-                soundIcon.src = '/game_pacu/assets/image/ui/sound_off.png';
-            } else {
-                soundIcon.src = '/game_pacu/assets/image/ui/sound_on.png';
-            }
+            soundIcon.src = sfxMuted
+                ? '/game_pacu/assets/image/ui/sound_off.png'
+                : '/game_pacu/assets/image/ui/sound_on.png';
         }
     }
 
@@ -2462,24 +2527,9 @@ if ($winsCount >= 100) {
     }
 
     function syncAudioModalButtons() {
-        const bgmMuted = localStorage.getItem('bgm_muted') === 'true';
         const sfxMuted = localStorage.getItem('sfx_muted') === 'true';
-        
-        const bgmBtn = document.getElementById('bgm-toggle-btn');
         const sfxBtn = document.getElementById('sfx-toggle-btn');
-        
-        if (bgmBtn) {
-            if (bgmMuted) {
-                bgmBtn.textContent = 'OFF';
-                bgmBtn.style.backgroundColor = '#ef4444';
-                bgmBtn.style.boxShadow = '0px 3px 0px #991b1b';
-            } else {
-                bgmBtn.textContent = 'ON';
-                bgmBtn.style.backgroundColor = '#22c55e';
-                bgmBtn.style.boxShadow = '0px 3px 0px #15803d';
-            }
-        }
-        
+
         if (sfxBtn) {
             if (sfxMuted) {
                 sfxBtn.textContent = 'OFF';
@@ -2491,12 +2541,9 @@ if ($winsCount >= 100) {
                 sfxBtn.style.boxShadow = '0px 3px 0px #15803d';
             }
         }
-        
+
         updateSoundIcon();
     }
-
-    // toggleBGMSetting sudah didefinisikan global di game-layout.js
-    // (langsung apply ke window.globalBGM secara real-time)
 
     function toggleSFXSetting() {
         const sfxMuted = localStorage.getItem('sfx_muted') === 'true';
@@ -2537,7 +2584,6 @@ if ($winsCount >= 100) {
     // Attach functions to window for layout onclick/scripts
     window.openAudioSettings = openAudioSettings;
     window.closeAudioSettings = closeAudioSettings;
-    // toggleBGMSetting: pakai global dari game-layout.js (sudah benar)
     // toggleSFXSetting: override global karena perlu handle Phaser SFX juga
     window.toggleSFXSetting = function () {
         const sfxMuted = localStorage.getItem('sfx_muted') === 'true';
@@ -2570,6 +2616,7 @@ if ($winsCount >= 100) {
     // Cleanup when leaving page via Livewire
     const cleanUpArenaPacu = function() {
         console.log("Cleaning up Arena Pacu page...");
+        resumeArenaBGM();
         if (window.activeMultiplayerArenaGame) {
             const scene = window.activeMultiplayerArenaGame.scene.getScene('ArenaScene');
             if (scene && scene.ws) {
@@ -2581,8 +2628,8 @@ if ($winsCount >= 100) {
         }
         delete window.openAudioSettings;
         delete window.closeAudioSettings;
-        delete window.toggleBGMSetting;
         delete window.toggleSFXSetting;
+        delete window.ensureArenaBGMOff;
         delete window.pressArenaReady;
     };
 

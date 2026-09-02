@@ -343,7 +343,7 @@
     /* ========= GLOBAL CHAT SIDEBAR ========= */
     #chat-toggle-btn {
         position: absolute;
-        bottom: 90px;
+        top: 64px;
         left: 0;
         width: 34px;
         height: 34px;
@@ -551,9 +551,12 @@
 <div id="chat-sidebar">
     <div class="chat-header">
         <div class="chat-header-title"><i class="bi bi-chat-fill me-1"></i> GLOBAL CHAT</div>
-        <div class="chat-online-badge">
-            <span class="chat-online-dot"></span>
-            <span id="chat-online-count">0</span> online
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="chat-online-badge">
+                <span class="chat-online-dot"></span>
+                <span id="chat-online-count">0</span> online
+            </div>
+            <button onclick="toggleChat()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup">✕</button>
         </div>
     </div>
     <!-- Share Room Button -->

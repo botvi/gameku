@@ -101,10 +101,10 @@
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         font-weight: bold;
-        color: #FFD700;
+        color: #000000;
         line-height: 1;
-        text-shadow: 1px 1px 0px #15803d, -1px -1px 0px #15803d,
-                     1px -1px 0px #15803d, -1px 1px 0px #15803d;
+        text-shadow: 1px 1px 0px #ffffff, -1px -1px 0px #ffffff,
+                     1px -1px 0px #ffffff, -1px 1px 0px #ffffff;
     }
 
     /* Explanation Banner */
@@ -131,7 +131,7 @@
     .banner-desc {
         font-family: 'Pixelify Sans', monospace;
         font-size: 11px;
-        color: #ffffff;
+        color: #000000;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         line-height: 1.3;
     }
@@ -248,7 +248,7 @@
         font-family: 'Pixelify Sans', monospace;
         font-size: 11px;
         font-weight: bold;
-        color: #15803d;
+        color: #ffffff;
         margin-bottom: 8px;
     }
 
@@ -262,8 +262,8 @@
         font-family: 'Press Start 2P', monospace;
         font-size: 8px;
         cursor: pointer;
-        text-shadow: 0 1px 2px #15803d;
-        box-shadow: 0 3px 0 #15803d;
+        text-shadow: 0 1px 2px #ffffff;
+        box-shadow: 0 3px 0 #ffffff;
         transition: all 0.1s ease;
         box-sizing: border-box;
     }
@@ -274,7 +274,7 @@
 
     .btn-action-green:active {
         transform: translateY(2px);
-        box-shadow: 0 1px 0 #15803d;
+        box-shadow: 0 1px 0 #ffffff;
     }
 
     /* Item Card */
@@ -406,7 +406,7 @@
         font-family: 'Pixelify Sans', monospace;
         font-size: 14px;
         font-weight: bold;
-        color: #15803d;
+        color: #ffffff;
         margin-bottom: 16px;
         line-height: 1.4;
     }
@@ -427,7 +427,7 @@
         font-family: 'Press Start 2P', monospace;
         font-size: 9px;
         cursor: pointer;
-        box-shadow: 0 3px 0 #15803d;
+        box-shadow: 0 3px 0 #ffffff;
     }
 
     .modal-btn-no {
@@ -484,19 +484,20 @@
 
 <div id="shop-dashboard">
     <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="back-btn-container" onclick="window.navigateToPage('/main-menu')">
-            <img src="/game_pacu/assets/image/ui/back.png" alt="Back" class="back-btn">
-        </div>
-        <div class="coin-display">
-            <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
-            <span id="shop-coin-count" class="coin-amount">{{ number_format(auth()->user()->kuansing_poin, 0, ',', '.') }}</span>
+    <div>
+        <div class="top-bar">
+            <div class="back-btn-container" onclick="window.navigateToPage('/main-menu')">
+                <img src="/game_pacu/assets/image/ui/back.png" alt="Back" class="back-btn">
+            </div>
+            <div class="coin-display">
+                <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+                <span id="shop-coin-count" class="coin-amount">{{ number_format(auth()->user()->kuansing_poin, 0, ',', '.') }}</span>
+            </div>
         </div>
     </div>
 
     <!-- Explanation Banner -->
     <div class="banner-container">
-        <div class="banner-title" id="banner-title"><i class="bi bi-lightning-charge-fill sprint-icon me-1"></i> APA ITU SPRINT?</div>
         <div class="banner-desc" id="banner-desc">
             Sprint adalah mata uang utama game ini. Kamu bisa mendapatkan Sprint secara gratis saat bermain, atau topup langsung melalui paket di bawah ini!
         </div>
@@ -522,7 +523,7 @@
                 @endphp
                 <div class="topup-card">
                     <div style="display:flex; justify-content:center; align-items:center; margin: 10px 0;">
-                        <i class="bi bi-lightning-charge-fill sprint-icon" style="font-size: {{ 2 * $scale }}rem;"></i>
+                        <img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: {{ 32 * $scale }}px; height: {{ 32 * $scale }}px; object-fit: contain;">
                     </div>
                     <div class="topup-amount">+{{ number_format($pkg->coin_amount, 0, ',', '.') }} Sprint</div>
                     <div class="topup-price">Rp {{ number_format($pkg->price, 0, ',', '.') }}</div>
@@ -602,32 +603,30 @@
         if (activeTab === tabIndex) return;
         activeTab = tabIndex;
 
-        if (window.playClickSound) window.playClickSound();
-
         const btnKoin = document.getElementById('tab-koin-btn');
         const btnItem = document.getElementById('tab-item-btn');
         const contentKoin = document.getElementById('tab-koin-content');
         const contentItem = document.getElementById('tab-item-content');
-
-        const bannerTitle = document.getElementById('banner-title');
         const bannerDesc = document.getElementById('banner-desc');
 
         if (tabIndex === 0) {
-            btnKoin.classList.add('active');
-            btnItem.classList.remove('active');
-            contentKoin.style.display = 'block';
-            contentItem.style.display = 'none';
+            if (btnKoin) btnKoin.classList.add('active');
+            if (btnItem) btnItem.classList.remove('active');
+            if (contentKoin) contentKoin.style.display = 'block';
+            if (contentItem) contentItem.style.display = 'none';
 
-            bannerTitle.innerHTML = '<i class="bi bi-lightning-charge-fill sprint-icon me-1"></i> APA ITU SPRINT?';
-            bannerDesc.innerText = 'Sprint adalah mata uang utama game ini. Kamu bisa mendapatkan Sprint secara gratis saat bermain, atau topup langsung melalui paket di bawah ini!';
+            if (bannerDesc) {
+                bannerDesc.innerText = 'Sprint adalah mata uang utama game ini. Kamu bisa mendapatkan Sprint secara gratis saat bermain, atau topup langsung melalui paket di bawah ini!';
+            }
         } else {
-            btnItem.classList.add('active');
-            btnKoin.classList.remove('active');
-            contentItem.style.display = 'block';
-            contentKoin.style.display = 'none';
+            if (btnItem) btnItem.classList.add('active');
+            if (btnKoin) btnKoin.classList.remove('active');
+            if (contentItem) contentItem.style.display = 'block';
+            if (contentKoin) contentKoin.style.display = 'none';
 
-            bannerTitle.innerHTML = '<i class="bi bi-bag-fill me-1 text-warning"></i> BELI ITEM PREMIUM';
-            bannerDesc.innerText = 'Gunakan Sprint milikmu untuk membeli dan mengunduh berbagai template kustomisasi premium agar tampilan perahumu semakin keren di arena pacu!';
+            if (bannerDesc) {
+                bannerDesc.innerText = 'Gunakan Sprint milikmu untuk membeli dan mengunduh berbagai template kustomisasi premium agar tampilan perahumu semakin keren di arena pacu!';
+            }
         }
     };
 
@@ -666,8 +665,6 @@
 
     // Topup Logic
     window.promptTopup = function(packageId, kpAmount, priceString) {
-        if (window.playClickSound) window.playClickSound();
-
         openConfirmModal(`Apakah Anda ingin membeli +${kpAmount.toLocaleString('id-ID')} KP seharga ${priceString}?`, () => {
             fetch('/topup/create', {
                 method: 'POST',
@@ -735,7 +732,6 @@
 
     // Download Item Logic
     window.downloadItem = function(itemId, filename) {
-        if (window.playClickSound) window.playClickSound();
         const link = document.createElement('a');
         link.href = `/shop/download-item/${itemId}`;
         link.download = filename;
@@ -746,7 +742,6 @@
 
     // Buy Item Logic
     window.promptBuyItem = function(itemId, itemName, priceKP, filename) {
-        if (window.playClickSound) window.playClickSound();
 
         if (purchasedItemIds.has(Number(itemId))) {
             downloadItem(itemId, filename);

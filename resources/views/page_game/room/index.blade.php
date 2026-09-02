@@ -930,14 +930,12 @@
     window.nextSlide = function(e) {
         if (e) e.stopPropagation();
         currentSlide = (currentSlide + 1) % slidesData.length;
-        if (typeof window.playClickSound === 'function') window.playClickSound();
         updateCarousel();
     };
 
     window.prevSlide = function(e) {
         if (e) e.stopPropagation();
         currentSlide = (currentSlide - 1 + slidesData.length) % slidesData.length;
-        if (typeof window.playClickSound === 'function') window.playClickSound();
         updateCarousel();
     };
 
@@ -945,11 +943,9 @@
         if (e) e.stopPropagation();
         if (idx !== currentSlide) {
             currentSlide = idx;
-            if (typeof window.playClickSound === 'function') window.playClickSound();
             updateCarousel();
             return;
         }
-        if (typeof window.playClickSound === 'function') window.playClickSound();
         updateCarousel();
         activateActiveSlide();
     };
@@ -957,7 +953,6 @@
     window.jumpToSlide = function(idx) {
         if (currentSlide !== idx) {
             currentSlide = idx;
-            if (typeof window.playClickSound === 'function') window.playClickSound();
             updateCarousel();
         }
     };

@@ -101,8 +101,8 @@
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         font-weight: bold;
-        color: #FFD700;
-        text-shadow: 1px 1px 0px #15803d, -1px -1px 0px #15803d, 1px -1px 0px #15803d, -1px 1px 0px #15803d;
+        color: #000000;
+        text-shadow: 1px 1px 0px #ffffff, -1px -1px 0px #ffffff, 1px -1px 0px #ffffff, -1px 1px 0px #ffffff;
     }
 
     .menu-main-wrapper {
@@ -274,13 +274,12 @@
     .reward-badge {
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
-        font-weight: bold;
-        color: #ffd700;
+        color: #FFD700;
         display: flex;
         align-items: center;
         gap: 6px;
         margin-bottom: 12px;
-        text-shadow: 1px 1px 0 #15803d, -1px -1px 0 #15803d;
+        text-shadow: 1px 1px 0 #000000, -1px -1px 0 #000000;
     }
 
     .reward-badge img {
@@ -291,7 +290,7 @@
 
     .pixel-btn {
         background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
-        border: 2px solid #15803d;
+        border: 2px solid #ffffff;
         border-radius: 10px;
         box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.35),
@@ -344,7 +343,7 @@
 
     <!-- Wallet Koin -->
     <div class="coin-display" onclick="window.navigateToPage('/shop')">
-        <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
+        <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
         <span id="coin-count">...</span>
     </div>
 
@@ -371,7 +370,7 @@
             <div class="ps5-details-title" id="active-title">LEVEL 1</div>
             <div class="ps5-details-desc" id="active-desc">TERBUKA</div>
             <div class="reward-badge">
-                <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill"></i></span>
+                <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 18px; height: 18px; object-fit: contain;"></span>
                 <span id="active-reward">+5 SPRINT</span>
             </div>
 
@@ -472,7 +471,7 @@
                 activeDesc.style.color = '#34d399';
                 actionBtn.innerText = 'MAIN LAGI';
                 actionBtn.style.background = 'linear-gradient(180deg, #22c55e 0%, #16a34a 100%)';
-                actionBtn.style.borderColor = '#15803d';
+                actionBtn.style.borderColor = '#ffffff';
                 actionBtn.disabled = false;
             } else if (activeLevel === vsaiUnlocked) {
                 activeDesc.innerText = 'TERBUKA';
@@ -496,7 +495,6 @@
         if (e) e.stopPropagation();
         if (currentSlide < totalLevels - 1) {
             currentSlide++;
-            if (typeof window.playClickSound === 'function') window.playClickSound();
             updateCarousel();
         }
     }
@@ -505,7 +503,6 @@
         if (e) e.stopPropagation();
         if (currentSlide > 0) {
             currentSlide--;
-            if (typeof window.playClickSound === 'function') window.playClickSound();
             updateCarousel();
         }
     }
@@ -514,7 +511,6 @@
         if (e) e.stopPropagation();
         if (currentSlide !== idx) {
             currentSlide = idx;
-            if (typeof window.playClickSound === 'function') window.playClickSound();
             updateCarousel();
         }
     }
@@ -522,7 +518,6 @@
     function startSelectedLevel() {
         const activeLevel = currentSlide + 1;
         if (activeLevel <= vsaiUnlocked) {
-            if (typeof window.playClickSound === 'function') window.playClickSound();
             window.navigateToPage(`/vsai/arena?level=${activeLevel}`);
         }
     }

@@ -153,9 +153,9 @@
         promises.push(new Promise(function (resolve) {
             setTimeout(resolve, 250);
         }));
-        var container = document.getElementById('game-container');
-        if (container) {
-            container.querySelectorAll('img[src]').forEach(function (img) {
+        var root = document.getElementById('mobile-frame') || document.body;
+        if (root) {
+            root.querySelectorAll('img[src]').forEach(function (img) {
                 if (!img.complete) {
                     promises.push(new Promise(function (resolve) {
                         img.addEventListener('load', resolve, { once: true });
@@ -285,26 +285,6 @@
         return canvas;
     };
 
-    /* -----------------------------------------------
-       6. GLOBAL CLICK SOUND ON INTERACTIVE ELEMENTS
-    ----------------------------------------------- */
-    window.playClickSound = function () {
-        const isMuted = localStorage.getItem('sfx_muted') === 'true';
-        if (isMuted) return;
-        const audio = new Audio('/game_pacu/assets/sound/klik_btn.ogg');
-        audio.volume = 0.4;
-        audio.play().catch(function (err) {
-            console.log('Audio play blocked:', err);
-        });
-    };
-
-    // DOM click interceptor
-    document.addEventListener('pointerdown', function (e) {
-        const target = e.target.closest('button, a, .btn, .btn-small, .menu-card, .profile-btn, .sound-btn, .pixel-btn, [onclick], .back-btn, .room-item button, .fullscreen-btn');
-        if (target) {
-            window.playClickSound();
-        }
-    });
 
     /* -----------------------------------------------
        7. BACKGROUND MUSIC (BGM)

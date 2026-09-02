@@ -61,9 +61,9 @@
  promises.push(new Promise(function (resolve) {
  setTimeout(resolve, 250);
  }));
- var container = document.getElementById('game-container');
- if (container) {
- container.querySelectorAll('img[src]').forEach(function (img) {
+ var root = document.getElementById('mobile-frame') || document.body;
+ if (root) {
+ root.querySelectorAll('img[src]').forEach(function (img) {
  if (!img.complete) {
  promises.push(new Promise(function (resolve) {
  img.addEventListener('load', resolve, { once: true });
@@ -175,25 +175,23 @@
  ctx.putImageData(imgData, 0, 0);
  return canvas;
  };
- window.playClickSound = function () {
- const isMuted = localStorage.getItem('sfx_muted') === 'true';
- if (isMuted) return;
- const audio = new Audio('/game_pacu/assets/sound/klik_btn.ogg');
- audio.volume = 0.4;
- audio.play().catch(function (err) {
- console.log('Audio play blocked:', err);
- });
- };
- document.addEventListener('pointerdown', function (e) {
- const target = e.target.closest('button, a, .btn, .btn-small, .menu-card, .profile-btn, .sound-btn, .pixel-btn, [onclick], .back-btn, .room-item button, .fullscreen-btn');
- if (target) {
- window.playClickSound();
- }
- });
+
  (function () {
   var bgmSrc = '/game_pacu/assets/sound/bgm.ogg';
 
+  function isArenaBgmSuppressed() {
+   return window._arenaBgmSuppressed === true;
+  }
+
   function applyMuteState(audio) {
+   if (isArenaBgmSuppressed()) {
+    audio.volume = 0;
+    audio.muted = true;
+    if (!audio.paused) {
+     audio.pause();
+    }
+    return;
+   }
    var isMuted = localStorage.getItem('bgm_muted') === 'true';
    if (isMuted) {
     audio.volume = 0;
@@ -206,11 +204,12 @@
 
   function tryPlay(audio) {
    applyMuteState(audio);
-   if (!audio.muted) {
-    audio.play().catch(function (err) {
-     console.log('[BGM] Autoplay blocked:', err);
-    });
+   if (isArenaBgmSuppressed() || audio.muted) {
+    return;
    }
+   audio.play().catch(function (err) {
+    console.log('[BGM] Autoplay blocked:', err);
+   });
   }
 
   function initBGM() {
@@ -218,7 +217,7 @@
    if (window.globalBGM && window.globalBGM.src && window.globalBGM.src.includes('bgm')) {
     applyMuteState(window.globalBGM);
     // Jika sedang pause & tidak muted, lanjutkan (jangan restart)
-    if (window.globalBGM.paused && !window.globalBGM.muted) {
+    if (window.globalBGM.paused && !window.globalBGM.muted && !isArenaBgmSuppressed()) {
      window.globalBGM.play().catch(function (err) {
       console.log('[BGM] Resume failed:', err);
      });
@@ -239,6 +238,7 @@
 
    // Fallback: mulai setelah interaksi pertama (autoplay policy mobile)
    var playOnInteraction = function () {
+    if (isArenaBgmSuppressed()) return;
     if (window.globalBGM && window.globalBGM.paused) {
      tryPlay(window.globalBGM);
     }
@@ -260,7 +260,7 @@
    } else {
     // App kembali ke foreground, resume (bukan restart)
     var isMuted = localStorage.getItem('bgm_muted') === 'true';
-    if (!isMuted && window.globalBGM.paused) {
+    if (!isMuted && !isArenaBgmSuppressed() && window.globalBGM.paused) {
      window.globalBGM.play().catch(function (err) {
       console.log('[BGM] Visibility resume failed:', err);
      });
@@ -274,7 +274,7 @@
     applyMuteState(window.globalBGM);
     // Jika pause karena navigasi, lanjutkan saja (jangan restart)
     var isMuted = localStorage.getItem('bgm_muted') === 'true';
-    if (!isMuted && window.globalBGM.paused) {
+    if (!isMuted && !isArenaBgmSuppressed() && window.globalBGM.paused) {
      window.globalBGM.play().catch(function (err) {
       console.log('[BGM] Post-navigate resume:', err);
      });
@@ -298,6 +298,14 @@
    */
   window.applyBGMMute = function () {
    if (!window.globalBGM) return;
+   if (isArenaBgmSuppressed()) {
+    window.globalBGM.volume = 0;
+    window.globalBGM.muted = true;
+    if (!window.globalBGM.paused) {
+     window.globalBGM.pause();
+    }
+    return;
+   }
    var isMuted = localStorage.getItem('bgm_muted') === 'true';
    if (isMuted) {
     window.globalBGM.volume = 0;

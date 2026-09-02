@@ -188,16 +188,16 @@
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         font-weight: bold;
-        color: #FFD700;
+        color: #000000;
         text-shadow:
-            1px 1px 0px #15803d,
-            -1px -1px 0px #15803d,
-            1px -1px 0px #15803d,
-            -1px 1px 0px #15803d,
-            0px 1px 0px #15803d,
-            0px -1px 0px #15803d,
-            1px 0px 0px #15803d,
-            -1px 0px 0px #15803d;
+            1px 1px 0px #ffffff,
+            -1px -1px 0px #ffffff,
+            1px -1px 0px #ffffff,
+            -1px 1px 0px #ffffff,
+            0px 1px 0px #ffffff,
+            0px -1px 0px #ffffff,
+            1px 0px 0px #ffffff,
+            -1px 0px 0px #ffffff;
         line-height: 1;
     }
 
@@ -457,7 +457,7 @@
 
     .pixel-btn {
         background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
-        border: 2px solid #15803d;
+        border: 2px solid #ffffff;
         border-radius: 10px;
         box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.35),
@@ -640,7 +640,7 @@
     /* ========= GLOBAL CHAT SIDEBAR ========= */
     #chat-toggle-btn {
         position: absolute;
-        bottom: 90px;
+        top: 64px;
         left: 0;
         width: 34px;
         height: 34px;
@@ -1032,7 +1032,7 @@
 
     <!-- Coin Display (Top Right) -->
     <div class="coin-display" onclick="window.navigateToPage('/shop')">
-        <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
+        <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
         <span id="header-coin-count">{{ number_format(auth()->user()->kuansing_poin, 0, ',', '.') }}</span>
     </div>
     <div id="ps5-backdrop" class="ps5-backdrop-glow bg-slide-0"></div>
@@ -1139,13 +1139,10 @@
             style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
             <div class="audio-modal-title" style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;"><i class="bi bi-volume-up-fill me-1"></i> PENGATURAN SUARA</div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <span style="font-size: 8px; color: #15803d; text-align: left; text-shadow: 1px 1px 0px rgba(0,0,0,0.05);">MUSIK (BGM)</span>
+                <span style="font-size: 8px; color: #ffffff; text-align: left; text-shadow: 1px 1px 0px rgba(0,0,0,0.05);">MUSIK (BGM)</span>
                 <button id="bgm-toggle-btn" onclick="toggleBGMSetting()" style="font-family: 'Press Start 2P', monospace; font-size: 8px; width: 80px; padding: 8px 0; border: 3px solid #000000; border-radius: 6px; cursor: pointer; text-shadow: 1.5px 1.5px 0px #000000; color: white; transition: all 0.1s; box-shadow: 0px 3px 0px #000000;">ON</button>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <span style="font-size: 8px; color: #15803d; text-align: left; text-shadow: 1px 1px 0px rgba(0,0,0,0.05);">EFEK (SFX)</span>
-                <button id="sfx-toggle-btn" onclick="toggleSFXSetting()" style="font-family: 'Press Start 2P', monospace; font-size: 8px; width: 80px; padding: 8px 0; border: 3px solid #000000; border-radius: 6px; cursor: pointer; text-shadow: 1.5px 1.5px 0px #000000; color: white; transition: all 0.1s; box-shadow: 0px 3px 0px #000000;">ON</button>
-            </div>
+            
             <button class="pixel-btn" onclick="closeAudioSettings()" style="margin-top: 0; background-color: #22c55e; border: 3px solid #000000; box-shadow: inset 0 2px 0px rgba(255,255,255,0.4), 0px 4px 0px #000000; color: white; padding: 12px; font-size: 9px; cursor: pointer; text-transform: uppercase; width: 100%; text-shadow: 1.5px 1.5px 0px #000000;">OKE</button>
         </div>
     </div>
@@ -1160,9 +1157,12 @@
 <div id="chat-sidebar">
     <div class="chat-header">
         <div class="chat-header-title"><i class="bi bi-chat-fill me-1"></i> GLOBAL CHAT</div>
-        <div class="chat-online-badge">
-            <span class="chat-online-dot"></span>
-            <span id="chat-online-count">0</span> online
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="chat-online-badge">
+                <span class="chat-online-dot"></span>
+                <span id="chat-online-count">0</span> online
+            </div>
+            <button onclick="toggleChat()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup">✕</button>
         </div>
     </div>
     <div id="chat-messages">
@@ -1268,7 +1268,7 @@
             } else {
                 bgmBtn.textContent = 'ON';
                 bgmBtn.style.backgroundColor = '#22c55e';
-                bgmBtn.style.boxShadow = '0px 3px 0px #15803d';
+                bgmBtn.style.boxShadow = '0px 3px 0px #ffffff';
             }
         }
 
@@ -1280,7 +1280,7 @@
             } else {
                 sfxBtn.textContent = 'ON';
                 sfxBtn.style.backgroundColor = '#22c55e';
-                sfxBtn.style.boxShadow = '0px 3px 0px #15803d';
+                sfxBtn.style.boxShadow = '0px 3px 0px #ffffff';
             }
         }
 
@@ -1367,14 +1367,12 @@
     window.nextSlide = function(e) {
         if (e) e.stopPropagation();
         currentSlide = (currentSlide + 1) % slidesData.length;
-        if (typeof window.playClickSound === 'function') window.playClickSound();
         updateCarousel();
     };
 
     window.prevSlide = function(e) {
         if (e) e.stopPropagation();
         currentSlide = (currentSlide - 1 + slidesData.length) % slidesData.length;
-        if (typeof window.playClickSound === 'function') window.playClickSound();
         updateCarousel();
     };
 
@@ -1382,11 +1380,9 @@
         if (e) e.stopPropagation();
         if (idx !== currentSlide) {
             currentSlide = idx;
-            if (typeof window.playClickSound === 'function') window.playClickSound();
             updateCarousel();
             return;
         }
-        if (typeof window.playClickSound === 'function') window.playClickSound();
         updateCarousel();
         activateActiveSlide();
     };
@@ -1394,7 +1390,6 @@
     window.jumpToSlide = function(idx) {
         if (currentSlide !== idx) {
             currentSlide = idx;
-            if (typeof window.playClickSound === 'function') window.playClickSound();
             updateCarousel();
         }
     };

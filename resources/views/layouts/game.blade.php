@@ -76,7 +76,7 @@
     </div>
 
     @livewireScripts
-    <script src="/game_pacu/assets/js/game-layout.js?v=2.2"></script>
+    <script src="/game_pacu/assets/js/game-layout.js?v=2.3"></script>
     @stack('scripts')
 </body>
 </html>

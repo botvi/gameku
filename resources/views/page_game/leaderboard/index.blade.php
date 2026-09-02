@@ -77,9 +77,9 @@
     .coin-amount {
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px; font-weight: bold;
-        color: #FFD700; line-height: 1;
-        text-shadow: 1px 1px 0px #15803d, -1px -1px 0px #15803d,
-                     1px -1px 0px #15803d, -1px 1px 0px #15803d;
+        color: #000000; line-height: 1;
+        text-shadow: 1px 1px 0px #ffffff, -1px -1px 0px #ffffff,
+                     1px -1px 0px #ffffff, -1px 1px 0px #ffffff;
     }
 
     /* Title */
@@ -170,7 +170,7 @@
     }
     .my-rank-stat { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
     .my-rank-stat-val { font-weight: bold; color: #fbbf24; }
-    .my-rank-stat-lbl { color: rgba(0,0,0,0.45); font-size: 9px; }
+    .my-rank-stat-lbl { color: rgb(0, 0, 0); font-size: 9px; }
 
     /* Scroll container */
     .lb-scroll {
@@ -194,7 +194,7 @@
         padding: 0 12px 6px;
         font-family: 'Press Start 2P', monospace;
         font-size: 6px;
-        color: rgba(0,0,0,0.45);
+        color: rgb(0, 0, 0);
         letter-spacing: 0.5px;
     }
     .rh-rank { width: 32px; }
@@ -228,7 +228,7 @@
         background: rgba(251, 191, 36, 0.07);
     }
     .lb-row.top1 { border-color: rgba(255, 215, 0, 0.55); background: rgba(255,215,0,0.06); }
-    .lb-row.top2 { border-color: rgba(192, 192, 192, 0.45); background: rgba(192,192,192,0.04); }
+    .lb-row.top2 { border-color: rgba(0, 0, 0, 0.45); background: rgba(192,192,192,0.04); }
     .lb-row.top3 { border-color: rgba(205, 127, 50, 0.45); background: rgba(205,127,50,0.04); }
 
     /* Rank Number */
@@ -236,7 +236,7 @@
         width: 32px;
         font-family: 'Press Start 2P', monospace;
         font-size: 8px;
-        color: rgba(0,0,0,0.45);
+        color: rgb(0, 0, 0);
         flex-shrink: 0;
     }
     .lb-rank.r1 { color: #FFD700; text-shadow: 0 0 8px rgba(255,215,0,0.5); }
@@ -330,14 +330,15 @@ $user = auth()->user();
 
 <div id="leaderboard-dashboard">
     <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="back-btn-container" onclick="goBack()">
-            <img class="back-btn" src="/game_pacu/assets/image/back.png" alt="Kembali"
-                 onerror="this.src='/game_pacu/assets/image/ui/back.png'">
-        </div>
-        <div class="coin-display" onclick="window.navigateToPage('/shop')">
-            <span class="sprint-icon me-1"><i class="bi bi-lightning-charge-fill" style="font-size: 1.2rem;"></i></span>
-            <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
+    <div>
+        <div class="top-bar">
+            <div class="back-btn-container" onclick="goBack()">
+                <img class="back-btn" src="/game_pacu/assets/image/ui/back.png" alt="Kembali">
+            </div>
+            <div class="coin-display" onclick="window.navigateToPage('/shop')">
+                <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+                <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
+            </div>
         </div>
     </div>
 
@@ -391,7 +392,7 @@ $user = auth()->user();
             </div>
             <div>
                 <div class="my-rank-name">{{ $myUser->nama_jalur ?? $myUser->email }}</div>
-                <div style="font-size:9px;color:rgba(0,0,0,0.45);margin-top:2px;">Kamu</div>
+                <div style="font-size:9px;color:rgba(0, 0, 0, 0);margin-top:2px;">Kamu</div>
             </div>
         </div>
         <div class="my-rank-info">
