@@ -3,8 +3,14 @@
 namespace App\Http\Controllers\pagegame;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\ModelJalur;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class TukangJaluarController extends Controller
 {
@@ -112,56 +118,61 @@ class TukangJaluarController extends Controller
         return response()->json($data);
     }
 
-    public function uploadCorak(Request $request)
+    public function uploadCorak(Request $request): JsonResponse
     {
-        $userId = auth()->id();
-        if (!$userId) {
-            return response()->json(['error' => 'Unauthenticated'], 401);
-        }
-
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $filename = time() . '_' . $file->getClientOriginalName();
-
-            if (!file_exists(public_path('corak'))) {
-                mkdir(public_path('corak'), 0755, true);
-            }
-
-            $file->move(public_path('corak'), $filename);
-
-            return response()->json([
-                'success' => true,
-                'url' => '/corak/' . $filename
-            ]);
-        }
-
-        return response()->json(['error' => 'No file uploaded'], 400);
+        return $this->uploadGameImage($request, 'corak');
     }
 
-    public function uploadLambai(Request $request)
+    public function uploadLambai(Request $request): JsonResponse
     {
-        $userId = auth()->id();
-        if (!$userId) {
+        return $this->uploadGameImage($request, 'lambai');
+    }
+
+    private function uploadGameImage(Request $request, string $folder): JsonResponse
+    {
+        if (!auth()->id()) {
             return response()->json(['error' => 'Unauthenticated'], 401);
         }
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $filename = time() . '_' . $file->getClientOriginalName();
+        try {
+            $validated = $request->validate([
+                'file' => 'required|file|image|mimes:jpeg,jpg,png,gif,webp|max:10240',
+            ]);
 
-            if (!file_exists(public_path('profiles'))) {
-                mkdir(public_path('profiles'), 0755, true);
+            $file = $validated['file'];
+            $extension = strtolower($file->getClientOriginalExtension() ?: $file->guessExtension() ?: 'png');
+            $filename = time() . '_' . Str::random(10) . '.' . $extension;
+
+            $disk = Storage::disk('public');
+            $stored = $disk->putFileAs($folder, $file, $filename);
+
+            if (!$stored) {
+                return response()->json([
+                    'error' => 'Gagal menyimpan file. Pastikan folder storage dapat ditulis.',
+                ], 500);
             }
-
-            $file->move(public_path('profiles'), $filename);
 
             return response()->json([
                 'success' => true,
-                'url' => '/profiles/' . $filename
+                'url' => '/storage/' . $folder . '/' . $filename,
             ]);
-        }
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => collect($e->errors())->flatten()->first() ?: 'File tidak valid.',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (Throwable $e) {
+            Log::error("Upload {$folder} gagal", [
+                'user_id' => auth()->id(),
+                'message' => $e->getMessage(),
+            ]);
 
-        return response()->json(['error' => 'No file uploaded'], 400);
+            return response()->json([
+                'error' => app()->hasDebugModeEnabled()
+                    ? $e->getMessage()
+                    : 'Gagal mengunggah file. Silakan coba lagi atau hubungi admin.',
+            ], 500);
+        }
     }
 }
 

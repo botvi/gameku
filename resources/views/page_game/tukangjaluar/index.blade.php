@@ -1502,11 +1502,18 @@
                 fetch('/tukang-jaluar/upload-corak', {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                        'Accept': 'application/json'
                     },
                     body: formData
                 })
-                .then(res => res.json())
+                .then(async (res) => {
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) {
+                        throw new Error(data.error || data.message || 'Upload gagal (HTTP ' + res.status + ')');
+                    }
+                    return data;
+                })
                 .then(data => {
                     if (data.success) {
                         const url = data.url;
@@ -1524,7 +1531,7 @@
                 })
                 .catch(err => {
                     console.error('Error uploading corak:', err);
-                    showCustomAlertModal(this, 'Gagal mengunggah corak.');
+                    showCustomAlertModal(this, err.message || 'Gagal mengunggah corak.');
                 });
 
                 e.target.value = '';
@@ -1540,11 +1547,18 @@
                 fetch('/tukang-jaluar/upload-lambai', {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                        'Accept': 'application/json'
                     },
                     body: formData
                 })
-                .then(res => res.json())
+                .then(async (res) => {
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) {
+                        throw new Error(data.error || data.message || 'Upload gagal (HTTP ' + res.status + ')');
+                    }
+                    return data;
+                })
                 .then(data => {
                     if (data.success) {
                         const url = data.url;
@@ -1562,7 +1576,7 @@
                 })
                 .catch(err => {
                     console.error('Error uploading lambai-lambai:', err);
-                    showCustomAlertModal(this, 'Gagal mengunggah lambai-lambai.');
+                    showCustomAlertModal(this, err.message || 'Gagal mengunggah lambai-lambai.');
                 });
 
                 e.target.value = '';
