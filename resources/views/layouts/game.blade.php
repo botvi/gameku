@@ -76,14 +76,7 @@
     </div>
 
     @livewireScripts
-    <script src="/game_pacu/assets/js/game-layout.js?v=2.1"></script>
-    <script>
-        // Fade out transition overlay on first load
-        document.addEventListener('DOMContentLoaded', function () {
-            var overlay = document.getElementById('page-transition-overlay');
-            if (overlay) setTimeout(function () { overlay.classList.add('fade-out'); }, 150);
-        });
-    </script>
+    <script src="/game_pacu/assets/js/game-layout.js?v=2.2"></script>
     @stack('scripts')
 </body>
 </html>

@@ -2,7 +2,7 @@
 
 @section('title', 'Room Matchmaking — Papan Jawara')
 
-@push('styles')
+@section('content')
 <style>
     body {
         margin: 0;
@@ -640,9 +640,7 @@
         box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.1), 0px 0px 0px #000000;
     }
 </style>
-@endpush
 
-@section('content')
 <div id="game-ui">
     <div id="ps5-backdrop" class="ps5-backdrop-glow bg-slide-0"></div>
 
@@ -986,13 +984,25 @@
         if (modal) modal.style.display = 'none';
     };
 
-    // Swipe Gestures Support
-    (function () {
+    document.addEventListener('keydown', function (e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (!document.getElementById('carousel-track')) return;
+        if (e.key === 'ArrowLeft') {
+            prevSlide();
+        } else if (e.key === 'ArrowRight') {
+            nextSlide();
+        } else if (e.key === 'Enter' || e.key === ' ') {
+            activateActiveSlide();
+        }
+    });
+
+    function initRoomSwipeGestures() {
+        const container = document.querySelector('.ps5-carousel-container');
+        if (!container || container.dataset.swipeBound === '1') return;
+        container.dataset.swipeBound = '1';
+
         let touchStartX = 0;
         let touchEndX = 0;
-
-        const container = document.querySelector('.ps5-carousel-container');
-        if (!container) return;
 
         container.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
@@ -1009,28 +1019,23 @@
                 }
             }
         }, { passive: true });
-    })();
+    }
 
-    // Keyboard Navigation Controller
-    document.addEventListener('keydown', function (e) {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        if (e.key === 'ArrowLeft') {
-            prevSlide();
-        } else if (e.key === 'ArrowRight') {
-            nextSlide();
-        } else if (e.key === 'Enter' || e.key === ' ') {
-            activateActiveSlide();
-        }
+    document.addEventListener('game:page-ready', function () {
+        if (!document.getElementById('carousel-track')) return;
+        setTimeout(updateCarousel, 50);
+        setTimeout(updateCarousel, 400);
+        initRoomSwipeGestures();
     });
-
     setTimeout(updateCarousel, 100);
+    initRoomSwipeGestures();
 
     document.addEventListener('livewire:navigating', () => {
         if (searchTimerInterval) {
             clearInterval(searchTimerInterval);
             searchTimerInterval = null;
         }
-    }, { once: true });
+    });
 }
 </script>
 @endpush

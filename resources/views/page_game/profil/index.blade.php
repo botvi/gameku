@@ -658,15 +658,17 @@
     };
 
     // Initialize boat preview widget
-    if (typeof window.initJalurPreview === 'function') {
-        window.initJalurPreview('jalur-preview-container', 'jalur-name');
-    }
-
-    document.addEventListener('livewire:navigated', () => {
+    function initProfilPreview() {
         if (typeof window.initJalurPreview === 'function' && document.getElementById('jalur-preview-container')) {
             window.initJalurPreview('jalur-preview-container', 'jalur-name');
         }
-    }, { once: true });
+    }
+
+    initProfilPreview();
+    document.addEventListener('game:page-ready', function () {
+        if (!document.getElementById('profile-dashboard')) return;
+        initProfilPreview();
+    });
 
     // Load correct avatar GIF based on local storage or database
     (function () {
@@ -698,7 +700,7 @@
             window.activePreviewGame = null;
             console.log('Profil page active preview game destroyed.');
         }
-    }, { once: true });
+    });
 }
 </script>
 @endpush

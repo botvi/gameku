@@ -2,7 +2,7 @@
 
 @section('title', 'Room Lobby — Papan Jawara')
 
-@push('styles')
+@section('content')
 <style>
     body {
         margin: 0;
@@ -482,9 +482,7 @@
     #chat-send-btn:hover { transform: translateY(-1px); }
     #chat-send-btn:active { transform: translateY(1px); }
 </style>
-@endpush
 
-@section('content')
 <div id="game-ui">
     <div id="ps5-backdrop" class="ps5-backdrop-glow bg-slide-1"></div>
     <canvas id="ps5-particles"
@@ -1025,8 +1023,14 @@
     document.addEventListener('click', chatClickOutside);
 
     // Initial WebSocket calls
-    initWebSocket();
-    initGlobalChat();
+    function initLobbyPage() {
+        if (!document.getElementById('lobby-room-name')) return;
+        initWebSocket();
+        initGlobalChat();
+    }
+
+    initLobbyPage();
+    document.addEventListener('game:page-ready', initLobbyPage);
 
     // Clean up connections on navigation to prevent leaks
     document.addEventListener('livewire:navigating', () => {
@@ -1041,7 +1045,7 @@
             chatWs = null;
             console.log('Lobby page global chat WebSocket closed.');
         }
-    }, { once: true });
+    });
 }
 </script>
 @endpush

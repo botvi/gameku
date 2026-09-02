@@ -1421,13 +1421,26 @@
         if (modal) modal.style.display = 'none';
     };
 
-    // Swipe Gestures Support
-    (function () {
+    // Keyboard Navigation Controller
+    document.addEventListener('keydown', function (e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (!document.getElementById('carousel-track')) return;
+        if (e.key === 'ArrowLeft') {
+            prevSlide();
+        } else if (e.key === 'ArrowRight') {
+            nextSlide();
+        } else if (e.key === 'Enter' || e.key === ' ') {
+            activateActiveSlide();
+        }
+    });
+
+    function initMenuSwipeGestures() {
+        const container = document.querySelector('.ps5-carousel-container');
+        if (!container || container.dataset.swipeBound === '1') return;
+        container.dataset.swipeBound = '1';
+
         let touchStartX = 0;
         let touchEndX = 0;
-
-        const container = document.querySelector('.ps5-carousel-container');
-        if (!container) return;
 
         container.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
@@ -1444,22 +1457,16 @@
                 }
             }
         }, { passive: true });
-    })();
+    }
 
-    // Keyboard Navigation Controller
-    document.addEventListener('keydown', function (e) {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        if (e.key === 'ArrowLeft') {
-            prevSlide();
-        } else if (e.key === 'ArrowRight') {
-            nextSlide();
-        } else if (e.key === 'Enter' || e.key === ' ') {
-            activateActiveSlide();
-        }
+    document.addEventListener('game:page-ready', function () {
+        if (!document.getElementById('carousel-track')) return;
+        setTimeout(updateCarousel, 50);
+        setTimeout(updateCarousel, 400);
+        initMenuSwipeGestures();
     });
-
-    // Initial position trigger
     setTimeout(updateCarousel, 100);
+    initMenuSwipeGestures();
 
     // ============= GLOBAL CHAT =============
     const chatCurrentUserId  = {{ auth()->id() }};

@@ -2,7 +2,7 @@
 
 @section('title', 'Franchise Game — Shop')
 
-@push('styles')
+@section('content')
 <style>
     body {
         margin: 0;
@@ -481,9 +481,7 @@
         font-size: 14px;
     }
 </style>
-@endpush
 
-@section('content')
 <div id="shop-dashboard">
     <!-- Top Bar -->
     <div class="top-bar">
@@ -646,7 +644,8 @@
         confirmCallback = null;
     };
 
-    document.getElementById('modal-btn-confirm').addEventListener('click', () => {
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('#modal-btn-confirm')) return;
         if (confirmCallback) {
             const cb = confirmCallback;
             closeConfirmModal();
@@ -801,8 +800,8 @@
         });
     };
 
-    // Initial Sync from server
-    fetch('/tukang-jaluar/get')
+    function syncShopCoins() {
+        fetch('/tukang-jaluar/get')
         .then(res => res.json())
         .then(data => {
             if (data.coins !== undefined) {
@@ -810,6 +809,13 @@
             }
         })
         .catch(err => console.error('Failed to sync coins:', err));
+    }
+
+    syncShopCoins();
+    document.addEventListener('game:page-ready', function (e) {
+        if (!document.getElementById('shop-dashboard')) return;
+        syncShopCoins();
+    });
 }
 </script>
 @endpush

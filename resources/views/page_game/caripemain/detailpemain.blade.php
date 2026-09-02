@@ -720,17 +720,17 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
         window.navigateToPage('/cari-pemain');
     };
 
-    document.addEventListener('DOMContentLoaded', () => {
-        if (window.Phaser) {
-            initJalurPreviewCustom('jalur-preview-container');
-        }
-    });
-
-    document.addEventListener('livewire:navigated', () => {
+    function initDetailPreview() {
         if (window.Phaser && document.getElementById('jalur-preview-container')) {
             initJalurPreviewCustom('jalur-preview-container');
         }
-    }, { once: true });
+    }
+
+    initDetailPreview();
+    document.addEventListener('game:page-ready', function () {
+        if (!document.getElementById('profile-dashboard')) return;
+        initDetailPreview();
+    });
 
     function initJalurPreviewCustom(containerId) {
         if (window.activePreviewGame) {

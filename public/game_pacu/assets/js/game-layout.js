@@ -39,37 +39,91 @@
  window.location.href = url;
  }
  };
- document.addEventListener('DOMContentLoaded', function () {
- const frame = document.getElementById('mobile-frame') || document.body;
- if (!document.getElementById('page-transition-overlay')) {
- const overlay = document.createElement('div');
+ var overlayRevealTimer = null;
+
+ function ensurePageTransitionOverlay() {
+ var frame = document.getElementById('mobile-frame') || document.body;
+ var overlay = document.getElementById('page-transition-overlay');
+ if (!overlay) {
+ overlay = document.createElement('div');
  overlay.id = 'page-transition-overlay';
- overlay.innerHTML = `
- <div class="transition-content">
- <div class="transition-title">✦ MEMUAT... ✦</div>
- <div class="transition-bar-container">
- <div class="transition-bar-fill"></div>
- </div>
- </div>
- `;
+ overlay.innerHTML = '<div class="transition-content"><div class="transition-title">✦ MEMUAT... ✦</div><div class="transition-bar-container"><div class="transition-bar-fill"></div></div></div>';
  frame.appendChild(overlay);
- setTimeout(function () {
- overlay.classList.add('fade-out');
- }, 150);
+ }
+ return overlay;
+ }
+
+ function waitForPageAssets() {
+ var promises = [];
+ if (document.fonts && document.fonts.ready) {
+ promises.push(document.fonts.ready.catch(function () {}));
+ }
+ promises.push(new Promise(function (resolve) {
+ setTimeout(resolve, 250);
+ }));
+ var container = document.getElementById('game-container');
+ if (container) {
+ container.querySelectorAll('img[src]').forEach(function (img) {
+ if (!img.complete) {
+ promises.push(new Promise(function (resolve) {
+ img.addEventListener('load', resolve, { once: true });
+ img.addEventListener('error', resolve, { once: true });
+ }));
  }
  });
+ }
+ return Promise.all(promises);
+ }
+
+ function fadeOutPageOverlay() {
+ var overlay = ensurePageTransitionOverlay();
+ if (!overlay || overlay.classList.contains('fade-out')) {
+ return;
+ }
+ if (overlayRevealTimer) {
+ clearTimeout(overlayRevealTimer);
+ }
+ var revealed = false;
+ function reveal() {
+ if (revealed) {
+ return;
+ }
+ revealed = true;
+ requestAnimationFrame(function () {
+ overlay.classList.add('fade-out');
+ });
+ }
+ waitForPageAssets().then(reveal).catch(reveal);
+ overlayRevealTimer = setTimeout(reveal, 3500);
+ }
+
+ function initCurrentPage() {
+ fadeOutPageOverlay();
+ if (typeof window.updateCarousel === 'function' && document.getElementById('carousel-track')) {
+ setTimeout(window.updateCarousel, 50);
+ setTimeout(window.updateCarousel, 400);
+ }
+ if (typeof window.initJalurPreview === 'function' && document.getElementById('jalur-preview-container')) {
+ var nameEl = document.getElementById('jalur-name');
+ window.initJalurPreview('jalur-preview-container', nameEl ? 'jalur-name' : undefined);
+ }
+ if (typeof window.initPageUI === 'function') {
+ window.initPageUI();
+ }
+ document.dispatchEvent(new CustomEvent('game:page-ready', {
+ detail: { url: window.location.pathname }
+ }));
+ }
+
+ document.addEventListener('DOMContentLoaded', initCurrentPage);
  document.addEventListener('livewire:navigating', function () {
- const overlay = document.getElementById('page-transition-overlay');
- if (overlay) {
+ var overlay = ensurePageTransitionOverlay();
  overlay.classList.remove('fade-out');
- }
  });
- document.addEventListener('livewire:navigated', function () {
- const overlay = document.getElementById('page-transition-overlay');
- if (overlay) {
- setTimeout(function () {
- overlay.classList.add('fade-out');
- }, 150);
+ document.addEventListener('livewire:navigated', initCurrentPage);
+ window.addEventListener('pageshow', function (e) {
+ if (e.persisted) {
+ initCurrentPage();
  }
  });
  window.recolorCharacterImage = function (scene, sourceKey, customColors) {

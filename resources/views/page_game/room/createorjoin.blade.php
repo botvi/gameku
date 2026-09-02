@@ -2,7 +2,7 @@
 
 @section('title', 'Custom Room — Papan Jawara')
 
-@push('styles')
+@section('content')
 <style>
     body {
         margin: 0;
@@ -406,9 +406,7 @@
         }
     }
 </style>
-@endpush
 
-@section('content')
 <div id="game-ui">
     <div id="ps5-backdrop" class="ps5-backdrop-glow bg-slide-4"></div>
     <canvas id="ps5-particles"
