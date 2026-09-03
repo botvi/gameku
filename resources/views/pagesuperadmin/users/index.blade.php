@@ -3,91 +3,81 @@
 @section('content')
     <div class="pc-container">
         <div class="pc-content">
-            <!-- [ breadcrumb ] start -->
-            <div class="page-header">
-                <div class="page-block">
-                    <div class="row align-items-center">
-                        <div class="col-md-12">
-                            <div class="page-header-title mb-2">
-                                <h4 class="m-0 text-dark fw-bold">Kelola User (Player)</h4>
-                            </div>
-                            <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('dashboard-superadmin') }}">Home</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Manajemen User</li>
-                            </ul>
-                        </div>
-                    </div>
+            <!-- Header Title -->
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 pb-2 border-bottom">
+                <div>
+                    <h3 class="h4 fw-bold text-slate-900 mb-1">Manajemen Player</h3>
+                    <p class="text-muted text-sm mb-0">Kelola akun pengguna, status blokir, saldo koin, dan rekor pertandingan.</p>
                 </div>
             </div>
-            <!-- [ breadcrumb ] end -->
 
             <!-- [ Main Content ] start -->
             <div class="row">
                 <div class="col-12">
-                    <div class="card border-0 shadow-sm rounded-4">
-                        <div class="card-header bg-white border-0 py-3">
-                            <h5 class="mb-0 text-dark fw-bold">Daftar Player Game</h5>
+                    <div class="card">
+                        <div class="card-header py-3">
+                            <h6 class="mb-0 fw-bold text-slate-900">Daftar Player Game</h6>
                         </div>
-                        <div class="card-body p-4">
+                        <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle" id="simpletable">
-                                    <thead class="table-light text-muted uppercase font-semibold text-xs">
+                                <table class="table align-middle" id="simpletable">
+                                    <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th class="ps-4">#</th>
                                             <th>PLAYER PROFILE</th>
                                             <th>EMAIL</th>
                                             <th>SALDO KOIN</th>
-                                            <th>REKOR (MENANG / KALAH)</th>
+                                            <th>REKOR MATCH</th>
                                             <th>STATUS</th>
-                                            <th class="text-center">AKSI</th>
+                                            <th class="pe-4 text-center">AKSI</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse($users as $index => $u)
                                             <tr>
-                                                <td>{{ $index + 1 }}</td>
+                                                <td class="ps-4 text-muted fw-semibold" style="font-size: 12px;">{{ $index + 1 }}</td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        <img src="{{ $u->foto_profile ?? asset('admin/assets/images/user/avatar-2.jpg') }}" alt="User" class="rounded-circle me-3" style="width: 42px; height: 42px; object-fit: cover;">
+                                                        <img src="{{ $u->foto_profile ?? asset('admin/assets/images/user/avatar-2.jpg') }}" alt="User" class="rounded-circle me-3 border" style="width: 40px; height: 40px; object-fit: cover;">
                                                         <div>
-                                                            <span class="fw-bold text-dark d-block">{{ $u->nama_jalur ?? 'Belum Membuat Jalur' }}</span>
-                                                            <span class="text-muted text-xs">Role: {{ ucfirst($u->role) }}</span>
+                                                            <span class="fw-bold text-slate-900 d-block" style="font-size: 14px;">{{ $u->nama_jalur ?? 'Belum Membuat Jalur' }}</span>
+                                                            <span class="shadcn-badge shadcn-badge-secondary mt-1" style="font-size: 10px; padding: 2px 6px;">Role: {{ ucfirst($u->role) }}</span>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>{{ $u->email }}</td>
+                                                <td class="text-slate-700" style="font-size: 13px;">{{ $u->email }}</td>
                                                 <td>
-                                                    <span class="badge bg-light-warning text-warning border border-warning rounded-pill py-1 px-3 fw-bold">
+                                                    <span class="shadcn-badge shadcn-badge-coin">
                                                         <i class="ti ti-coin me-1"></i>{{ number_format($u->kuansing_poin) }} KP
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex gap-2">
-                                                        <span class="badge bg-light-success text-success border border-success rounded-pill px-2 py-1">
-                                                            🏆 {{ $u->wins_count }} Menang
+                                                        <span class="shadcn-badge shadcn-badge-success">
+                                                            🏆 {{ $u->wins_count }} Win
                                                         </span>
-                                                        <span class="badge bg-light-danger text-danger border border-danger rounded-pill px-2 py-1">
-                                                            💀 {{ $u->losses_count }} Kalah
+                                                        <span class="shadcn-badge shadcn-badge-danger">
+                                                            💀 {{ $u->losses_count }} Loss
                                                         </span>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     @if($u->is_blocked)
-                                                        <span class="badge bg-light-danger text-danger border border-danger rounded-pill px-3 py-1">BLOCKED</span>
+                                                        <span class="shadcn-badge shadcn-badge-danger">BLOCKED</span>
                                                     @else
-                                                        <span class="badge bg-light-success text-success border border-success rounded-pill px-3 py-1">ACTIVE</span>
+                                                        <span class="shadcn-badge shadcn-badge-success">ACTIVE</span>
                                                     @endif
                                                 </td>
-                                                <td class="text-center">
+                                                <td class="pe-4 text-center">
                                                     <form action="{{ route('superadmin.users.toggle-block', $u->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin mengubah status blokir untuk player ini?')">
                                                         @csrf
                                                         @if($u->is_blocked)
-                                                            <button type="submit" class="btn btn-sm btn-success rounded-pill px-3">
-                                                                <i class="ti ti-lock-open me-1"></i> Unblock Player
+                                                            <button type="submit" class="btn-shadcn-success">
+                                                                <i class="ti ti-lock-open me-1"></i> Unblock
                                                             </button>
                                                         @else
-                                                            <button type="submit" class="btn btn-sm btn-danger rounded-pill px-3">
-                                                                <i class="ti ti-lock me-1"></i> Block Player
+                                                            <button type="submit" class="btn-shadcn-danger">
+                                                                <i class="ti ti-lock me-1"></i> Block
                                                             </button>
                                                         @endif
                                                     </form>

@@ -31,6 +31,257 @@
     <!-- [Template CSS Files] -->
     <link rel="stylesheet" href="{{ asset('admin') }}/assets/css/style.css" id="main-style-link">
     <link rel="stylesheet" href="{{ asset('admin') }}/assets/css/style-preset.css">
+
+    <!-- Shadcn UI Design System -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --bg-slate-50: #f8fafc;
+            --border-slate-200: #e2e8f0;
+            --border-slate-300: #cbd5e1;
+            --text-slate-900: #0f172a;
+            --text-slate-700: #334155;
+            --text-slate-500: #64748b;
+            --text-slate-400: #94a3b8;
+            --sidebar-bg: #0f172a;
+            --primary-slate: #0f172a;
+        }
+
+        body {
+            font-family: var(--font-sans) !important;
+            background-color: var(--bg-slate-50) !important;
+            color: var(--text-slate-900) !important;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Page Container */
+        .pc-container {
+            background-color: var(--bg-slate-50) !important;
+            min-height: 100vh;
+        }
+        .pc-content {
+            padding: 24px 32px !important;
+        }
+
+        /* Shadcn Card */
+        .card {
+            background-color: #ffffff !important;
+            border: 1px solid var(--border-slate-200) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .card-header {
+            background-color: #ffffff !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            padding: 18px 24px !important;
+        }
+
+        /* Shadcn Table */
+        .table {
+            margin-bottom: 0 !important;
+        }
+        .table th {
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            color: var(--text-slate-500) !important;
+            background-color: #f8fafc !important;
+            border-bottom: 1px solid var(--border-slate-200) !important;
+            padding: 12px 16px !important;
+        }
+        .table td {
+            padding: 14px 16px !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            vertical-align: middle !important;
+            font-size: 13.5px !important;
+            color: var(--text-slate-700) !important;
+        }
+        .table tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+
+        /* Shadcn Badges */
+        .shadcn-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 11.5px;
+            font-weight: 600;
+            line-height: 1;
+        }
+        .shadcn-badge-success {
+            background-color: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+        .shadcn-badge-danger {
+            background-color: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+        .shadcn-badge-warning {
+            background-color: #fffbeb;
+            color: #b45309;
+            border: 1px solid #fde68a;
+        }
+        .shadcn-badge-coin {
+            background-color: #fefce8;
+            color: #a16207;
+            border: 1px solid #fef08a;
+        }
+        .shadcn-badge-secondary {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Shadcn Buttons */
+        .btn-shadcn-primary {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+            border: 1px solid #0f172a !important;
+            border-radius: 8px !important;
+            padding: 8px 16px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+            transition: all 0.15s ease-in-out !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-shadcn-primary:hover {
+            background-color: #1e293b !important;
+            border-color: #1e293b !important;
+            color: #ffffff !important;
+            transform: translateY(-1px);
+        }
+        
+        .btn-shadcn-outline {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            padding: 8px 16px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            transition: all 0.15s ease-in-out !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-shadcn-outline:hover {
+            background-color: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+
+        .btn-shadcn-danger {
+            background-color: #ef4444 !important;
+            color: #ffffff !important;
+            border: 1px solid #dc2626 !important;
+            border-radius: 8px !important;
+            padding: 8px 16px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            transition: all 0.15s ease-in-out !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-shadcn-danger:hover {
+            background-color: #dc2626 !important;
+            color: #ffffff !important;
+        }
+
+        .btn-shadcn-success {
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+            border: 1px solid #059669 !important;
+            border-radius: 8px !important;
+            padding: 8px 16px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            transition: all 0.15s ease-in-out !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-shadcn-success:hover {
+            background-color: #059669 !important;
+            color: #ffffff !important;
+        }
+
+        /* Shadcn Inputs */
+        .form-control, .form-select {
+            border-radius: 8px !important;
+            border: 1px solid var(--border-slate-200) !important;
+            padding: 9px 13px !important;
+            font-size: 13.5px !important;
+            color: var(--text-slate-900) !important;
+            box-shadow: none !important;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #0f172a !important;
+            box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1) !important;
+        }
+
+        /* Modal Shadcn styling */
+        .modal-content {
+            border-radius: 14px !important;
+            border: 1px solid var(--border-slate-200) !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+        }
+        .modal-header {
+            border-bottom: 1px solid #f1f5f9 !important;
+            padding: 18px 24px !important;
+        }
+        .modal-footer {
+            border-top: 1px solid #f1f5f9 !important;
+            padding: 14px 24px !important;
+        }
+
+        /* Header & Navbar styling override */
+        .pc-sidebar {
+            background: #0f172a !important;
+            border-right: 1px solid #1e293b !important;
+        }
+        .pc-sidebar .pc-mtext, .pc-sidebar .pc-micon {
+            color: #94a3b8 !important;
+        }
+        .pc-sidebar .pc-link:hover .pc-mtext, 
+        .pc-sidebar .pc-link:hover .pc-micon {
+            color: #ffffff !important;
+        }
+        .pc-sidebar .pc-item.active > .pc-link {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-radius: 8px !important;
+        }
+        .pc-sidebar .pc-item.active > .pc-link .pc-mtext,
+        .pc-sidebar .pc-item.active > .pc-link .pc-micon {
+            color: #38bdf8 !important;
+        }
+
+        .pc-header {
+            background: #ffffff !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+        }
+
+        @media (max-width: 1024px) {
+            .pc-content {
+                padding: 16px !important;
+            }
+        }
+    </style>
     @yield('style')
 
 </head>

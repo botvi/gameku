@@ -4,15 +4,6 @@
 
 @section('content')
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        background-color: #0c111d;
-        color: #e2e8f0;
-        font-family: 'Pixelify Sans', monospace;
-        overflow: hidden;
-    }
-
     #shop-dashboard {
         position: absolute;
         top: 0;
@@ -28,8 +19,7 @@
         overflow: hidden;
     }
 
-    /* Top Bar */
-    .top-bar {
+    #shop-dashboard .top-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -39,7 +29,7 @@
         box-sizing: border-box;
     }
 
-    .back-btn-container {
+    #shop-dashboard .back-btn-container {
         width: 36px;
         height: 36px;
         display: flex;
@@ -49,22 +39,22 @@
         transition: transform 0.15s ease;
     }
 
-    .back-btn-container:hover {
+    #shop-dashboard .back-btn-container:hover {
         transform: scale(1.1);
     }
 
-    .back-btn-container:active {
+    #shop-dashboard .back-btn-container:active {
         transform: scale(0.9);
     }
 
-    .back-btn-container img {
+    #shop-dashboard .back-btn-container img {
         width: 100%;
         height: 100%;
         object-fit: contain;
         image-rendering: pixelated;
     }
 
-    .page-title {
+    #shop-dashboard .page-title {
         font-family: 'Press Start 2P', monospace;
         font-size: 13px;
         color: #22c55e;
@@ -73,14 +63,14 @@
         margin: 0;
     }
 
-    .coin-display {
+    #shop-dashboard .coin-display {
         display: flex;
         align-items: center;
         gap: 6px;
         z-index: 15;
     }
 
-    .coin-icon-wrapper {
+    #shop-dashboard .coin-icon-wrapper {
         position: relative;
         width: 32px;
         height: 32px;
@@ -91,13 +81,13 @@
         justify-content: center;
     }
 
-    .coin-icon-wrapper img {
+    #shop-dashboard .coin-icon-wrapper img {
         width: 100%;
         height: 100%;
         image-rendering: pixelated;
     }
 
-    .coin-amount {
+    #shop-dashboard .coin-amount {
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         font-weight: bold;
@@ -107,8 +97,7 @@
                      1px -1px 0px #ffffff, -1px 1px 0px #ffffff;
     }
 
-    /* Explanation Banner */
-    .banner-container {
+    #shop-dashboard .banner-container {
         margin: 4px 16px 10px;
         padding: 10px 14px;
         background: rgba(22, 163, 74, 0.25);
@@ -119,7 +108,7 @@
         z-index: 12;
     }
 
-    .banner-title {
+    #shop-dashboard .banner-title {
         font-family: 'Press Start 2P', monospace;
         font-size: 10px;
         font-weight: bold;
@@ -128,20 +117,19 @@
         margin-bottom: 4px;
     }
 
-    .banner-desc {
+    #shop-dashboard .banner-desc {
         font-family: 'Pixelify Sans', monospace;
         font-size: 11px;
-        color: #000000;
+        color: #ffffff;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         line-height: 1.3;
     }
 
-    /* Tab Switcher Bar */
-    .tab-bar-container {
+    #shop-dashboard .tab-bar-container {
         display: flex;
         justify-content: center;
         margin: 0 16px 12px;
-        background: rgba(15, 23, 42, 0.7);
+        background: rgba(15, 23, 42, 0.85);
         border: 2px solid rgba(34, 197, 94, 0.4);
         border-radius: 12px;
         padding: 4px;
@@ -150,7 +138,7 @@
         box-sizing: border-box;
     }
 
-    .tab-btn {
+    #shop-dashboard .tab-btn {
         flex: 1;
         padding: 8px 0;
         font-family: 'Press Start 2P', monospace;
@@ -165,14 +153,13 @@
         user-select: none;
     }
 
-    .tab-btn.active {
+    #shop-dashboard .tab-btn.active {
         color: #ffffff;
         background: #22c55e;
         box-shadow: 0 2px 8px rgba(34, 197, 94, 0.5);
     }
 
-    /* Scrollable Content Container */
-    .shop-content-scroll {
+    #shop-dashboard .shop-content-scroll {
         flex: 1;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
@@ -181,22 +168,21 @@
         z-index: 12;
     }
 
-    .shop-content-scroll::-webkit-scrollbar {
+    #shop-dashboard .shop-content-scroll::-webkit-scrollbar {
         width: 6px;
     }
 
-    .shop-content-scroll::-webkit-scrollbar-track {
+    #shop-dashboard .shop-content-scroll::-webkit-scrollbar-track {
         background: rgba(0, 0, 0, 0.2);
         border-radius: 10px;
     }
 
-    .shop-content-scroll::-webkit-scrollbar-thumb {
+    #shop-dashboard .shop-content-scroll::-webkit-scrollbar-thumb {
         background: rgba(34, 197, 94, 0.6);
         border-radius: 10px;
     }
 
-    /* Cards Grid Layout */
-    .cards-grid {
+    #shop-dashboard .cards-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
         gap: 12px;
@@ -206,10 +192,9 @@
         box-sizing: border-box;
     }
 
-    /* Topup Package Card */
-    .topup-card {
-        background: #ffffff;
-        border: 3px solid #86efac;
+    #shop-dashboard .topup-card {
+        background: rgba(15, 23, 42, 0.88);
+        border: 2px solid #86efac;
         border-radius: 16px;
         padding: 12px 8px;
         display: flex;
@@ -217,34 +202,34 @@
         align-items: center;
         justify-content: space-between;
         text-align: center;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         transition: transform 0.2s ease, border-color 0.2s ease;
         box-sizing: border-box;
     }
 
-    .topup-card:hover {
+    #shop-dashboard .topup-card:hover {
         transform: translateY(-2px);
         border-color: #22c55e;
-        background: #f0fdf4;
+        background: rgba(30, 41, 59, 0.95);
     }
 
-    .topup-coin-icon {
+    #shop-dashboard .topup-coin-icon {
         width: 36px;
         height: 36px;
         margin-bottom: 4px;
         image-rendering: pixelated;
     }
 
-    .topup-amount {
+    #shop-dashboard .topup-amount {
         font-family: 'Pixelify Sans', monospace;
         font-size: 16px;
         font-weight: bold;
-        color: #d97706;
-        text-shadow: 0 1px 0px #fef3c7;
+        color: #f59e0b;
+        text-shadow: 0 1px 0px #78350f;
         margin-bottom: 2px;
     }
 
-    .topup-price {
+    #shop-dashboard .topup-price {
         font-family: 'Pixelify Sans', monospace;
         font-size: 11px;
         font-weight: bold;
@@ -252,7 +237,7 @@
         margin-bottom: 8px;
     }
 
-    .btn-action-green {
+    #shop-dashboard .btn-action-green {
         width: 100%;
         padding: 7px 0;
         background: #22c55e;
@@ -262,19 +247,19 @@
         font-family: 'Press Start 2P', monospace;
         font-size: 8px;
         cursor: pointer;
-        text-shadow: 0 1px 2px #ffffff;
-        box-shadow: 0 3px 0 #ffffff;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        box-shadow: 0 3px 0 #14532d;
         transition: all 0.1s ease;
         box-sizing: border-box;
     }
 
-    .btn-action-green:hover {
+    #shop-dashboard .btn-action-green:hover {
         background: #4ade80;
     }
 
-    .btn-action-green:active {
+    #shop-dashboard .btn-action-green:active {
         transform: translateY(2px);
-        box-shadow: 0 1px 0 #ffffff;
+        box-shadow: 0 1px 0 #14532d;
     }
 
     /* Item Card */

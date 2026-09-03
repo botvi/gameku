@@ -3,53 +3,43 @@
 @section('content')
     <div class="pc-container">
         <div class="pc-content">
-            <!-- [ breadcrumb ] start -->
-            <div class="page-header">
-                <div class="page-block">
-                    <div class="row align-items-center">
-                        <div class="col-md-12">
-                            <div class="page-header-title mb-2">
-                                <h4 class="m-0 text-dark fw-bold">Pengaturan API KlikQRIS</h4>
-                            </div>
-                            <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('dashboard-superadmin') }}">Home</a></li>
-                                <li class="breadcrumb-item" aria-current="page">KlikQRIS Credentials</li>
-                            </ul>
-                        </div>
-                    </div>
+            <!-- Header Title -->
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 pb-2 border-bottom">
+                <div>
+                    <h3 class="h4 fw-bold text-slate-900 mb-1">Pengaturan API KlikQRIS</h3>
+                    <p class="text-muted text-sm mb-0">Konfigurasi kunci API dan ID Merchant untuk pemprosesan otomatis transaksi QRIS.</p>
                 </div>
             </div>
-            <!-- [ breadcrumb ] end -->
 
             <!-- [ Main Content ] start -->
-            <div class="row">
+            <div class="row g-4">
                 <div class="col-md-6 col-sm-12">
-                    <div class="card border-0 shadow-sm rounded-4">
-                        <div class="card-header bg-white border-0 py-3">
-                            <h5 class="mb-0 text-dark fw-bold">Konfigurasi Merchant</h5>
+                    <div class="card">
+                        <div class="card-header py-3">
+                            <h6 class="mb-0 fw-bold text-slate-900">Konfigurasi Merchant</h6>
                         </div>
                         <div class="card-body p-4">
                             <form action="{{ route('superadmin.settings.save') }}" method="POST">
                                 @csrf
                                 <div class="mb-3">
-                                    <label for="klikqris_merchant_id" class="form-label fw-semibold text-dark">ID Merchant KlikQRIS</label>
-                                    <input type="text" class="form-control rounded-3" id="klikqris_merchant_id" name="klikqris_merchant_id" value="{{ $merchantId }}" required placeholder="Contoh: 178032012018">
-                                    <div class="form-text text-muted text-xs">ID Merchant unik yang diperoleh dari dasbor merchant KlikQRIS.</div>
+                                    <label for="klikqris_merchant_id" class="form-label fw-medium text-slate-900" style="font-size: 13px;">ID Merchant KlikQRIS</label>
+                                    <input type="text" class="form-control" id="klikqris_merchant_id" name="klikqris_merchant_id" value="{{ $merchantId }}" required placeholder="Contoh: 178032012018">
+                                    <div class="form-text text-muted" style="font-size: 11px;">ID Merchant unik dari dasbor KlikQRIS.</div>
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="klikqris_api_key" class="form-label fw-semibold text-dark">API Key KlikQRIS</label>
+                                    <label for="klikqris_api_key" class="form-label fw-medium text-slate-900" style="font-size: 13px;">API Key KlikQRIS</label>
                                     <div class="input-group">
-                                        <input type="password" class="form-control rounded-start-3" id="klikqris_api_key" name="klikqris_api_key" value="{{ $apiKey }}" required placeholder="Masukkan API Key Anda">
-                                        <button class="btn btn-outline-secondary rounded-end-3" type="button" id="btnToggleApiKey">
+                                        <input type="password" class="form-control" id="klikqris_api_key" name="klikqris_api_key" value="{{ $apiKey }}" required placeholder="Masukkan API Key Anda">
+                                        <button class="btn-shadcn-outline" type="button" id="btnToggleApiKey" style="border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important;">
                                             <i class="ti ti-eye" id="toggleIcon"></i>
                                         </button>
                                     </div>
-                                    <div class="form-text text-muted text-xs">Kunci otorisasi API rahasia untuk memvalidasi request pembayaran.</div>
+                                    <div class="form-text text-muted" style="font-size: 11px;">Kunci otorisasi rahasia untuk validasi webhook & callback payment.</div>
                                 </div>
 
                                 <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary rounded-pill py-2 fw-semibold">
+                                    <button type="submit" class="btn-shadcn-primary py-2">
                                         <i class="ti ti-device-floppy me-1"></i> Simpan Konfigurasi
                                     </button>
                                 </div>
@@ -59,23 +49,26 @@
                 </div>
 
                 <div class="col-md-6 col-sm-12">
-                    <div class="card border-0 shadow-sm rounded-4 bg-light">
+                    <div class="card bg-slate-50">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold text-dark mb-3"><i class="ti ti-info-circle me-1 text-primary"></i> Panduan Kredensial</h5>
-                            <p class="text-muted text-sm mb-3">
-                                Kredensial ini digunakan oleh backend game untuk berkomunikasi langsung dengan server gateway <strong>KlikQRIS</strong> saat player ingin melakukan pembelian koin (Kuansing Poin).
+                            <h6 class="fw-bold text-slate-900 mb-3"><i class="ti ti-info-circle me-1 text-primary"></i> Panduan Kredensial</h6>
+                            <p class="text-muted text-sm mb-3" style="line-height: 1.6;">
+                                Kredensial ini digunakan backend game untuk berkomunikasi langsung dengan gateway <strong>KlikQRIS</strong> saat player membeli koin (KP).
                             </p>
-                            <h6 class="fw-bold text-dark text-xs text-uppercase mb-2">Langkah Sinkronisasi:</h6>
-                            <ol class="text-muted text-sm ps-3 mb-4">
-                                <li class="mb-2">Login ke dashboard KlikQRIS Anda.</li>
-                                <li class="mb-2">Salin <strong>Merchant ID</strong> dan <strong>API Key</strong> dari menu integrasi pengembang.</li>
-                                <li class="mb-2">Tempelkan data tersebut di form sebelah kiri dan simpan.</li>
-                                <li class="mb-2">Pastikan webhook global di dasbor KlikQRIS diarahkan ke: <br>
-                                    <code class="bg-white p-1 rounded border border-light text-xs font-mono select-all text-primary">{{ route('klikqris.webhook') }}</code>
+                            <h6 class="fw-bold text-slate-900 text-xs text-uppercase mb-2" style="letter-spacing: 0.05em;">Langkah Sinkronisasi:</h6>
+                            <ol class="text-muted text-sm ps-3 mb-4" style="line-height: 1.8;">
+                                <li>Login ke dashboard KlikQRIS Anda.</li>
+                                <li>Salin <strong>Merchant ID</strong> dan <strong>API Key</strong> dari menu integrasi pengembang.</li>
+                                <li>Tempelkan data tersebut di form sebelah kiri lalu klik simpan.</li>
+                                <li>Pastikan webhook global di dasbor KlikQRIS diarahkan ke: <br>
+                                    <code class="bg-white px-2 py-1 rounded border text-xs font-mono select-all text-primary d-inline-block mt-1">{{ route('klikqris.webhook') }}</code>
                                 </li>
                             </ol>
-                            <div class="alert alert-warning border border-warning rounded-3 mb-0" role="alert">
-                                <i class="ti ti-alert-triangle me-1"></i> <strong>Penting:</strong> Selalu amankan API Key Anda. Jangan membagikannya kepada siapa pun.
+                            <div class="shadcn-badge shadcn-badge-warning p-3 w-100 d-flex align-items-start gap-2" style="border-radius: 8px;">
+                                <i class="ti ti-alert-triangle f-18 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <strong class="d-block mb-1">Penting:</strong> Selalu amankan API Key Anda. Jangan membagikan kunci rahasia ini ke pihak mana pun.
+                                </div>
                             </div>
                         </div>
                     </div>

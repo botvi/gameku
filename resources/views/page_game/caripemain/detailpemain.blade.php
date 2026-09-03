@@ -4,16 +4,7 @@
 
 @section('content')
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        background-color: #0c111d;
-        color: #ffffff;
-        font-family: 'Pixelify Sans', monospace;
-        overflow: hidden;
-    }
-
-    #profile-dashboard {
+    #detail-pemain-dashboard {
         position: absolute;
         top: 0;
         left: 0;
@@ -29,13 +20,11 @@
         padding-bottom: 10px;
     }
 
-    /* Particles animation canvas */
-    #ps5-particles {
+    #detail-pemain-dashboard #ps5-particles {
         display: none;
     }
 
-    /* Top Navigation Bar */
-    .top-bar {
+    #detail-pemain-dashboard .top-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -46,7 +35,7 @@
         box-sizing: border-box;
     }
 
-    .back-btn-container {
+    #detail-pemain-dashboard .back-btn-container {
         width: 36px;
         height: 36px;
         display: flex;
@@ -56,21 +45,20 @@
         transition: transform 0.2s ease;
     }
 
-    .back-btn {
+    #detail-pemain-dashboard .back-btn {
         width: 36px;
         height: 36px;
     }
 
-    .back-btn-container:hover {
+    #detail-pemain-dashboard .back-btn-container:hover {
         transform: scale(1.1);
     }
 
-    .back-btn-container:active {
+    #detail-pemain-dashboard .back-btn-container:active {
         transform: scale(0.9);
     }
 
-    /* Coin Display (Top Right) from Menu style */
-    .coin-display {
+    #detail-pemain-dashboard .coin-display {
         display: flex;
         align-items: center;
         gap: 6px;
@@ -80,11 +68,11 @@
         transition: transform 0.2s;
     }
 
-    .coin-display:hover {
+    #detail-pemain-dashboard .coin-display:hover {
         transform: scale(1.05);
     }
 
-    .coin-icon-wrapper {
+    #detail-pemain-dashboard .coin-icon-wrapper {
         position: relative;
         width: 36px;
         height: 36px;
@@ -95,24 +83,13 @@
         justify-content: center;
     }
 
-    .coin-icon-wrapper img {
+    #detail-pemain-dashboard .coin-icon-wrapper img {
         width: 100%;
         height: 100%;
         image-rendering: pixelated;
     }
 
-    .coin-icon-wrapper::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: none;
-        display: none;
-    }
-
-    .coin-amount {
+    #detail-pemain-dashboard .coin-amount {
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         font-weight: bold;
@@ -129,18 +106,7 @@
             -1px 0px 0px #ffffff;
     }
 
-    @keyframes htmlShimmer {
-        0% {
-            transform: translateX(-150%) skewX(-25deg);
-        }
-
-        100% {
-            transform: translateX(150%) skewX(-25deg);
-        }
-    }
-
-    /* Main Content Scrollable Area */
-    .profile-container {
+    #detail-pemain-dashboard .profile-container {
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -152,38 +118,33 @@
         box-sizing: border-box;
     }
 
-    .profile-container::-webkit-scrollbar {
+    #detail-pemain-dashboard .profile-container::-webkit-scrollbar {
         width: 5px;
     }
 
-    .profile-container::-webkit-scrollbar-track {
+    #detail-pemain-dashboard .profile-container::-webkit-scrollbar-track {
         background: rgba(255, 255, 255, 0.02);
         border-radius: 4px;
     }
 
-    .profile-container::-webkit-scrollbar-thumb {
+    #detail-pemain-dashboard .profile-container::-webkit-scrollbar-thumb {
         background: rgba(59, 130, 246, 0.4);
         border-radius: 4px;
     }
 
-    .profile-container::-webkit-scrollbar-thumb:hover {
-        background: rgba(59, 130, 246, 0.6);
-    }
-
-    /* Premium PS5 Glass Card */
-    .ps5-card {
-        background: rgba(255, 255, 255, 0.025);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+    #detail-pemain-dashboard .ps5-card {
+        background: rgba(15, 23, 42, 0.88);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border-radius: 24px;
         width: calc(100% - 28px);
         margin: 0 auto 12px;
         padding: 16px;
         box-shadow:
-            0 10px 32px rgba(0, 0, 0, 0.6),
-            0 0 0 1px rgba(255, 255, 255, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            0 10px 32px rgba(0, 0, 0, 0.7),
+            0 0 0 1px rgba(255, 255, 255, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -192,7 +153,7 @@
         overflow: hidden;
     }
 
-    .ps5-card::before {
+    #detail-pemain-dashboard .ps5-card::before {
         content: '';
         position: absolute;
         top: 0; left: 0;
@@ -206,15 +167,14 @@
         border-radius: 24px;
     }
 
-    /* Profile Avatar wrapper container */
-    .profile-avatar-wrapper {
+    #detail-pemain-dashboard .profile-avatar-wrapper {
         position: relative;
         margin-top: 6px;
         margin-bottom: 10px;
         z-index: 2;
     }
 
-    .profile-avatar-container {
+    #detail-pemain-dashboard .profile-avatar-container {
         width: 80px;
         height: 80px;
         border-radius: 50%;
@@ -228,13 +188,13 @@
         box-sizing: border-box;
     }
 
-    .profile-avatar-img {
+    #detail-pemain-dashboard .profile-avatar-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    .status-dot-pulse {
+    #detail-pemain-dashboard .status-dot-pulse {
         position: absolute;
         bottom: 3px;
         right: 3px;
@@ -246,8 +206,7 @@
         box-shadow: none;
     }
 
-    /* Identity Details */
-    .profile-name {
+    #detail-pemain-dashboard .profile-name {
         font-size: 13px;
         font-weight: bold;
         color: #ffffff;
@@ -257,7 +216,7 @@
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
-    .profile-badge {
+    #detail-pemain-dashboard .profile-badge {
         font-family: 'Press Start 2P', monospace;
         font-size: 8px;
         background: linear-gradient(90deg, #3b82f6, #8b5cf6);
@@ -272,18 +231,17 @@
         text-transform: uppercase;
     }
 
-    /* Trophy-style Stats grid */
-    .stats-row {
+    #detail-pemain-dashboard .stats-row {
         display: flex;
         gap: 8px;
         width: 100%;
         margin-bottom: 14px;
     }
 
-    .stat-card {
+    #detail-pemain-dashboard .stat-card {
         flex: 1;
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 14px;
         padding: 8px 6px;
         display: flex;
@@ -294,31 +252,31 @@
         box-sizing: border-box;
     }
 
-    .stat-card-gold {
-        border-color: rgba(245, 158, 11, 0.3);
-        background: linear-gradient(180deg, rgba(245, 158, 11, 0.08) 0%, rgba(0, 0, 0, 0) 100%);
-        box-shadow: inset 0 1px 0 rgba(245, 158, 11, 0.1), 0 0 12px rgba(245, 158, 11, 0.06);
+    #detail-pemain-dashboard .stat-card-gold {
+        border-color: rgba(245, 158, 11, 0.4);
+        background: linear-gradient(180deg, rgba(245, 158, 11, 0.12) 0%, rgba(0, 0, 0, 0.2) 100%);
+        box-shadow: inset 0 1px 0 rgba(245, 158, 11, 0.2), 0 0 12px rgba(245, 158, 11, 0.1);
     }
 
-    .stat-card-silver {
-        border-color: rgba(148, 163, 184, 0.3);
-        background: linear-gradient(180deg, rgba(148, 163, 184, 0.08) 0%, rgba(0, 0, 0, 0) 100%);
-        box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.1);
+    #detail-pemain-dashboard .stat-card-silver {
+        border-color: rgba(148, 163, 184, 0.4);
+        background: linear-gradient(180deg, rgba(148, 163, 184, 0.12) 0%, rgba(0, 0, 0, 0.2) 100%);
+        box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.2);
     }
 
-    .stat-card-bronze {
-        border-color: rgba(6, 182, 212, 0.3);
-        background: linear-gradient(180deg, rgba(6, 182, 212, 0.08) 0%, rgba(0, 0, 0, 0) 100%);
-        box-shadow: inset 0 1px 0 rgba(6, 182, 212, 0.1), 0 0 12px rgba(6, 182, 212, 0.06);
+    #detail-pemain-dashboard .stat-card-bronze {
+        border-color: rgba(6, 182, 212, 0.4);
+        background: linear-gradient(180deg, rgba(6, 182, 212, 0.12) 0%, rgba(0, 0, 0, 0.2) 100%);
+        box-shadow: inset 0 1px 0 rgba(6, 182, 212, 0.2), 0 0 12px rgba(6, 182, 212, 0.1);
     }
 
-    .stat-icon {
+    #detail-pemain-dashboard .stat-icon {
         font-size: 15px;
         margin-bottom: 4px;
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
     }
 
-    .stat-label {
+    #detail-pemain-dashboard .stat-label {
         font-family: 'Press Start 2P', monospace;
         font-size: 6px;
         color: #94a3b8;
@@ -326,32 +284,20 @@
         text-transform: uppercase;
     }
 
-    .stat-value {
+    #detail-pemain-dashboard .stat-value {
         font-size: 13px;
         font-weight: bold;
         font-family: 'Pixelify Sans', monospace;
     }
 
-    .stat-card-gold .stat-value {
-        color: #f59e0b;
-        text-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
-    }
+    #detail-pemain-dashboard .stat-card-gold .stat-value { color: #f59e0b; text-shadow: 0 0 6px rgba(245, 158, 11, 0.4); }
+    #detail-pemain-dashboard .stat-card-silver .stat-value { color: #e2e8f0; text-shadow: 0 0 6px rgba(148, 163, 184, 0.4); }
+    #detail-pemain-dashboard .stat-card-bronze .stat-value { color: #22d3ee; text-shadow: 0 0 6px rgba(6, 182, 212, 0.4); }
 
-    .stat-card-silver .stat-value {
-        color: #e2e8f0;
-        text-shadow: 0 0 6px rgba(148, 163, 184, 0.4);
-    }
-
-    .stat-card-bronze .stat-value {
-        color: #22d3ee;
-        text-shadow: 0 0 6px rgba(6, 182, 212, 0.4);
-    }
-
-    /* Boat Preview Card container */
-    .preview-panel {
+    #detail-pemain-dashboard .preview-panel {
         width: 100%;
-        background: rgba(0, 0, 0, 0.22);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(59, 130, 246, 0.25);
         border-radius: 16px;
         padding: 10px;
         display: flex;
@@ -360,7 +306,7 @@
         box-sizing: border-box;
     }
 
-    .preview-panel-title {
+    #detail-pemain-dashboard .preview-panel-title {
         font-family: 'Press Start 2P', monospace;
         font-size: 7px;
         color: #38bdf8;
@@ -370,19 +316,19 @@
         text-transform: uppercase;
     }
 
-    #jalur-preview-container {
+    #detail-pemain-dashboard #jalur-preview-container {
         width: 250px;
         height: 85px;
         border-radius: 10px;
         overflow: hidden;
-        background: rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(59, 130, 246, 0.2);
+        background: rgba(0, 0, 0, 0.35);
+        border: 1.5px solid rgba(59, 130, 246, 0.3);
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
-    #jalur-name {
+    #detail-pemain-dashboard #jalur-name {
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         font-weight: bold;
@@ -393,7 +339,7 @@
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
 
-    .section-header {
+    #detail-pemain-dashboard .section-header {
         width: calc(100% - 28px);
         margin: 4px auto 6px;
         font-family: 'Press Start 2P', monospace;
@@ -405,7 +351,7 @@
         text-transform: uppercase;
     }
 
-    .history-slider {
+    #detail-pemain-dashboard .history-slider {
         width: calc(100% - 28px);
         margin: 0 auto 10px;
         display: flex;
@@ -420,55 +366,51 @@
         touch-action: pan-x !important;
     }
 
-    .history-slider::-webkit-scrollbar {
+    #detail-pemain-dashboard .history-slider::-webkit-scrollbar {
         height: 5px;
     }
 
-    .history-slider::-webkit-scrollbar-track {
+    #detail-pemain-dashboard .history-slider::-webkit-scrollbar-track {
         background: rgba(0, 0, 0, 0.3);
         border-radius: 4px;
     }
 
-    .history-slider::-webkit-scrollbar-thumb {
+    #detail-pemain-dashboard .history-slider::-webkit-scrollbar-thumb {
         background: #3b82f6;
         border-radius: 4px;
     }
 
-    .history-slider::-webkit-scrollbar-thumb:hover {
-        background: #2563eb;
-    }
-
-    .history-card {
+    #detail-pemain-dashboard .history-card {
         flex-shrink: 0;
         width: 136px;
         height: 86px;
         border-radius: 12px;
-        background: #0f172a;
-        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        background: rgba(15, 23, 42, 0.9);
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
         padding: 8px 10px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         scroll-snap-align: start;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         box-sizing: border-box;
         transition: all 0.2s ease;
     }
 
-    .history-card:hover {
+    #detail-pemain-dashboard .history-card:hover {
         border-color: #3b82f6;
         background: #1e293b;
         transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.25);
+        box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
     }
 
-    .history-outcome-row {
+    #detail-pemain-dashboard .history-outcome-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-    .outcome-badge {
+    #detail-pemain-dashboard .outcome-badge {
         font-size: 8px;
         font-weight: 700;
         padding: 2px 6px;
@@ -477,27 +419,27 @@
         text-transform: uppercase;
     }
 
-    .outcome-win {
-        background: rgba(34, 197, 94, 0.15);
+    #detail-pemain-dashboard .outcome-win {
+        background: rgba(34, 197, 94, 0.2);
         color: #4ade80;
-        border: 1px solid rgba(34, 197, 94, 0.3);
+        border: 1px solid rgba(34, 197, 94, 0.4);
         text-shadow: 0 0 5px rgba(74, 222, 128, 0.4);
     }
 
-    .outcome-loss {
-        background: rgba(239, 68, 68, 0.15);
+    #detail-pemain-dashboard .outcome-loss {
+        background: rgba(239, 68, 68, 0.2);
         color: #f87171;
-        border: 1px solid rgba(239, 68, 68, 0.3);
+        border: 1px solid rgba(239, 68, 68, 0.4);
         text-shadow: 0 0 5px rgba(248, 113, 113, 0.4);
     }
 
-    .history-room-code {
+    #detail-pemain-dashboard .history-room-code {
         font-family: 'Press Start 2P', monospace;
         font-size: 6px;
         color: #64748b;
     }
 
-    .history-opponent {
+    #detail-pemain-dashboard .history-opponent {
         font-size: 11px;
         font-weight: 600;
         color: #e2e8f0;
@@ -507,7 +449,7 @@
         margin: 4px 0;
     }
 
-    .history-time-row {
+    #detail-pemain-dashboard .history-time-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -515,22 +457,21 @@
         color: #64748b;
     }
 
-    .history-date {
+    #detail-pemain-dashboard .history-date {
         font-size: 8px;
         font-family: 'Pixelify Sans', monospace;
     }
 
-    .history-mode {
+    #detail-pemain-dashboard .history-mode {
         font-size: 7px;
         font-family: 'Press Start 2P', monospace;
-        color: #475569;
+        color: #64748b;
     }
 
-    /* Empty state layout */
-    .history-empty {
+    #detail-pemain-dashboard .history-empty {
         width: 100%;
-        background: rgba(255, 255, 255, 0.01);
-        border: 1.5px dashed rgba(255, 255, 255, 0.08);
+        background: rgba(15, 23, 42, 0.85);
+        border: 1.5px dashed rgba(255, 255, 255, 0.15);
         border-radius: 12px;
         padding: 16px;
         text-align: center;
@@ -541,7 +482,7 @@
         box-sizing: border-box;
     }
 
-    .history-empty-title {
+    #detail-pemain-dashboard .history-empty-title {
         font-family: 'Press Start 2P', monospace;
         font-size: 7px;
         color: #38bdf8;
@@ -549,7 +490,7 @@
         text-shadow: 0 0 5px rgba(56, 189, 248, 0.3);
     }
 
-    .history-empty-subtitle {
+    #detail-pemain-dashboard .history-empty-subtitle {
         font-size: 10px;
         color: rgba(255, 255, 255, 0.6);
     }
@@ -592,7 +533,7 @@ $corakDataUrl = ($modelJalur && ($modelJalur->model_jalur['boat_unlocked'] ?? fa
 $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ?? false)) ? ($modelJalur->model_jalur['lambai_data_url'] ?? null) : null;
 @endphp
 
-<div id="profile-dashboard">
+<div id="detail-pemain-dashboard">
     <!-- Top bar: Back and Coin display -->
     <div>
         <div class="top-bar">

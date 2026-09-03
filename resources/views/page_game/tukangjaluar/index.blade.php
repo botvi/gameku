@@ -10,7 +10,7 @@
     }
 
     /* Top Bar Header */
-    .top-bar {
+    #tukangjaluar-dashboard .top-bar {
         position: absolute;
         top: 0;
         left: 0;
@@ -24,11 +24,11 @@
         pointer-events: none;
     }
 
-    .back-btn-container, .coin-display {
+    #tukangjaluar-dashboard .back-btn-container, #tukangjaluar-dashboard .coin-display {
         pointer-events: auto;
     }
 
-    .back-btn-container {
+    #tukangjaluar-dashboard .back-btn-container {
         width: 36px;
         height: 36px;
         display: flex;
@@ -38,29 +38,29 @@
         transition: transform 0.15s ease;
     }
 
-    .back-btn-container:hover {
+    #tukangjaluar-dashboard .back-btn-container:hover {
         transform: scale(1.1);
     }
 
-    .back-btn-container:active {
+    #tukangjaluar-dashboard .back-btn-container:active {
         transform: scale(0.9);
     }
 
-    .back-btn-container img {
+    #tukangjaluar-dashboard .back-btn-container img {
         width: 100%;
         height: 100%;
         object-fit: contain;
         image-rendering: pixelated;
     }
 
-    .coin-display {
+    #tukangjaluar-dashboard .coin-display {
         display: flex;
         align-items: center;
         gap: 6px;
         z-index: 15;
     }
 
-    .coin-amount {
+    #tukangjaluar-dashboard .coin-amount {
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         font-weight: bold;
@@ -74,7 +74,7 @@
 
 @section('content')
 <!-- Top Bar -->
-<div>
+<div id="tukangjaluar-dashboard">
     <div class="top-bar">
         <div class="back-btn-container" onclick="window.navigateToPage('/main-menu')">
             <img src="/game_pacu/assets/image/ui/back.png" alt="Back" class="back-btn">

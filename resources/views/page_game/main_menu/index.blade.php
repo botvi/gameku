@@ -258,7 +258,7 @@
         will-change: transform;
     }
 
-    .ps5-card {
+    .ps5-carousel-container .ps5-card {
         width: 110px;
         height: 135px;
         flex-shrink: 0;
@@ -280,7 +280,7 @@
         overflow: hidden;
     }
 
-    .ps5-card.active {
+    .ps5-carousel-container .ps5-card.active {
         opacity: 1;
         transform: scale(1.1);
         border-color: #ffffff;
@@ -288,23 +288,23 @@
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
     }
 
-    .ps5-card.card-green {
+    .ps5-carousel-container .ps5-card.card-green {
         --glow-color: rgba(34, 197, 94, 0.6);
     }
 
-    .ps5-card.card-red {
+    .ps5-carousel-container .ps5-card.card-red {
         --glow-color: rgba(239, 68, 68, 0.6);
     }
 
-    .ps5-card.card-orange {
+    .ps5-carousel-container .ps5-card.card-orange {
         --glow-color: rgba(249, 115, 22, 0.6);
     }
 
-    .ps5-card.card-yellow {
+    .ps5-carousel-container .ps5-card.card-yellow {
         --glow-color: rgba(234, 179, 8, 0.6);
     }
 
-    .ps5-card.card-purple {
+    .ps5-carousel-container .ps5-card.card-purple {
         --glow-color: rgba(168, 85, 247, 0.6);
     }
 
@@ -511,7 +511,7 @@
         z-index: 30;
     }
 
-    .search-container {
+    .matchmaking-radar-container {
         position: relative;
         width: 120px;
         height: 120px;
@@ -652,7 +652,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        z-index: 50;
+        z-index: 97;
         transition: all 0.2s ease;
         box-shadow: 3px 0 12px rgba(0,0,0,0.4);
     }
@@ -679,24 +679,47 @@
         50%      { transform: scale(1.4); opacity: 0.7; }
     }
 
+    #chat-backdrop {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 98;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.28s ease;
+    }
+    #chat-backdrop.show {
+        display: block;
+        opacity: 1;
+    }
+
     #chat-sidebar {
         position: absolute;
-        top: 0; left: -260px;
+        top: 0; left: 0;
         width: 260px;
+        max-width: 82vw;
         height: 100%;
-        background: rgba(8, 15, 30, 0.92);
-        border-right: 1px solid rgba(255,255,255,0.1);
+        background: rgba(8, 15, 30, 0.95);
+        border-right: 1px solid rgba(255,255,255,0.12);
         backdrop-filter: blur(18px);
         -webkit-backdrop-filter: blur(18px);
-        z-index: 49;
+        z-index: 99;
         display: flex;
         flex-direction: column;
         box-shadow: 4px 0 24px rgba(0,0,0,0.6);
-        transition: left 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.32s;
         box-sizing: border-box;
     }
 
-    #chat-sidebar.open { left: 0; }
+    #chat-sidebar.open {
+        transform: translateX(0);
+        visibility: visible;
+    }
 
     #chat-sidebar::before {
         content: '';
@@ -1109,7 +1132,7 @@
     </div>
 
     <div class="loading-overlay" id="loading-overlay">
-        <div class="search-container">
+        <div class="matchmaking-radar-container">
             <div class="radar"></div>
             <div class="magnifying-glass">
                 <div class="lens"></div>
@@ -1149,6 +1172,7 @@
 </div>
 
 <!-- ===== GLOBAL CHAT SIDEBAR ===== -->
+<div id="chat-backdrop" onclick="toggleChat()"></div>
 <div id="chat-toggle-btn" onclick="toggleChat()">
     <span class="chat-icon"><i class="bi bi-chat-dots-fill"></i></span>
     <span id="chat-unread-dot"></span>
@@ -1165,7 +1189,7 @@
             <button onclick="toggleChat()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup">✕</button>
         </div>
     </div>
-    <div id="chat-messages">
+    <div id="chat-messages" class="scrollable">
         <div class="chat-system-msg">— Selamat datang di Global Chat —</div>
     </div>
     <div class="chat-input-area">
@@ -1583,20 +1607,30 @@
     window.toggleChat = function() {
         chatOpen = !chatOpen;
         const sidebar = document.getElementById('chat-sidebar');
+        const backdrop = document.getElementById('chat-backdrop');
+        const inp = document.getElementById('chat-input');
         if (sidebar) {
             if (chatOpen) {
                 sidebar.classList.add('open');
+                if (backdrop) backdrop.classList.add('show');
                 chatUnread = 0;
                 const dot = document.getElementById('chat-unread-dot');
                 if (dot) dot.style.display = 'none';
                 setTimeout(() => {
-                    const inp = document.getElementById('chat-input');
                     if (inp) inp.focus();
                 }, 350);
                 const msgs = document.getElementById('chat-messages');
                 if (msgs) msgs.scrollTop = msgs.scrollHeight;
             } else {
                 sidebar.classList.remove('open');
+                if (backdrop) backdrop.classList.remove('show');
+                if (inp) inp.blur();
+                if (document.activeElement) document.activeElement.blur();
+                setTimeout(() => {
+                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                }, 50);
             }
         }
     };
@@ -1616,10 +1650,21 @@
         const sidebar = document.getElementById('chat-sidebar');
         const toggleBtn = document.getElementById('chat-toggle-btn');
         if (sidebar && !sidebar.contains(e.target) && toggleBtn && !toggleBtn.contains(e.target)) {
-            chatOpen = false;
-            sidebar.classList.remove('open');
+            toggleChat();
         }
     });
+
+    // Reset mobile viewport scroll when input loses focus
+    const chatInputEl = document.getElementById('chat-input');
+    if (chatInputEl) {
+        chatInputEl.addEventListener('blur', function() {
+            setTimeout(() => {
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }, 100);
+        });
+    }
 
     initGlobalChat();
 

@@ -88,7 +88,7 @@
         will-change: transform;
     }
 
-    .ps5-card {
+    .ps5-carousel-container .ps5-card {
         width: 110px;
         height: 135px;
         flex-shrink: 0;
@@ -110,7 +110,7 @@
         overflow: hidden;
     }
 
-    .ps5-card.active {
+    .ps5-carousel-container .ps5-card.active {
         opacity: 1;
         transform: scale(1.1);
         border-color: #ffffff;
@@ -118,11 +118,11 @@
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
     }
 
-    .ps5-card.card-green {
+    .ps5-carousel-container .ps5-card.card-green {
         --glow-color: rgba(34, 197, 94, 0.6);
     }
 
-    .ps5-card.card-blue {
+    .ps5-carousel-container .ps5-card.card-blue {
         --glow-color: rgba(59, 130, 246, 0.6);
     }
 

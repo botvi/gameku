@@ -4,15 +4,6 @@
 
 @section('content')
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        background-color: #0c111d;
-        color: #ffffff;
-        font-family: 'Pixelify Sans', monospace;
-        overflow: hidden;
-    }
-
     #search-dashboard {
         position: absolute;
         top: 0;
@@ -29,13 +20,11 @@
         padding-bottom: 10px;
     }
 
-    /* Particles animation canvas */
-    #ps5-particles {
+    #search-dashboard #ps5-particles {
         display: none;
     }
 
-    /* Top Navigation Bar */
-    .top-bar {
+    #search-dashboard .top-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -46,7 +35,7 @@
         box-sizing: border-box;
     }
 
-    .back-btn-container {
+    #search-dashboard .back-btn-container {
         width: 36px;
         height: 36px;
         display: flex;
@@ -56,16 +45,16 @@
         transition: transform 0.2s ease;
     }
 
-    .back-btn {
+    #search-dashboard .back-btn {
         width: 36px;
         height: 36px;
     }
 
-    .back-btn-container:hover {
+    #search-dashboard .back-btn-container:hover {
         transform: scale(1.1);
     }
 
-    .coin-display {
+    #search-dashboard .coin-display {
         display: flex;
         align-items: center;
         gap: 6px;
@@ -73,7 +62,7 @@
         box-sizing: border-box;
     }
 
-    .coin-icon-wrapper {
+    #search-dashboard .coin-icon-wrapper {
         position: relative;
         width: 36px;
         height: 36px;
@@ -84,21 +73,13 @@
         justify-content: center;
     }
 
-    .coin-icon-wrapper img {
+    #search-dashboard .coin-icon-wrapper img {
         width: 100%;
         height: 100%;
         image-rendering: pixelated;
     }
-    .coin-icon-wrapper::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: none;
-        display: none;
-    }
 
-    .coin-amount {
+    #search-dashboard .coin-amount {
         font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         font-weight: bold;
@@ -111,8 +92,7 @@
             -1px 1px 0px #ffffff;
     }
 
-    /* Search Section & Card */
-    .search-container {
+    #search-dashboard .search-container {
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -125,27 +105,26 @@
         padding: 0 14px;
     }
 
-    .search-container::-webkit-scrollbar {
+    #search-dashboard .search-container::-webkit-scrollbar {
         width: 5px;
     }
 
-    .search-container::-webkit-scrollbar-thumb {
+    #search-dashboard .search-container::-webkit-scrollbar-thumb {
         background: rgba(239, 68, 68, 0.4);
         border-radius: 4px;
     }
 
-    /* Premium PS5 Search Bar Card */
-    .search-card {
-        background: rgba(255, 255, 255, 0.025);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+    #search-dashboard .search-card {
+        background: rgba(15, 23, 42, 0.88);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border-radius: 20px;
         padding: 18px;
         box-shadow:
-            0 10px 32px rgba(0, 0, 0, 0.6),
-            0 0 0 1px rgba(255, 255, 255, 0.04),
-            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            0 10px 32px rgba(0, 0, 0, 0.7),
+            0 0 0 1px rgba(255, 255, 255, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         display: flex;
         flex-direction: column;
         gap: 12px;
@@ -154,8 +133,7 @@
         overflow: hidden;
     }
 
-    /* Pixel scanline on search card */
-    .search-card::before {
+    #search-dashboard .search-card::before {
         content: '';
         position: absolute;
         top: 0; left: 0;
@@ -169,7 +147,7 @@
         border-radius: 20px;
     }
 
-    .search-title {
+    #search-dashboard .search-title {
         font-family: 'Press Start 2P', monospace;
         font-size: 10px;
         color: #f87171;
@@ -178,16 +156,16 @@
         margin-bottom: 2px;
     }
 
-    .search-form {
+    #search-dashboard .search-form {
         display: flex;
         gap: 10px;
         width: 100%;
     }
 
-    .search-input {
+    #search-dashboard .search-input {
         flex: 1;
-        background: rgba(0, 0, 0, 0.3);
-        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.4);
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
         border-radius: 12px;
         padding: 10px 14px;
         font-family: 'Pixelify Sans', monospace;
@@ -197,17 +175,17 @@
         transition: all 0.2s ease;
     }
 
-    .search-input::placeholder {
-        color: rgba(255, 255, 255, 0.25);
+    #search-dashboard .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.35);
     }
 
-    .search-input:focus {
+    #search-dashboard .search-input:focus {
         border-color: #f87171;
-        box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
-        background: rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        background: rgba(0, 0, 0, 0.5);
     }
 
-    .search-btn {
+    #search-dashboard .search-btn {
         background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         border: none;
         border-radius: 12px;
@@ -221,17 +199,16 @@
         text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.4);
     }
 
-    .search-btn:hover {
+    #search-dashboard .search-btn:hover {
         transform: translateY(-1px);
         box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
     }
 
-    .search-btn:active {
+    #search-dashboard .search-btn:active {
         transform: translateY(1px);
     }
 
-    /* Players List */
-    .section-header {
+    #search-dashboard .section-header {
         font-family: 'Press Start 2P', monospace;
         font-size: 8px;
         color: #ffffff;
@@ -241,41 +218,41 @@
         text-transform: uppercase;
     }
 
-    .players-list {
+    #search-dashboard .players-list {
         display: flex;
         flex-direction: column;
         gap: 10px;
         margin-bottom: 20px;
     }
 
-    .player-row {
-        background: rgba(15, 23, 42, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+    #search-dashboard .player-row {
+        background: rgba(15, 23, 42, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 16px;
         padding: 12px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         transition: all 0.2s ease;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
     }
 
-    .player-row:hover {
+    #search-dashboard .player-row:hover {
         border-color: rgba(239, 68, 68, 0.5);
-        background: rgba(30, 41, 59, 0.8);
+        background: rgba(30, 41, 59, 0.95);
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 16px rgba(239, 68, 68, 0.12);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 16px rgba(239, 68, 68, 0.2);
     }
 
-    .player-info {
+    #search-dashboard .player-info {
         display: flex;
         align-items: center;
         gap: 12px;
     }
 
-    .player-avatar-wrapper {
+    #search-dashboard .player-avatar-wrapper {
         width: 44px;
         height: 44px;
         border-radius: 50%;
@@ -288,34 +265,34 @@
         box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
     }
 
-    .player-avatar-img {
+    #search-dashboard .player-avatar-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    .player-details {
+    #search-dashboard .player-details {
         display: flex;
         flex-direction: column;
         gap: 2px;
     }
 
-    .player-name {
+    #search-dashboard .player-name {
         font-family: 'Press Start 2P', monospace;
         font-size: 8px;
         color: #ffffff;
         text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
 
-    .player-wins {
+    #search-dashboard .player-wins {
         font-size: 11px;
         color: #f59e0b;
         font-weight: bold;
     }
 
-    .detail-btn {
-        background: rgba(239, 68, 68, 0.08);
-        border: 1px solid rgba(239, 68, 68, 0.25);
+    #search-dashboard .detail-btn {
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.35);
         border-radius: 10px;
         padding: 8px 12px;
         font-family: 'Press Start 2P', monospace;
@@ -326,7 +303,7 @@
         text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
 
-    .detail-btn:hover {
+    #search-dashboard .detail-btn:hover {
         background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         border-color: #ef4444;
         color: #ffffff;
@@ -337,15 +314,14 @@
         text-shadow: 0 1px 2px rgba(0,0,0,0.4);
     }
 
-    .detail-btn:active {
+    #search-dashboard .detail-btn:active {
         transform: translateY(2px);
         box-shadow: 0 1px 0 #7f1d1d;
     }
 
-    /* Empty State */
-    .players-empty {
-        background: rgba(255, 255, 255, 0.01);
-        border: 1.5px dashed rgba(255, 255, 255, 0.08);
+    #search-dashboard .players-empty {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1.5px dashed rgba(255, 255, 255, 0.15);
         border-radius: 16px;
         padding: 24px;
         text-align: center;
@@ -355,21 +331,21 @@
         justify-content: center;
     }
 
-    .empty-icon {
+    #search-dashboard .empty-icon {
         font-size: 24px;
         margin-bottom: 8px;
     }
 
-    .empty-title {
+    #search-dashboard .empty-title {
         font-family: 'Press Start 2P', monospace;
         font-size: 8px;
-        color: #64748b;
+        color: #94a3b8;
         margin-bottom: 4px;
     }
 
-    .empty-subtitle {
+    #search-dashboard .empty-subtitle {
         font-size: 11px;
-        color: #475569;
+        color: #64748b;
     }
 </style>
 
