@@ -373,14 +373,14 @@
     }
 
     .modal-card {
-        background: #ffffff;
-        border: 4px solid #22c55e;
+        background: #0f172a;
+        border: 3px solid #22c55e;
         border-radius: 16px;
         width: 85%;
         max-width: 320px;
-        padding: 20px 16px;
+        padding: 22px 18px;
         text-align: center;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 0 24px rgba(34, 197, 94, 0.3), 6px 6px 0px #000000;
         box-sizing: border-box;
         animation: modalBounce 0.25s ease-out;
     }
@@ -392,11 +392,12 @@
 
     .modal-text {
         font-family: 'Pixelify Sans', monospace;
-        font-size: 14px;
+        font-size: 15px;
         font-weight: bold;
         color: #ffffff;
-        margin-bottom: 16px;
+        margin-bottom: 18px;
         line-height: 1.4;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
     }
 
     .modal-buttons {
@@ -415,7 +416,7 @@
         font-family: 'Press Start 2P', monospace;
         font-size: 9px;
         cursor: pointer;
-        box-shadow: 0 3px 0 #ffffff;
+        box-shadow: 0 3px 0 #14532d;
     }
 
     .modal-btn-no {
@@ -560,7 +561,7 @@
     <div class="modal-card">
         <div class="modal-text" id="modal-msg">Konfirmasi tindakan?</div>
         <div class="modal-buttons">
-            <button class="modal-btn-no" onclick="closeConfirmModal()">BATAL</button>
+            <button class="modal-btn-no" id="modal-btn-cancel" onclick="closeConfirmModal()">BATAL</button>
             <button class="modal-btn-yes" id="modal-btn-confirm">YA</button>
         </div>
     </div>
@@ -621,10 +622,27 @@
 
     // Modal Helpers
     let confirmCallback = null;
-    function openConfirmModal(msg, onConfirm) {
-        document.getElementById('modal-msg').innerText = msg;
+    function openConfirmModal(msg, onConfirm, showCancel = true, confirmText = 'YA', cancelText = 'BATAL') {
+        const msgEl = document.getElementById('modal-msg');
+        if (msgEl) msgEl.innerText = msg;
         confirmCallback = onConfirm;
+
+        const cancelBtn = document.getElementById('modal-btn-cancel');
+        const confirmBtn = document.getElementById('modal-btn-confirm');
+
+        if (cancelBtn) {
+            cancelBtn.style.display = showCancel ? 'block' : 'none';
+            cancelBtn.innerText = cancelText;
+        }
+        if (confirmBtn) {
+            confirmBtn.innerText = confirmText;
+        }
+
         document.getElementById('confirm-modal').classList.add('active');
+    }
+
+    function openAlertModal(msg, onOk = null) {
+        openConfirmModal(msg, onOk, false, 'OKE');
     }
 
     window.closeConfirmModal = function() {
@@ -638,6 +656,8 @@
             const cb = confirmCallback;
             closeConfirmModal();
             cb();
+        } else {
+            closeConfirmModal();
         }
     });
 
@@ -689,12 +709,12 @@
 
                     startPollingStatus(data.order_id, kpAmount);
                 } else {
-                    alert(data.message || 'Gagal memulai transaksi topup.');
+                    openAlertModal(data.message || 'Gagal memulai transaksi topup.');
                 }
             })
             .catch(err => {
                 console.error('Error topup init:', err);
-                alert('Gagal menghubungi gateway pembayaran.');
+                openAlertModal('Gagal menghubungi gateway pembayaran.');
             });
         });
     };
@@ -711,7 +731,7 @@
                         showToast(`TOPUP BERHASIL! +${kpAmount.toLocaleString('id-ID')} KP`);
                     } else if (data.status === 'EXPIRED') {
                         clearInterval(pollInterval);
-                        alert('Waktu pembayaran QRIS telah habis (Expired).');
+                        openAlertModal('Waktu pembayaran QRIS telah habis (Expired).');
                     }
                 }
             })
@@ -737,14 +757,14 @@
             return;
         }
 
-        openConfirmModal(`Beli ${itemName} seharga ${priceKP.toLocaleString('id-ID')} KP?`, () => {
-            if (currentCoinCount < priceKP) {
-                openConfirmModal("KP tidak cukup! Ingin top up koin?", () => {
-                    switchShopTab(0);
-                });
-                return;
-            }
+        if (currentCoinCount < priceKP) {
+            openConfirmModal("KP tidak cukup! Ingin top up koin?", () => {
+                switchShopTab(0);
+            }, true, 'TOPUP', 'BATAL');
+            return;
+        }
 
+        openConfirmModal(`Beli ${itemName} seharga ${priceKP.toLocaleString('id-ID')} KP?`, () => {
             fetch('/shop/buy-item', {
                 method: 'POST',
                 headers: {
@@ -774,12 +794,12 @@
                         downloadItem(itemId, filename);
                     }, 500);
                 } else {
-                    alert(data.message || 'Gagal membeli item.');
+                    openAlertModal(data.message || 'Gagal membeli item.');
                 }
             })
             .catch(err => {
                 console.error('Error buying item:', err);
-                alert('Terjadi kesalahan saat membeli item.');
+                openAlertModal('Terjadi kesalahan saat membeli item.');
             });
         });
     };
