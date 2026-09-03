@@ -170,7 +170,8 @@
         padding: 0 12px 6px;
         font-family: 'Press Start 2P', monospace;
         font-size: 6px;
-        color: rgba(255, 255, 255, 0.6);
+        font-style: bold;
+        color: rgb(0, 0, 0);
         letter-spacing: 0.5px;
     }
     #leaderboard-dashboard .rh-rank { width: 32px; }
@@ -236,7 +237,7 @@
     #leaderboard-dashboard .lb-name {
         font-family: 'Press Start 2P', monospace;
         font-size: 7px;
-        color: #ffffff;
+        color: #000000;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         max-width: 110px;
     }
@@ -248,7 +249,7 @@
     }
     #leaderboard-dashboard .lb-totalmatch {
         font-size: 9px;
-        color: rgba(255,255,255,0.5);
+        color: rgb(0, 0, 0);
         margin-top: 2px;
     }
 

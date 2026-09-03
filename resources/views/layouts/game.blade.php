@@ -62,7 +62,7 @@
             <!-- Page Transition Overlay (smooth SPA transitions) -->
             <div id="page-transition-overlay">
                 <div class="transition-content">
-                    <div class="transition-title"><i class="bi bi-arrow-repeat spin-icon me-1"></i> MEMUAT...</div>
+                    <div class="transition-title">MEMUAT...</div>
                     <div class="transition-bar-container">
                         <div class="transition-bar-fill"></div>
                     </div>

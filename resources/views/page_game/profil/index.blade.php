@@ -273,10 +273,23 @@
         box-shadow: inset 0 1px 0 rgba(6, 182, 212, 0.2), 0 0 12px rgba(6, 182, 212, 0.1);
     }
 
-    #profile-dashboard .stat-icon {
+    #profile-dashboard .stat-icon-wins { 
         font-size: 15px;
         margin-bottom: 4px;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        color: #fda635;
+
+    }
+    #profile-dashboard .stat-icon-losses {
+        font-size: 15px;
+        margin-bottom: 4px;
+        color: #e64141;
+    
+    }
+    #profile-dashboard .stat-icon-winrate {
+        font-size: 15px;
+        margin-bottom: 4px;
+        color: #d6402c;
+  
     }
 
     #profile-dashboard .stat-label {
@@ -349,7 +362,7 @@
         margin: 4px auto 6px;
         font-family: 'Press Start 2P', monospace;
         font-size: 8px;
-        color: #38bdf8;
+        color: #ffffff;
         letter-spacing: 0.5px;
         text-align: left;
         text-shadow: 2px 2px 0px #000000;
@@ -536,17 +549,17 @@
             <!-- Trophy Stats Grid -->
             <div class="stats-row">
                 <div class="stat-card stat-card-gold">
-                    <span class="stat-icon"><i class="bi bi-trophy-fill text-warning"></i></span>
+                    <span class="stat-icon-wins"><i class="bi bi-trophy-fill bg-warning"></i></span>
                     <span class="stat-label">Wins</span>
                     <span class="stat-value">{{ $winsCount }}</span>
                 </div>
                 <div class="stat-card stat-card-silver">
-                    <span class="stat-icon"><i class="bi bi-x-circle-fill text-danger"></i></span>
+                    <span class="stat-icon-losses"><i class="bi bi-x-circle-fill bg-danger"></i></span>
                     <span class="stat-label">Losses</span>
                     <span class="stat-value">{{ $lossesCount }}</span>
                 </div>
                 <div class="stat-card stat-card-bronze">
-                    <span class="stat-icon"><i class="bi bi-fire text-danger"></i></span>
+                    <span class="stat-icon-winrate"><i class="bi bi-fire bg-danger"></i></span>
                     <span class="stat-label">Win Rate</span>
                     <span class="stat-value">
                         @php
@@ -566,7 +579,7 @@
         </div>
 
         <!-- Game History Slider Section -->
-        <div class="section-header"><i class="bi bi-clock-history me-1 text-info"></i> Riwayat Permainan</div>
+        <div class="section-header">Riwayat Permainan</div>
         
         <div class="history-slider scrollable">
             @if ($history->isEmpty())

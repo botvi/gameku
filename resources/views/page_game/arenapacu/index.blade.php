@@ -187,7 +187,7 @@
 
     #arena-ready-btn:active {
         transform: translateY(8px) !important;
-        box-shadow: 0 0 0 #14532d, 0 4px 12px rgba(34, 197, 94, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 0 0 #ee3636, 0 4px 12px rgba(245, 19, 19, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.2) !important;
         animation: none !important;
     }
 
@@ -286,8 +286,7 @@
 @section('content')
 {{-- ── ARENA LOADING SCREEN (tampil sebelum Phaser siap) ── --}}
 <div id="arena-loading-screen">
-    <div class="arena-loading-title">✦ ARENA PACU ✦</div>
-    <div class="arena-loading-boat">🚣</div>
+    <div class="arena-loading-title">ARENA PACU</div>
     <div class="arena-loading-bar-wrap">
         <div id="arena-loading-bar"></div>
     </div>
@@ -684,7 +683,7 @@ if ($winsCount >= 100) {
             this.load.on('complete', () => {
                 if (bar) bar.style.width = '100%';
                 if (pct) pct.textContent = '100%';
-                if (txt) txt.textContent = 'Siap bertanding! 🏁';
+                if (txt) txt.textContent = 'Siap bertanding!';
             });
 
             // Load semua assets arena
@@ -2561,7 +2560,7 @@ if ($winsCount >= 100) {
         const btn = document.getElementById('arena-ready-btn');
         if (btn) {
             btn.classList.add('pressed');
-            btn.textContent = '✅ SIAP!';
+            btn.textContent = 'SUDAH SIAP!';
         }
 
         const statusEl = document.getElementById('ready-status-text');

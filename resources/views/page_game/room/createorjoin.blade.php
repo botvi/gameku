@@ -416,7 +416,7 @@
         <img src="/game_pacu/assets/image/ui/back.png" alt="Back">
     </div>
 
-    <div class="title-banner"><i class="bi bi-door-open-fill me-1"></i> CUSTOM ROOM</div>
+    <div class="title-banner">CUSTOM ROOM</div>
 
     <!-- Panel Buat Room -->
     <div class="panel">

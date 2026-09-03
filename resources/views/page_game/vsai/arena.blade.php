@@ -146,8 +146,7 @@
 @section('content')
 {{-- ── ARENA LOADING SCREEN (VS AI) ── --}}
 <div id="arena-loading-screen">
-    <div class="arena-loading-title">✦ VS AI ARENA ✦</div>
-    <div class="arena-loading-boat">🚣</div>
+    <div class="arena-loading-title">VS AI ARENA</div>
     <div class="arena-loading-bar-wrap">
         <div id="arena-loading-bar"></div>
     </div>
@@ -510,7 +509,7 @@ if ($winsCount >= 100) {
             this.load.on('complete', () => {
                 if (bar) bar.style.width = '100%';
                 if (pct) pct.textContent = '100%';
-                if (txt) txt.textContent = 'Siap lawan AI! 🤖';
+                if (txt) txt.textContent = 'Siap lawan AI!';
             });
 
             this.load.image('bgmenu',     '/game_pacu/assets/image/bg/bgmenu.jpg');

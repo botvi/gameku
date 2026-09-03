@@ -348,7 +348,7 @@
     </div>
 
     <div class="menu-main-wrapper">
-        <div class="title-banner"><i class="bi bi-controller me-1"></i> PILIH LEVEL</div>
+        <div class="title-banner">PILIH LEVEL</div>
 
         <!-- Carousel Menu PS5 -->
         <div class="ps5-carousel-container">

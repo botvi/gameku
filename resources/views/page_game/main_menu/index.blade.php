@@ -1160,7 +1160,7 @@
         style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 44, 34, 0.85); z-index: 200; align-items: center; justify-content: center; box-sizing: border-box;">
         <div class="audio-modal-card"
             style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
-            <div class="audio-modal-title" style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;"><i class="bi bi-volume-up-fill me-1"></i> PENGATURAN SUARA</div>
+            <div class="audio-modal-title" style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">PENGATURAN SUARA</div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <span style="font-size: 8px; color: #ffffff; text-align: left; text-shadow: 1px 1px 0px rgba(0,0,0,0.05);">MUSIK (BGM)</span>
                 <button id="bgm-toggle-btn" onclick="toggleBGMSetting()" style="font-family: 'Press Start 2P', monospace; font-size: 8px; width: 80px; padding: 8px 0; border: 3px solid #000000; border-radius: 6px; cursor: pointer; text-shadow: 1.5px 1.5px 0px #000000; color: white; transition: all 0.1s; box-shadow: 0px 3px 0px #000000;">ON</button>

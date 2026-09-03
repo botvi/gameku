@@ -513,11 +513,11 @@
     <canvas id="ps5-particles"
         style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.5;"></canvas>
 
-    <div class="title-banner"><i class="bi bi-people-fill me-1"></i> ROOM LOBBY</div>
+    <div class="title-banner">ROOM LOBBY</div>
 
     <!-- Panel Lobby -->
     <div class="panel">
-        <div class="panel-title" id="lobby-room-name"><i class="bi bi-door-open-fill me-1"></i> ROOM: {{ strtoupper($room->name) }}</div>
+        <div class="panel-title" id="lobby-room-name">{{ strtoupper($room->name) }}</div>
 
         <!-- Room Code Display -->
         <div class="room-code-box">

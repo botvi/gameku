@@ -277,12 +277,11 @@
 <div id="game-ui">
     <div class="login-content">
         <!-- Game Title -->
-        <div class="game-title">PACU JALUR</div>
-        <div class="game-subtitle">Arena Balapan Perahu Nusantara</div>
+
 
         <!-- Login Card -->
         <div class="login-card">
-            <div class="card-header"><i class="bi bi-controller me-1"></i> MASUK GAME</div>
+            <div class="card-header">MASUK GAME</div>
 
             <!-- Google Sign In Button -->
             <a id="google-login-btn" href="#" class="google-btn" onclick="handleGoogleLogin(event)">
@@ -307,7 +306,7 @@
             <img src="/game_pacu/assets/image/ui/pwa-icon-192.png" alt="Icon Game" class="pwa-alert-icon">
             <div class="pwa-alert-title-group">
                 <h4 class="pwa-alert-title"><i class="bi bi-download me-1"></i> PASANG GAME</h4>
-                <p class="pwa-alert-desc">Pasang game Pacu Jalur di Home Screen kamu untuk bermain lebih lancar, cepat, dan layar penuh!</p>
+                <p class="pwa-alert-desc">Pasang game di Home Screen kamu untuk bermain lebih lancar, cepat, dan layar penuh!</p>
             </div>
         </div>
         <!-- iOS specific message (hidden by default) -->
