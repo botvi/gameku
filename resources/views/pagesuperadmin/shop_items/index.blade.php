@@ -7,7 +7,7 @@
             <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 pb-2 border-bottom">
                 <div>
                     <h3 class="h4 fw-bold text-slate-900 mb-1">Manajemen Item Shop</h3>
-                    <p class="text-muted text-sm mb-0">Kelola katalog item shop, gambar asset, harga koin (KP), dan status keaktifan.</p>
+                    <p class="text-muted text-sm mb-0">Kelola katalog item shop, gambar asset asli, foto thumbnail (1:1), harga koin (KP), dan status keaktifan.</p>
                 </div>
             </div>
 
@@ -66,21 +66,44 @@
                                     <div class="form-text text-muted" style="font-size: 11px;">Harga dalam satuan Kuansing Poin (KP).</div>
                                 </div>
 
+                                <!-- Input Foto Thumbnail 1:1 -->
                                 <div class="mb-3">
-                                    <label for="image" class="form-label fw-medium text-slate-900" style="font-size: 13px;">Gambar Item</label>
+                                    <label for="thumbnail" class="form-label fw-medium text-slate-900 d-flex justify-content-between align-items-center" style="font-size: 13px;">
+                                        <span>Foto Thumbnail Game (Rasio 1:1)</span>
+                                        <span class="badge bg-primary text-white" style="font-size: 10px;">1:1 Ratio</span>
+                                    </label>
+                                    <input type="file"
+                                           class="form-control @error('thumbnail') is-invalid @enderror"
+                                           id="thumbnail" name="thumbnail"
+                                           accept="image/png,image/jpeg,image/gif,image/webp"
+                                           onchange="previewImage(this, 'previewThumbNew')">
+                                    @error('thumbnail')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text text-muted" style="font-size: 11px;">Foto thumbnail yang muncul di game & preview shop. Rasio wajib 1:1 (Persegi).</div>
+                                    <!-- Preview Thumbnail -->
+                                    <div id="previewThumbNew" class="mt-2 d-none text-center">
+                                        <div class="d-inline-block border rounded-3 p-1 bg-white shadow-sm" style="width: 120px; height: 120px;">
+                                            <img src="" alt="Preview Thumbnail" class="rounded-2 w-100 h-100" style="object-fit: cover; aspect-ratio: 1/1;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Input File Item Asli -->
+                                <div class="mb-3">
+                                    <label for="image" class="form-label fw-medium text-slate-900" style="font-size: 13px;">File Item Asli (Untuk Download)</label>
                                     <input type="file"
                                            class="form-control @error('image') is-invalid @enderror"
                                            id="image" name="image"
-                                           accept="image/png,image/jpeg,image/gif,image/webp"
                                            required
                                            onchange="previewImage(this, 'previewNew')">
                                     @error('image')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                    <div class="form-text text-muted" style="font-size: 11px;">Format: PNG, JPG, GIF, WebP. Maks 5MB.</div>
-                                    <!-- Preview gambar -->
+                                    <div class="form-text text-muted" style="font-size: 11px;">File asli yang di-download pemain ketika dibeli. Maks 10MB.</div>
+                                    <!-- Preview File/Gambar Asli -->
                                     <div id="previewNew" class="mt-2 d-none text-center">
-                                        <img src="" alt="Preview" class="img-fluid rounded-3 border p-1 bg-white" style="max-height: 140px;">
+                                        <img src="" alt="Preview Item Asli" class="img-fluid rounded-3 border p-1 bg-white" style="max-height: 120px;">
                                     </div>
                                 </div>
 
@@ -119,10 +142,13 @@
                             @else
                                 <div class="row g-3">
                                     @foreach($items as $item)
+                                        @php
+                                            $displayThumb = !empty($item->thumbnail_path) ? asset($item->thumbnail_path) : asset($item->image_path);
+                                        @endphp
                                         <div class="col-md-6 col-lg-4">
                                             <div class="card h-100 position-relative overflow-hidden">
                                                 <!-- Badge aktif/nonaktif -->
-                                                <span class="position-absolute top-0 end-0 m-2">
+                                                <span class="position-absolute top-0 end-0 m-2" style="z-index: 5;">
                                                     @if($item->is_active)
                                                         <span class="shadcn-badge shadcn-badge-success">Aktif</span>
                                                     @else
@@ -130,17 +156,26 @@
                                                     @endif
                                                 </span>
 
-                                                <!-- Gambar item -->
-                                                <div class="text-center pt-3 pb-2 bg-slate-50 border-bottom" style="min-height:130px;">
-                                                    <img src="{{ asset($item->image_path) }}"
-                                                         alt="{{ $item->name }}"
-                                                         class="img-fluid rounded-3"
-                                                         style="max-height:110px; object-fit:contain;">
+                                                <!-- Gambar Preview Thumbnail (Rasio 1:1) -->
+                                                <div class="text-center pt-3 pb-2 bg-slate-50 border-bottom d-flex align-items-center justify-content-center" style="min-height:140px;">
+                                                    <div class="d-inline-block border rounded-3 p-1 bg-white shadow-sm overflow-hidden" style="width: 110px; height: 110px;">
+                                                        <img src="{{ $displayThumb }}"
+                                                             alt="{{ $item->name }}"
+                                                             class="w-100 h-100 rounded-2"
+                                                             style="object-fit: cover; aspect-ratio: 1/1;">
+                                                    </div>
                                                 </div>
 
                                                 <div class="card-body p-3">
                                                     <h6 class="fw-bold text-slate-900 mb-1" style="font-size: 14px;">{{ $item->name }}</h6>
                                                     <p class="text-muted mb-2" style="font-size: 12px; min-height:34px;">{{ $item->description ?? '-' }}</p>
+                                                    
+                                                    <div class="mb-2">
+                                                        <small class="text-muted d-block text-truncate" style="font-size: 11px;" title="{{ $item->filename }}">
+                                                            <i class="ti ti-file me-1"></i><strong>File Asli:</strong> {{ $item->filename }}
+                                                        </small>
+                                                    </div>
+
                                                     <div class="d-flex align-items-center justify-content-between mb-3">
                                                         <span class="shadcn-badge shadcn-badge-coin">
                                                             🪙 {{ number_format($item->price_kp) }} KP
@@ -171,7 +206,7 @@
 
                                                         <!-- Delete -->
                                                         <form action="{{ route('superadmin.shop-items.delete', $item->id) }}" method="POST"
-                                                              onsubmit="return confirm('Hapus item \'{{ $item->name }}\'? Gambar juga akan dihapus!')">
+                                                              onsubmit="return confirm('Hapus item \'{{ $item->name }}\'? File asset dan thumbnail akan dihapus!')">
                                                             @csrf
                                                             <button type="submit" class="btn-shadcn-danger" style="padding: 5px 8px !important; font-size: 11.5px !important;">
                                                                 <i class="ti ti-trash"></i>
@@ -219,22 +254,46 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-medium text-slate-900" style="font-size: 13px;">Gambar Saat Ini</label>
+                                                            <!-- Edit Thumbnail 1:1 -->
+                                                            <div class="mb-3 border p-3 rounded-3 bg-light">
+                                                                <label class="form-label fw-medium text-slate-900 d-flex justify-content-between align-items-center" style="font-size: 13px;">
+                                                                    <span>Thumbnail Game (1:1)</span>
+                                                                    <span class="badge bg-secondary" style="font-size: 10px;">Ratio 1:1</span>
+                                                                </label>
                                                                 <div class="text-center mb-2">
-                                                                    <img src="{{ asset($item->image_path) }}"
-                                                                         alt="{{ $item->name }}"
-                                                                         class="img-fluid rounded-3 border p-1"
-                                                                         style="max-height:100px;">
+                                                                    <div class="d-inline-block border rounded-3 p-1 bg-white shadow-sm" style="width: 90px; height: 90px;">
+                                                                        <img src="{{ $displayThumb }}"
+                                                                             alt="Thumbnail Current"
+                                                                             class="w-100 h-100 rounded-2"
+                                                                             style="object-fit: cover; aspect-ratio: 1/1;">
+                                                                    </div>
                                                                 </div>
-                                                                <label class="form-label text-muted" style="font-size: 11px;">Ganti Gambar (opsional)</label>
+                                                                <label class="form-label text-muted" style="font-size: 11px;">Ganti Foto Thumbnail (opsional)</label>
+                                                                <input type="file"
+                                                                       class="form-control"
+                                                                       name="thumbnail"
+                                                                       accept="image/png,image/jpeg,image/gif,image/webp"
+                                                                       onchange="previewImage(this, 'previewThumbEdit{{ $item->id }}')">
+                                                                <div id="previewThumbEdit{{ $item->id }}" class="mt-2 d-none text-center">
+                                                                    <div class="d-inline-block border rounded-3 p-1 bg-white shadow-sm" style="width: 90px; height: 90px;">
+                                                                        <img src="" alt="Preview Thumbnail Baru" class="w-100 h-100 rounded-2" style="object-fit: cover; aspect-ratio: 1/1;">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Edit File Item Asli -->
+                                                            <div class="mb-3 border p-3 rounded-3 bg-light">
+                                                                <label class="form-label fw-medium text-slate-900" style="font-size: 13px;">File Item Asli (Untuk Download)</label>
+                                                                <div class="small text-muted mb-2 text-truncate">
+                                                                    <i class="ti ti-file me-1"></i>File saat ini: <strong>{{ $item->filename }}</strong>
+                                                                </div>
+                                                                <label class="form-label text-muted" style="font-size: 11px;">Ganti File Item Asli (opsional)</label>
                                                                 <input type="file"
                                                                        class="form-control"
                                                                        name="image"
-                                                                       accept="image/png,image/jpeg,image/gif,image/webp"
                                                                        onchange="previewImage(this, 'previewEdit{{ $item->id }}')">
                                                                 <div id="previewEdit{{ $item->id }}" class="mt-2 d-none text-center">
-                                                                    <img src="" alt="Preview Baru" class="img-fluid rounded-3 border p-1" style="max-height:100px;">
+                                                                    <img src="" alt="Preview File Baru" class="img-fluid rounded-3 border p-1 bg-white" style="max-height:90px;">
                                                                 </div>
                                                             </div>
 
@@ -277,7 +336,10 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     container.classList.remove('d-none');
-                    container.querySelector('img').src = e.target.result;
+                    const img = container.querySelector('img');
+                    if (img) {
+                        img.src = e.target.result;
+                    }
                 };
                 reader.readAsDataURL(input.files[0]);
             } else {

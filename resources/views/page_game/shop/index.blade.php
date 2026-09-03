@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Franchise Game — Shop')
+@section('title', 'Pacu Jalur: The Pixel — Shop')
 
 @section('content')
 <style>
@@ -36,15 +36,16 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: transform 0.15s ease;
+        transition: filter 0.15s ease, opacity 0.15s ease;
     }
 
     #shop-dashboard .back-btn-container:hover {
-        transform: scale(1.1);
+        filter: brightness(1.3);
     }
 
     #shop-dashboard .back-btn-container:active {
-        transform: scale(0.9);
+        filter: brightness(0.8);
+        opacity: 0.8;
     }
 
     #shop-dashboard .back-btn-container img {
@@ -52,6 +53,7 @@
         height: 100%;
         object-fit: contain;
         image-rendering: pixelated;
+        pointer-events: none;
     }
 
     #shop-dashboard .page-title {
@@ -285,8 +287,9 @@
     }
 
     .item-img-container {
-        width: 60px;
-        height: 60px;
+        width: 64px;
+        height: 64px;
+        aspect-ratio: 1 / 1;
         background: #eff6ff;
         border: 2px solid #93c5fd;
         border-radius: 10px;
@@ -298,10 +301,10 @@
     }
 
     .item-img-container img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        image-rendering: pixelated;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        aspect-ratio: 1 / 1;
     }
 
     .item-title {
@@ -526,11 +529,12 @@
                 @forelse($shopItems as $item)
                 @php
                     $isOwned = in_array($item->id, $purchasedIds ?? []);
+                    $displayThumb = !empty($item->thumbnail_path) ? asset($item->thumbnail_path) : asset($item->image_path);
                 @endphp
                 <div class="item-card" id="item-card-{{ $item->id }}">
                     <div class="item-img-container">
-                        @if(!empty($item->image_path))
-                            <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}">
+                        @if(!empty($displayThumb))
+                            <img src="{{ $displayThumb }}" alt="{{ $item->name }}" style="aspect-ratio: 1/1; object-fit: cover; width: 100%; height: 100%;">
                         @else
                             <i class="bi bi-file-earmark-image text-info" style="font-size: 28px;"></i>
                         @endif

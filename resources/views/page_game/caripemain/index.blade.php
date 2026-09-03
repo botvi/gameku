@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Franchise Game — Cari Pemain')
+@section('title', 'Pacu Jalur: The Pixel — Cari Pemain')
 
 @section('content')
 <style>
@@ -42,16 +42,22 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: transform 0.2s ease;
+        transition: filter 0.15s ease, opacity 0.15s ease;
     }
 
     #search-dashboard .back-btn {
         width: 36px;
         height: 36px;
+        pointer-events: none;
     }
 
     #search-dashboard .back-btn-container:hover {
-        transform: scale(1.1);
+        filter: brightness(1.3);
+    }
+
+    #search-dashboard .back-btn-container:active {
+        filter: brightness(0.8);
+        opacity: 0.8;
     }
 
     #search-dashboard .coin-display {

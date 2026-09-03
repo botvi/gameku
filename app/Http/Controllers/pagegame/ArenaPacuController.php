@@ -5,6 +5,7 @@ namespace App\Http\Controllers\pagegame;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ModelJalur;
+use App\Models\Sponsor;
 
 class ArenaPacuController extends Controller
 {
@@ -25,7 +26,9 @@ class ArenaPacuController extends Controller
         $corakDataUrl = $modelJalurData['corak_data_url'] ?? null;
         $lambaiDataUrl = $modelJalurData['lambai_data_url'] ?? null;
 
-        return view('page_game.arenapacu.index', compact('customColors', 'corakDataUrl', 'lambaiDataUrl'));
+        $sponsors = Sponsor::where('is_active', true)->pluck('image_path')->map(fn($p) => asset($p))->toArray();
+
+        return view('page_game.arenapacu.index', compact('customColors', 'corakDataUrl', 'lambaiDataUrl', 'sponsors'));
     }
 
     public function addCoins(Request $request)

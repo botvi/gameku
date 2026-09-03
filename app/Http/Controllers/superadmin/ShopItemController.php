@@ -5,6 +5,8 @@ namespace App\Http\Controllers\superadmin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ShopItem;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ShopItemController extends Controller
@@ -19,7 +21,7 @@ class ShopItemController extends Controller
     }
 
     /**
-     * Simpan item baru (dengan upload gambar).
+     * Simpan item baru (dengan storage upload & thumbnail 1:1).
      */
     public function store(Request $request)
     {
@@ -27,26 +29,37 @@ class ShopItemController extends Controller
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
             'price_kp'    => 'required|integer|min:1',
-            'image'       => 'required|image|mimes:png,jpg,jpeg,gif,webp|max:5120',
+            'image'       => 'required|file|max:10240',
+            'thumbnail'   => 'nullable|image|mimes:png,jpg,jpeg,gif,webp|max:5120',
         ]);
 
-        $file     = $request->file('image');
-        $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+        $disk = Storage::disk('public');
 
-        $dir = public_path('shop_items');
-        if (!file_exists($dir)) {
-            mkdir($dir, 0755, true);
+        // Upload item asset file (file asli untuk download)
+        $file     = $request->file('image');
+        $ext      = strtolower($file->getClientOriginalExtension() ?: $file->guessExtension() ?: 'png');
+        $filename = time() . '_' . Str::random(10) . '.' . $ext;
+        $disk->putFileAs('shop_items', $file, $filename);
+        $imagePath = 'storage/shop_items/' . $filename;
+
+        // Upload thumbnail (gambar 1:1 untuk game & preview)
+        $thumbnailPath = null;
+        if ($request->hasFile('thumbnail')) {
+            $thumbFile     = $request->file('thumbnail');
+            $thumbExt      = strtolower($thumbFile->getClientOriginalExtension() ?: $thumbFile->guessExtension() ?: 'png');
+            $thumbFilename = time() . '_thumb_' . Str::random(10) . '.' . $thumbExt;
+            $disk->putFileAs('shop_items/thumbnails', $thumbFile, $thumbFilename);
+            $thumbnailPath = 'storage/shop_items/thumbnails/' . $thumbFilename;
         }
 
-        $file->move($dir, $filename);
-
         ShopItem::create([
-            'name'        => $request->name,
-            'description' => $request->description,
-            'price_kp'    => $request->price_kp,
-            'image_path'  => 'shop_items/' . $filename,
-            'filename'    => $filename,
-            'is_active'   => $request->boolean('is_active', true),
+            'name'           => $request->name,
+            'description'    => $request->description,
+            'price_kp'       => $request->price_kp,
+            'image_path'     => $imagePath,
+            'thumbnail_path' => $thumbnailPath,
+            'filename'       => $file->getClientOriginalName() ?: $filename,
+            'is_active'      => $request->boolean('is_active', true),
         ]);
 
         Alert::success('Berhasil', 'Item shop berhasil ditambahkan.');
@@ -54,7 +67,7 @@ class ShopItemController extends Controller
     }
 
     /**
-     * Update item (dengan atau tanpa ganti gambar).
+     * Update item (dengan atau tanpa ganti file/thumbnail).
      */
     public function update(Request $request, $id)
     {
@@ -64,7 +77,8 @@ class ShopItemController extends Controller
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
             'price_kp'    => 'required|integer|min:1',
-            'image'       => 'nullable|image|mimes:png,jpg,jpeg,gif,webp|max:5120',
+            'image'       => 'nullable|file|max:10240',
+            'thumbnail'   => 'nullable|image|mimes:png,jpg,jpeg,gif,webp|max:5120',
         ]);
 
         $data = [
@@ -74,25 +88,31 @@ class ShopItemController extends Controller
             'is_active'   => $request->boolean('is_active', true),
         ];
 
+        $disk = Storage::disk('public');
+
         if ($request->hasFile('image')) {
-            // Hapus gambar lama
-            $oldPath = public_path($item->image_path);
-            if (file_exists($oldPath)) {
-                unlink($oldPath);
-            }
+            $this->removeFile($item->image_path);
 
             $file     = $request->file('image');
-            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            $ext      = strtolower($file->getClientOriginalExtension() ?: $file->guessExtension() ?: 'png');
+            $filename = time() . '_' . Str::random(10) . '.' . $ext;
+            $disk->putFileAs('shop_items', $file, $filename);
 
-            $dir = public_path('shop_items');
-            if (!file_exists($dir)) {
-                mkdir($dir, 0755, true);
+            $data['image_path'] = 'storage/shop_items/' . $filename;
+            $data['filename']   = $file->getClientOriginalName() ?: $filename;
+        }
+
+        if ($request->hasFile('thumbnail')) {
+            if (!empty($item->thumbnail_path)) {
+                $this->removeFile($item->thumbnail_path);
             }
 
-            $file->move($dir, $filename);
+            $thumbFile     = $request->file('thumbnail');
+            $thumbExt      = strtolower($thumbFile->getClientOriginalExtension() ?: $thumbFile->guessExtension() ?: 'png');
+            $thumbFilename = time() . '_thumb_' . Str::random(10) . '.' . $thumbExt;
+            $disk->putFileAs('shop_items/thumbnails', $thumbFile, $thumbFilename);
 
-            $data['image_path'] = 'shop_items/' . $filename;
-            $data['filename']   = $filename;
+            $data['thumbnail_path'] = 'storage/shop_items/thumbnails/' . $thumbFilename;
         }
 
         $item->update($data);
@@ -108,10 +128,9 @@ class ShopItemController extends Controller
     {
         $item = ShopItem::findOrFail($id);
 
-        // Hapus file gambar
-        $oldPath = public_path($item->image_path);
-        if (file_exists($oldPath)) {
-            unlink($oldPath);
+        $this->removeFile($item->image_path);
+        if (!empty($item->thumbnail_path)) {
+            $this->removeFile($item->thumbnail_path);
         }
 
         $item->delete();
@@ -132,5 +151,25 @@ class ShopItemController extends Controller
         $status = $item->is_active ? 'diaktifkan' : 'dinonaktifkan';
         Alert::success('Berhasil', "Item \"{$item->name}\" berhasil {$status}.");
         return redirect()->back();
+    }
+
+    /**
+     * Hapus file fisik dari storage public atau public_path.
+     */
+    private function removeFile(?string $path): void
+    {
+        if (empty($path)) {
+            return;
+        }
+
+        $relativeStoragePath = preg_replace('#^storage/#', '', $path);
+        if (Storage::disk('public')->exists($relativeStoragePath)) {
+            Storage::disk('public')->delete($relativeStoragePath);
+        }
+
+        $publicPath = public_path($path);
+        if (file_exists($publicPath) && !is_dir($publicPath)) {
+            @unlink($publicPath);
+        }
     }
 }

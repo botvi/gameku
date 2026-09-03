@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Franchise Game — Arena Pacu Jalur')
+@section('title', 'Pacu Jalur: The Pixel — Arena VS AI')
 
 @push('styles')
 <style>
@@ -523,8 +523,13 @@ if ($winsCount >= 100) {
             for (let i = 1; i <= 6; i++) {
                 this.load.image(`pancang${i}`, `/game_pacu/assets/image/pancang/${i}.png`);
             }
+            const sponsorUrls = {!! json_encode($sponsors ?? []) !!};
             for (let i = 1; i <= 8; i++) {
-                this.load.image(`promosi${i}`, `/game_pacu/assets/image/promosi/spanduk_${i}.png`);
+                const defaultImg = `/game_pacu/assets/image/promosi/spanduk_${i}.png`;
+                const imgUrl = (Array.isArray(sponsorUrls) && sponsorUrls.length > 0)
+                    ? sponsorUrls[(i - 1) % sponsorUrls.length]
+                    : defaultImg;
+                this.load.image(`promosi${i}`, imgUrl);
             }
             for (let i = 1; i <= 5; i++) {
                 this.load.image(`whiteflag${i}`, `/game_pacu/assets/image/ui/whiteflag/${i}.png`);

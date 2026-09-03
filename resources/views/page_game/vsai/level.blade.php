@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Pilih Level — VS AI Mode')
+@section('title', 'Pacu Jalur: The Pixel — Pilih Level VS AI')
 
 @push('styles')
 <style>

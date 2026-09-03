@@ -10,6 +10,7 @@ use App\Http\Controllers\{
 use App\Http\Controllers\superadmin\{
     DashboardSuperAdminController,
     ShopItemController,
+    SponsorController,
 };
 
 use App\Http\Controllers\auth\{
@@ -81,6 +82,13 @@ Route::group(['middleware' => ['auth', 'role:admin', 'check.blocked']], function
     Route::post('/dashboard-superadmin/shop-items/{id}/update', [ShopItemController::class, 'update'])->name('superadmin.shop-items.update');
     Route::post('/dashboard-superadmin/shop-items/{id}/delete', [ShopItemController::class, 'destroy'])->name('superadmin.shop-items.delete');
     Route::post('/dashboard-superadmin/shop-items/{id}/toggle', [ShopItemController::class, 'toggleActive'])->name('superadmin.shop-items.toggle');
+
+    // Sponsors CRUD
+    Route::get('/dashboard-superadmin/sponsors', [SponsorController::class, 'index'])->name('superadmin.sponsors');
+    Route::post('/dashboard-superadmin/sponsors/store', [SponsorController::class, 'store'])->name('superadmin.sponsors.store');
+    Route::post('/dashboard-superadmin/sponsors/{id}/update', [SponsorController::class, 'update'])->name('superadmin.sponsors.update');
+    Route::post('/dashboard-superadmin/sponsors/{id}/delete', [SponsorController::class, 'destroy'])->name('superadmin.sponsors.delete');
+    Route::post('/dashboard-superadmin/sponsors/{id}/toggle', [SponsorController::class, 'toggleActive'])->name('superadmin.sponsors.toggle');
 });
 
 // Webhook KlikQRIS (no CSRF, public)
@@ -105,6 +113,7 @@ Route::middleware(['auth', 'check.blocked'])->group(function () {
     Route::get('/shop', [ShopController::class, 'index'])->name('shop');
     Route::post('/shop/add-points', [ShopController::class, 'addPoints'])->name('shop.add-points');
     Route::post('/shop/buy-item', [ShopController::class, 'buyItem'])->name('shop.buy-item');
+    Route::get('/shop/preview-item/{id}', [ShopController::class, 'previewItem'])->name('shop.preview-item');
     Route::get('/shop/download-item/{id}', [ShopController::class, 'downloadItem'])->name('shop.download-item');
     Route::get('/tukang-jaluar', [TukangJaluarController::class, 'index'])->name('tukang-jaluar');
     Route::post('/tukang-jaluar/save', [TukangJaluarController::class, 'save'])->name('tukang-jaluar.save');

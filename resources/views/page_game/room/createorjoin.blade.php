@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Custom Room — Papan Jawara')
+@section('title', 'Pacu Jalur: The Pixel — Custom Room')
 
 @section('content')
 <style>

@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Nuxel Games — Loading')
+@section('title', 'Pacu Jalur: The Pixel — Loading')
 
 @push('styles')
 <style>

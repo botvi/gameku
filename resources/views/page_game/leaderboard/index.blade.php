@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Franchise Game — Leaderboard')
+@section('title', 'Pacu Jalur: The Pixel — Leaderboard')
 
 @section('content')
 <style>
@@ -39,10 +39,11 @@
         width: 36px; height: 36px;
         display: flex; align-items: center; justify-content: center;
         cursor: pointer;
-        transition: transform 0.2s ease;
+        transition: filter 0.15s ease, opacity 0.15s ease;
     }
-    #leaderboard-dashboard .back-btn { width: 36px; height: 36px; }
-    #leaderboard-dashboard .back-btn-container:hover { transform: scale(1.1); }
+    #leaderboard-dashboard .back-btn { width: 36px; height: 36px; pointer-events: none; }
+    #leaderboard-dashboard .back-btn-container:hover { filter: brightness(1.3); }
+    #leaderboard-dashboard .back-btn-container:active { filter: brightness(0.8); opacity: 0.8; }
 
     #leaderboard-dashboard .coin-display {
         display: flex; align-items: center; gap: 6px;

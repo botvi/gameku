@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Room Matchmaking — Papan Jawara')
+@section('title', 'Pacu Jalur: The Pixel — Menu Utama')
 
 @section('content')
 <style>
@@ -125,7 +125,7 @@
         justify-content: center;
         cursor: pointer;
         z-index: 15;
-        transition: all 0.15s ease;
+        transition: filter 0.15s ease, opacity 0.15s ease;
         box-sizing: border-box;
     }
 
@@ -134,14 +134,16 @@
         height: 100%;
         object-fit: contain;
         image-rendering: pixelated;
+        pointer-events: none;
     }
 
     .sound-btn:hover {
-        transform: translateX(-50%) scale(1.05);
+        filter: brightness(1.3);
     }
 
     .sound-btn:active {
-        transform: translateX(-50%) scale(0.9);
+        filter: brightness(0.75);
+        opacity: 0.85;
     }
 
     .coin-display {
@@ -1157,16 +1159,21 @@
 
     <!-- Custom Audio Settings Modal -->
     <div id="audio-settings-modal"
-        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 44, 34, 0.85); z-index: 200; align-items: center; justify-content: center; box-sizing: border-box;">
+        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 30, 20, 0.88); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; box-sizing: border-box;">
         <div class="audio-modal-card"
-            style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
-            <div class="audio-modal-title" style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">PENGATURAN SUARA</div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <span style="font-size: 8px; color: #ffffff; text-align: left; text-shadow: 1px 1px 0px rgba(0,0,0,0.05);">MUSIK (BGM)</span>
-                <button id="bgm-toggle-btn" onclick="toggleBGMSetting()" style="font-family: 'Press Start 2P', monospace; font-size: 8px; width: 80px; padding: 8px 0; border: 3px solid #000000; border-radius: 6px; cursor: pointer; text-shadow: 1.5px 1.5px 0px #000000; color: white; transition: all 0.1s; box-shadow: 0px 3px 0px #000000;">ON</button>
+            style="background: #0f1a12; border: 3px solid #22c55e; box-shadow: 0 0 24px rgba(34,197,94,0.3), 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
+            <!-- Title -->
+            <div style="font-size: 10px; color: #34d399; margin-bottom: 18px; border-bottom: 2px dashed #22c55e; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">
+                PENGATURAN SUARA
             </div>
-            
-            <button class="pixel-btn" onclick="closeAudioSettings()" style="margin-top: 0; background-color: #22c55e; border: 3px solid #000000; box-shadow: inset 0 2px 0px rgba(255,255,255,0.4), 0px 4px 0px #000000; color: white; padding: 12px; font-size: 9px; cursor: pointer; text-transform: uppercase; width: 100%; text-shadow: 1.5px 1.5px 0px #000000;">OKE</button>
+            <!-- BGM Row -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <span style="font-size: 8px; color: #d1fae5; text-align: left;">MUSIK (BGM)</span>
+                <button id="bgm-toggle-btn" onclick="toggleBGMSetting()" style="font-family: 'Press Start 2P', monospace; font-size: 8px; width: 72px; padding: 8px 0; border: 3px solid #000000; border-radius: 6px; cursor: pointer; text-shadow: 1.5px 1.5px 0px #000000; color: white; transition: background-color 0.1s; box-shadow: 0px 3px 0px #000000;">ON</button>
+            </div>
+           
+            <!-- Close Button -->
+            <button onclick="closeAudioSettings()" style="font-family: 'Press Start 2P', monospace; background-color: #22c55e; border: 3px solid #000000; box-shadow: inset 0 2px 0px rgba(255,255,255,0.3), 0px 4px 0px #000000; color: white; padding: 12px; font-size: 9px; cursor: pointer; text-transform: uppercase; width: 100%; text-shadow: 1.5px 1.5px 0px #000000; border-radius: 6px;">OKE</button>
         </div>
     </div>
 </div>
@@ -1268,7 +1275,7 @@
         const modal = document.getElementById('audio-settings-modal');
         if (modal) {
             modal.style.display = 'flex';
-            syncAudioModalButtons();
+            window.syncAudioModalButtons();
         }
     };
 
@@ -1288,11 +1295,11 @@
             if (bgmMuted) {
                 bgmBtn.textContent = 'OFF';
                 bgmBtn.style.backgroundColor = '#ef4444';
-                bgmBtn.style.boxShadow = '0px 3px 0px #991b1b';
+                bgmBtn.style.boxShadow = '0px 3px 0px #7f1d1d';
             } else {
                 bgmBtn.textContent = 'ON';
-                bgmBtn.style.backgroundColor = '#22c55e';
-                bgmBtn.style.boxShadow = '0px 3px 0px #ffffff';
+                bgmBtn.style.backgroundColor = '#16a34a';
+                bgmBtn.style.boxShadow = '0px 3px 0px #14532d';
             }
         }
 
@@ -1300,16 +1307,30 @@
             if (sfxMuted) {
                 sfxBtn.textContent = 'OFF';
                 sfxBtn.style.backgroundColor = '#ef4444';
-                sfxBtn.style.boxShadow = '0px 3px 0px #991b1b';
+                sfxBtn.style.boxShadow = '0px 3px 0px #7f1d1d';
             } else {
                 sfxBtn.textContent = 'ON';
-                sfxBtn.style.backgroundColor = '#22c55e';
-                sfxBtn.style.boxShadow = '0px 3px 0px #ffffff';
+                sfxBtn.style.backgroundColor = '#16a34a';
+                sfxBtn.style.boxShadow = '0px 3px 0px #14532d';
             }
         }
 
-        if (window.updateSoundIcon) window.updateSoundIcon();
+        // Update sound icon in topbar
+        window.updateSoundIcon();
     };
+
+    // Override updateSoundIcon — ganti ikon berdasarkan status BGM di localStorage
+    window.updateSoundIcon = function() {
+        const soundIcon = document.getElementById('sound-icon');
+        if (!soundIcon) return;
+        const bgmMuted = localStorage.getItem('bgm_muted') === 'true';
+        soundIcon.src = bgmMuted
+            ? '/game_pacu/assets/image/ui/sound_off.png'
+            : '/game_pacu/assets/image/ui/sound_on.png';
+    };
+
+    // Sync ikon suara saat halaman pertama dimuat
+    window.updateSoundIcon();
 
     // toggleBGMSetting & toggleSFXSetting sudah didefinisikan global
     // di game-layout.js dan langsung apply ke window.globalBGM

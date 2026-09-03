@@ -5,6 +5,7 @@ namespace App\Http\Controllers\pagegame;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ModelJalur;
+use App\Models\Sponsor;
 
 class VsAiController extends Controller
 {
@@ -19,13 +20,15 @@ class VsAiController extends Controller
             'hair'   => '#e53e3e',
             'shirt'  => '#a0aec0',
             'pants'  => '#38a169',
-            'paddle' => '#3182ce',
+            'paddle' => '#854d0e',
             'splash' => '#a5f3fc',
         ];
         $corakDataUrl  = $modelJalurData['corak_data_url'] ?? null;
         $lambaiDataUrl = $modelJalurData['lambai_data_url'] ?? null;
 
-        return compact('customColors', 'corakDataUrl', 'lambaiDataUrl');
+        $sponsors = Sponsor::where('is_active', true)->pluck('image_path')->map(fn($p) => asset($p))->toArray();
+
+        return compact('customColors', 'corakDataUrl', 'lambaiDataUrl', 'sponsors');
     }
 
     public function level()

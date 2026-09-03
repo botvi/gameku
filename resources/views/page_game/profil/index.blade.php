@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Franchise Game — Profil Pamacu')
+@section('title', 'Pacu Jalur: The Pixel — Profil Pamacu')
 
 @section('content')
 <style>
@@ -42,20 +42,22 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: transform 0.2s ease;
+        transition: filter 0.15s ease, opacity 0.15s ease;
     }
 
     #profile-dashboard .back-btn {
         width: 36px;
         height: 36px;
+        pointer-events: none;
     }
 
     #profile-dashboard .back-btn-container:hover {
-        transform: scale(1.1);
+        filter: brightness(1.3);
     }
 
     #profile-dashboard .back-btn-container:active {
-        transform: scale(0.9);
+        filter: brightness(0.8);
+        opacity: 0.8;
     }
 
     #profile-dashboard .coin-display {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CoinPackage;
 use App\Models\ShopItem;
+use Illuminate\Support\Facades\Storage;
 
 class ShopController extends Controller
 {
@@ -84,7 +85,7 @@ class ShopController extends Controller
     }
 
     /**
-     * Download gambar item yang sudah dibeli.
+     * Download file item asli yang sudah dibeli.
      */
     public function downloadItem($id)
     {
@@ -101,8 +102,13 @@ class ShopController extends Controller
         }
 
         $filePath = public_path($item->image_path);
-        if (!file_exists($filePath)) {
-            abort(404, 'File tidak ditemukan.');
+        if (!file_exists($filePath) || is_dir($filePath)) {
+            $storageRelative = preg_replace('#^storage/#', '', $item->image_path);
+            if (Storage::disk('public')->exists($storageRelative)) {
+                $filePath = Storage::disk('public')->path($storageRelative);
+            } else {
+                abort(404, 'File item asli tidak ditemukan.');
+            }
         }
 
         return response()->download($filePath, $item->filename);

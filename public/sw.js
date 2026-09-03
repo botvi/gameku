@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pacu-jalur-v3';
+const CACHE_NAME = 'pacu-jalur-the-pixel-v4';
 const ASSETS_TO_CACHE = [
   '/',
   '/login',
@@ -16,7 +16,6 @@ const ASSETS_TO_CACHE = [
   '/game_pacu/assets/image/bg/bgmenu.jpg',
   '/game_pacu/assets/fonts/BlockBlueprint.ttf',
 ];
-
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

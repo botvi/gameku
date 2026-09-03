@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Nuxel Games')</title>
+    <title>@yield('title', 'Pacu Jalur: The Pixel')</title>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/game_pacu/assets/image/ui/pwa-icon-192.png">
     <link rel="stylesheet" href="/game_pacu/assets/css/game-layout.css">

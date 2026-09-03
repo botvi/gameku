@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shop_items', function (Blueprint $table) {
+        Schema::create('sponsors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->unsignedInteger('price_kp');
-            $table->string('image_path'); // path ke file gambar/asset asli
-            $table->string('thumbnail_path')->nullable(); // path ke thumbnail (1:1)
-            $table->string('filename');   // nama file asli untuk download
+            $table->string('image_path');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shop_items');
+        Schema::dropIfExists('sponsors');
     }
 };

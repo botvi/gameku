@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Pacu Jalur — Masuk Akun')
+@section('title', 'Pacu Jalur: The Pixel — Masuk Akun')
 
 @push('styles')
 <link rel="manifest" href="/manifest.json">

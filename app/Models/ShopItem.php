@@ -14,6 +14,7 @@ class ShopItem extends Model
         'description',
         'price_kp',
         'image_path',
+        'thumbnail_path',
         'filename',
         'is_active',
     ];

@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Franchise Game — Kustomisasi Grid')
+@section('title', 'Pacu Jalur: The Pixel — Kustomisasi Jalur')
 
 @push('styles')
 <style>
@@ -35,15 +35,16 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: transform 0.15s ease;
+        transition: filter 0.15s ease, opacity 0.15s ease;
     }
 
     #tukangjaluar-dashboard .back-btn-container:hover {
-        transform: scale(1.1);
+        filter: brightness(1.3);
     }
 
     #tukangjaluar-dashboard .back-btn-container:active {
-        transform: scale(0.9);
+        filter: brightness(0.8);
+        opacity: 0.8;
     }
 
     #tukangjaluar-dashboard .back-btn-container img {
@@ -51,6 +52,7 @@
         height: 100%;
         object-fit: contain;
         image-rendering: pixelated;
+        pointer-events: none;
     }
 
     #tukangjaluar-dashboard .coin-display {
