@@ -814,6 +814,7 @@
     };
 
     let searchTimerInterval = null;
+    let matchmakePollInterval = null;
     let searchSeconds = 0;
 
     window.updateSearchTimer = function() {
@@ -826,6 +827,17 @@
         }
     };
 
+    window.stopSearchTimers = function() {
+        if (searchTimerInterval) {
+            clearInterval(searchTimerInterval);
+            searchTimerInterval = null;
+        }
+        if (matchmakePollInterval) {
+            clearInterval(matchmakePollInterval);
+            matchmakePollInterval = null;
+        }
+    };
+
     window.cariLawan = function() {
         document.getElementById('loading-overlay').style.display = 'flex';
 
@@ -834,7 +846,7 @@
         const timerVal = document.getElementById('search-timer-val');
         if (timerVal) timerVal.textContent = '00:00';
 
-        if (searchTimerInterval) clearInterval(searchTimerInterval);
+        stopSearchTimers();
         searchTimerInterval = setInterval(updateSearchTimer, 1000);
 
         fetch('/room/matchmake', {
@@ -846,8 +858,14 @@
         })
         .then(res => res.json())
         .then(data => {
-            if (data.success && data.redirect_url) {
-                window.navigateToPage(data.redirect_url);
+            if (data.success) {
+                if (data.status === 'matched' && data.redirect_url) {
+                    stopSearchTimers();
+                    window.navigateToPage(data.redirect_url);
+                } else if (data.status === 'searching') {
+                    // Start polling for match status
+                    matchmakePollInterval = setInterval(pollMatchmakeStatus, 1500);
+                }
             } else {
                 showHTMLAlert(data.message || 'Gagal mencari lawan.').then(() => {
                     batalCari();
@@ -862,15 +880,39 @@
         });
     };
 
+    window.pollMatchmakeStatus = function() {
+        fetch('/room/matchmake/status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.status === 'matched' && data.redirect_url) {
+                stopSearchTimers();
+                window.navigateToPage(data.redirect_url);
+            } else if (!data.success && data.status === 'cancelled') {
+                stopSearchTimers();
+                document.getElementById('loading-overlay').style.display = 'none';
+            }
+        })
+        .catch(err => console.error('Poll error:', err));
+    };
+
     window.batalCari = function() {
+        stopSearchTimers();
         document.getElementById('loading-overlay').style.display = 'none';
-        if (searchTimerInterval) {
-            clearInterval(searchTimerInterval);
-            searchTimerInterval = null;
-        }
-        if (window.searchTimeout) {
-            clearTimeout(window.searchTimeout);
-        }
+
+        // Notify server to cancel search
+        fetch('/room/matchmake/cancel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        }).catch(err => console.error(err));
     };
 
     // Carousel Slider Logic (PS5 style) for Online Arena
@@ -1026,10 +1068,16 @@
     initRoomSwipeGestures();
 
     document.addEventListener('livewire:navigating', () => {
-        if (searchTimerInterval) {
-            clearInterval(searchTimerInterval);
-            searchTimerInterval = null;
+        if (matchmakePollInterval) {
+            fetch('/room/matchmake/cancel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            }).catch(e => {});
         }
+        stopSearchTimers();
     });
 }
 </script>

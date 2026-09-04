@@ -54,7 +54,7 @@ class GoogleController extends Controller
                 // Redirect langsung untuk user yang sudah terdaftar dan profilnya lengkap
                 $redirectUrl = ($user->role == 'admin' || $user->role == 'superadmin')
                     ? route('dashboard-superadmin')
-                    : '/main-menu';
+                    : route('loading');
                 return $this->respondWithPopupScript('success', $redirectUrl);
             }
 
@@ -127,9 +127,9 @@ class GoogleController extends Controller
             if ($sessionUserId && (string) $sessionUserId === (string) $user->id) {
                 session()->forget('google_pending_user_id');
                 Auth::login($user);
-                return redirect('/main-menu');
+                return redirect()->route('loading');
             } else if (Auth::check() && Auth::id() == $user->id) {
-                return redirect('/main-menu');
+                return redirect()->route('loading');
             } else {
                 Alert::error('Akses Ditolak', 'Silakan login dengan Google terlebih dahulu.');
                 return redirect('/login');
@@ -237,7 +237,7 @@ class GoogleController extends Controller
             if ($user->role == 'admin' || $user->role == 'superadmin') {
                 return redirect()->route('dashboard-superadmin');
             } else {
-                return redirect('/main-menu');
+                return redirect()->route('loading');
             }
 
         } catch (\Exception $e) {

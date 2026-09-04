@@ -1,7 +1,7 @@
 {
-  "name": "Pacu Jalur: The Pixel",
-  "short_name": "Pacu Jalur",
-  "description": "Pacu Jalur: The Pixel — Game Balap Perahu Tradisional Indonesia!",
+  "name": "Pacu Jalur: The Pixel Race",
+  "short_name": "Pacu Jalur: The Pixel Race",
+  "description": "Pacu Jalur: The Pixel Race — Game Balap Perahu Tradisional Indonesia!",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",

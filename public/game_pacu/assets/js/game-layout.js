@@ -359,5 +359,91 @@
    window.updateSoundIcon = function () {};
   }
 
+  /**
+   * Fullscreen Helper - mendukung HTML5 Document, Mobile Frame, dan Phaser Scale Manager
+   */
+  window.requestGameFullscreen = function () {
+   var isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+   if (isFS) return;
+
+   var elem = document.documentElement || document.body || document.getElementById('mobile-frame');
+   var req = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.mozRequestFullScreen || elem.msRequestFullscreen;
+
+   if (req) {
+    try {
+     var p = req.call(elem);
+     if (p && typeof p.catch === 'function') {
+      p.catch(function (err) {
+       tryPhaserFullscreen();
+      });
+     }
+    } catch (e) {
+     tryPhaserFullscreen();
+    }
+   } else {
+    tryPhaserFullscreen();
+   }
+  };
+
+  function tryPhaserFullscreen() {
+   if (window.activeMultiplayerArenaGame && window.activeMultiplayerArenaGame.scale) {
+    try {
+     window.activeMultiplayerArenaGame.scale.startFullscreen();
+    } catch (e) {}
+   }
+  }
+
+  window.toggleFullscreenManual = function () {
+   var isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+   if (isFS) {
+    var exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (exit) {
+     exit.call(document).catch(function () {});
+    }
+    if (window.activeMultiplayerArenaGame && window.activeMultiplayerArenaGame.scale) {
+     try { window.activeMultiplayerArenaGame.scale.stopFullscreen(); } catch (e) {}
+    }
+   } else {
+    window.requestGameFullscreen();
+   }
+  };
+
+  function updateFullscreenIcon() {
+   var btnIcon = document.getElementById('fullscreen-icon');
+   if (!btnIcon) return;
+   var isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+   if (isFS) {
+    btnIcon.className = 'bi bi-fullscreen-exit';
+   } else {
+    btnIcon.className = 'bi bi-fullscreen';
+   }
+  }
+
+  document.addEventListener('fullscreenchange', updateFullscreenIcon);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+  document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
+
+  var _autoFsTriggered = false;
+  function triggerAutoFullscreenOnGesture() {
+   if (window.autoFullscreenEnabled === false || _autoFsTriggered) return;
+   var isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+   if (!isFS) {
+    window.requestGameFullscreen();
+    setTimeout(function () {
+     var checkFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+     if (checkFS) {
+      _autoFsTriggered = true;
+     }
+    }, 200);
+   } else {
+    _autoFsTriggered = true;
+   }
+  }
+
+  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(function (evtType) {
+   window.addEventListener(evtType, triggerAutoFullscreenOnGesture, { capture: true, passive: true });
+   document.addEventListener(evtType, triggerAutoFullscreenOnGesture, { capture: true, passive: true });
+  });
+
  })();
 })();

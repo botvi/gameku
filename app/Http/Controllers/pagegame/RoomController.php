@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\MatchmakingQueue;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,6 +14,9 @@ class RoomController extends Controller
 {
     public function index()
     {
+        if (auth()->check()) {
+            MatchmakingQueue::where('user_id', auth()->id())->delete();
+        }
         return view('page_game.room.index');
     }
 
@@ -158,29 +162,114 @@ class RoomController extends Controller
 
     public function matchmake(Request $request)
     {
-        // Find an active Quick Match room waiting for a guest, created by someone else
-        $room = Room::where('name', 'Quick Match')
-            ->where('status', 'waiting')
-            ->whereNull('guest_id')
-            ->where('host_id', '!=', auth()->id())
+        $userId = auth()->id();
+
+        // Clean up old stale queue entries older than 2 minutes
+        MatchmakingQueue::where('updated_at', '<', now()->subMinutes(2))->delete();
+
+        // Remove any existing active queue for this user
+        MatchmakingQueue::where('user_id', $userId)->delete();
+
+        // Check if there is another player currently searching (active within last 15 seconds)
+        $opponentQueue = MatchmakingQueue::where('status', 'searching')
+            ->where('user_id', '!=', $userId)
+            ->where('updated_at', '>=', now()->subSeconds(15))
+            ->orderBy('created_at', 'asc')
             ->first();
 
-        if ($room) {
-            $room->guest_id = auth()->id();
-            $room->save();
-        } else {
-            // Create a new Quick Match room
+        if ($opponentQueue) {
+            // Match found! Create a room for both players
             $room = Room::create([
                 'room_code' => strtoupper(Str::random(6)),
                 'name' => 'Quick Match',
-                'host_id' => auth()->id(),
+                'host_id' => $opponentQueue->user_id,
+                'guest_id' => $userId,
                 'status' => 'waiting',
+            ]);
+
+            // Update opponent queue to matched
+            $opponentQueue->update([
+                'status' => 'matched',
+                'room_id' => $room->id,
+            ]);
+
+            // Create current user queue entry as matched
+            MatchmakingQueue::create([
+                'user_id' => $userId,
+                'status' => 'matched',
+                'room_id' => $room->id,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'status' => 'matched',
+                'redirect_url' => route('room.lobby', ['id' => $room->id])
+            ]);
+        } else {
+            // No opponent searching right now -> enter queue and wait!
+            MatchmakingQueue::create([
+                'user_id' => $userId,
+                'status' => 'searching',
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'status' => 'searching',
+                'message' => 'Mencari lawan...'
+            ]);
+        }
+    }
+
+    public function matchmakeStatus(Request $request)
+    {
+        $userId = auth()->id();
+
+        $queue = MatchmakingQueue::where('user_id', $userId)->first();
+
+        if (!$queue) {
+            return response()->json([
+                'success' => false,
+                'status' => 'cancelled'
+            ]);
+        }
+
+        // If currently searching, update timestamp so server knows player is alive
+        if ($queue->status === 'searching') {
+            $queue->touch();
+            return response()->json([
+                'success' => true,
+                'status' => 'searching'
+            ]);
+        }
+
+        // If matched, return redirect_url
+        if ($queue->status === 'matched' && $queue->room_id) {
+            $redirectUrl = route('room.lobby', ['id' => $queue->room_id]);
+            // Clean up queue entry after retrieving match
+            $queue->delete();
+
+            return response()->json([
+                'success' => true,
+                'status' => 'matched',
+                'redirect_url' => $redirectUrl
             ]);
         }
 
         return response()->json([
             'success' => true,
-            'redirect_url' => route('room.lobby', ['id' => $room->id])
+            'status' => $queue->status
+        ]);
+    }
+
+    public function matchmakeCancel(Request $request)
+    {
+        $userId = auth()->id();
+
+        MatchmakingQueue::where('user_id', $userId)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pencarian lawan dibatalkan.'
         ]);
     }
 

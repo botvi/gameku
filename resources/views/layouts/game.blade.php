@@ -9,7 +9,7 @@
     <title>@yield('title', 'Pacu Jalur: The Pixel')</title>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/game_pacu/assets/image/ui/pwa-icon-192.png">
-    <link rel="stylesheet" href="/game_pacu/assets/css/game-layout.css">
+    <link rel="stylesheet" href="/game_pacu/assets/css/game-layout.css?v={{ config('app.version', '1.0.5') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -56,7 +56,12 @@
         <div id="mobile-frame">
             <div id="status-bar">
                 <span id="clock">00:00</span>
-                <span class="status-dots"><i class="bi bi-wifi"></i> <i class="bi bi-battery-full ms-1"></i></span>
+                <span class="status-dots">
+                    <button id="fullscreen-toggle-btn" onclick="toggleFullscreenManual()" style="background: none; border: none; color: #ffffff; cursor: pointer; padding: 0 4px; font-size: 11px; line-height: 1; vertical-align: middle;" title="Layar Penuh">
+                        <i class="bi bi-fullscreen" id="fullscreen-icon"></i>
+                    </button>
+                    <i class="bi bi-wifi"></i> <i class="bi bi-battery-full ms-1"></i>
+                </span>
             </div>
 
             <!-- Page Transition Overlay (smooth SPA transitions) -->
@@ -75,8 +80,11 @@
         </div>
     </div>
 
+    <script>
+        window.autoFullscreenEnabled = {{ \App\Models\GameSetting::isFullscreenEnabled() ? 'true' : 'false' }};
+    </script>
     @livewireScripts
-    <script src="/game_pacu/assets/js/game-layout.js?v=2.3"></script>
+    <script src="/game_pacu/assets/js/game-layout.js?v={{ config('app.version', '1.0.5') }}"></script>
     @stack('scripts')
 </body>
 </html>

@@ -41,7 +41,7 @@ class LoginController extends Controller
             if ($user->role == 'admin' || $user->role == 'superadmin') {
                 return redirect()->route('dashboard-superadmin');
             } else {
-                return redirect('/main-menu');
+                return redirect()->route('loading');
             }
         }
 

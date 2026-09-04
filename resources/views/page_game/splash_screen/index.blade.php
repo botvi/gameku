@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Loading')
+@section('title', 'Pacu Jalur: The Pixel Race — Loading')
 
 @push('styles')
 <style>
@@ -134,13 +134,13 @@
 <div class="splash-container">
     <!-- Top: Studio name -->
     <div class="splash-top">
-        <div class="studio-intro">NUXEL STUDIO PRESENTS</div>
+        <div class="studio-intro">NYX STUDIO PRESENTS</div>
     </div>
 
     <!-- Middle: Logo -->
     <div class="splash-middle">
         <div class="logo-wrapper">
-            <img src="{{ asset('env/logo_text1.png') }}" alt="Pacu Jalur Logo" class="pixel-logo">
+            <img src="{{ asset('env/nyx_nobg.png') }}" alt="Logo Nyx Studio" class="pixel-logo">
         </div>
     </div>
 
@@ -151,7 +151,7 @@
             <div class="progress-fill" id="progress-fill"></div>
         </div>
         <div class="status-text" id="status-text">INITIALIZING SYSTEM...</div>
-        <div class="splash-footer">© 2026 Nuxel Studio. All Rights Reserved.</div>
+        <div class="splash-footer">© 2026 Nyx Studio. All Rights Reserved.</div>
     </div>
 </div>
 @endsection

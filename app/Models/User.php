@@ -91,4 +91,9 @@ class User extends Authenticatable
         return $this->belongsToMany(ShopItem::class, 'user_shop_items', 'user_id', 'shop_item_id')
                     ->withTimestamps();
     }
+
+    public function inboxStatuses()
+    {
+        return $this->hasMany(UserInboxStatus::class, 'user_id');
+    }
 }

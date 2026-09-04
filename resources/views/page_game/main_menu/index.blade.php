@@ -897,6 +897,350 @@
 
     #chat-send-btn:active { transform: translateY(1px); }
 
+    /* ========= INBOX SIDEBAR (RIGHT TOGGLE) ========= */
+    #inbox-toggle-btn {
+        position: absolute;
+        color: #ffffff;
+        top: 64px;
+        right: 0;
+        width: 34px;
+        height: 34px;
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border: 1.5px solid rgba(255,255,255,0.15);
+        border-right: none;
+        border-radius: 10px 0 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 97;
+        transition: all 0.2s ease;
+        box-shadow: -3px 0 12px rgba(0,0,0,0.4);
+    }
+
+    #inbox-toggle-btn:hover {
+        background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+        width: 40px;
+    }
+
+    #inbox-toggle-btn .inbox-icon { font-size: 16px; color: #38bdf8; }
+
+    #inbox-unread-dot {
+        position: absolute;
+        top: 4px; left: 4px;
+        width: 8px; height: 8px;
+        background: #ef4444;
+        border-radius: 50%;
+        display: none;
+        animation: dotPulse 1s infinite ease-in-out;
+    }
+
+    #inbox-backdrop {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 98;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.28s ease;
+    }
+    #inbox-backdrop.show {
+        display: block;
+        opacity: 1;
+    }
+
+    #inbox-sidebar {
+        position: absolute;
+        top: 0; right: 0;
+        width: 270px;
+        max-width: 85vw;
+        height: 100%;
+        background: rgba(8, 15, 30, 0.96);
+        border-left: 1px solid rgba(255,255,255,0.12);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        z-index: 99;
+        display: flex;
+        flex-direction: column;
+        box-shadow: -4px 0 24px rgba(0,0,0,0.6);
+        transform: translateX(100%);
+        visibility: hidden;
+        transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.32s;
+        box-sizing: border-box;
+    }
+
+    #inbox-sidebar.open {
+        transform: translateX(0);
+        visibility: visible;
+    }
+
+    .inbox-header {
+        padding: 12px 14px 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        z-index: 1;
+        flex-shrink: 0;
+    }
+
+    .inbox-header-title {
+        font-family: 'Press Start 2P', monospace;
+        font-size: 7px;
+        color: #38bdf8;
+        text-shadow: 0 0 8px rgba(56,189,248,0.5);
+        letter-spacing: 0.5px;
+    }
+
+    #inbox-messages-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: relative;
+        z-index: 1;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(56,189,248,0.3) rgba(255,255,255,0.02);
+    }
+
+    .inbox-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .inbox-card.unread {
+        background: rgba(56,189,248,0.08);
+        border-color: rgba(56,189,248,0.3);
+        box-shadow: 0 2px 8px rgba(56,189,248,0.15);
+    }
+
+    .inbox-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+    }
+
+    .inbox-card-title {
+        font-family: 'Press Start 2P', monospace;
+        font-size: 8px;
+        color: #ffffff;
+        line-height: 1.3;
+    }
+
+    .inbox-card-badge {
+        font-size: 7.5px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Press Start 2P', monospace;
+        text-transform: uppercase;
+        flex-shrink: 0;
+    }
+
+    .inbox-badge-new {
+        background: #ef4444;
+        color: #ffffff;
+    }
+
+    .inbox-badge-read {
+        background: rgba(255,255,255,0.15);
+        color: rgba(255,255,255,0.6);
+    }
+
+    .inbox-card-time {
+        font-size: 9px;
+        color: rgba(255,255,255,0.35);
+    }
+
+    .inbox-card-content {
+        font-family: 'Pixelify Sans', monospace;
+        font-size: 11.5px;
+        color: #cbd5e1;
+        line-height: 1.4;
+        white-space: pre-line;
+    }
+
+    .inbox-reward-box {
+        background: rgba(245, 158, 11, 0.12);
+        border: 1px dashed rgba(245, 158, 11, 0.4);
+        border-radius: 8px;
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 4px;
+        box-sizing: border-box;
+    }
+
+    .inbox-reward-text {
+        font-family: 'Press Start 2P', monospace;
+        font-size: 7.5px;
+        color: #fbbf24;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+        min-width: 100px;
+        line-height: 1.4;
+        word-break: break-word;
+    }
+
+    .inbox-claim-btn {
+        background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+        border: 1px solid #ffffff;
+        border-radius: 6px;
+        color: #ffffff;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 7px;
+        padding: 6px 10px;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        transition: all 0.15s;
+        flex-shrink: 0;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 320px) {
+        .inbox-reward-box {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 6px;
+        }
+        .inbox-reward-text {
+            justify-content: center;
+        }
+        .inbox-claim-btn {
+            width: 100%;
+            padding: 7px 0;
+        }
+    }
+
+    .inbox-claim-btn:hover {
+        background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+    }
+
+    .inbox-claim-btn.claimed {
+        background: #475569;
+        border-color: #64748b;
+        color: #cbd5e1;
+        cursor: default;
+        box-shadow: none;
+    }
+
+    .inbox-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        padding-top: 6px;
+        margin-top: 2px;
+    }
+
+    .inbox-del-btn {
+        background: none;
+        border: none;
+        color: rgba(239,68,68,0.7);
+        font-size: 11px;
+        cursor: pointer;
+        padding: 2px 4px;
+        transition: color 0.15s;
+    }
+
+    .inbox-del-btn:hover {
+        color: #ef4444;
+    }
+
+    /* ========= INBOX TOAST ALERT ========= */
+    .inbox-toast-alert {
+        position: absolute;
+        top: -120px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 330px;
+        background: rgba(15, 23, 42, 0.95);
+        border: 2px solid #38bdf8;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(56, 189, 248, 0.3);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 10px 12px;
+        box-sizing: border-box;
+        z-index: 1020;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .inbox-toast-alert.show {
+        top: 60px;
+    }
+
+    .inbox-toast-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(56, 189, 248, 0.15);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #38bdf8;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .inbox-toast-body {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .inbox-toast-title {
+        font-family: 'Press Start 2P', monospace;
+        font-size: 7px;
+        color: #38bdf8;
+        text-shadow: 0 0 6px rgba(56, 189, 248, 0.4);
+        margin-bottom: 3px;
+    }
+
+    .inbox-toast-desc {
+        font-family: 'Pixelify Sans', monospace;
+        font-size: 11px;
+        color: #e2e8f0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .inbox-toast-close {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 16px;
+        cursor: pointer;
+        padding: 0 4px;
+        line-height: 1;
+    }
+
+    .inbox-toast-close:hover { color: #ffffff; }
+
     /* PWA Install Alert Banner */
     .pwa-install-alert {
         position: absolute;
@@ -1205,6 +1549,33 @@
     </div>
 </div>
 
+<!-- ===== INBOX SIDEBAR (RIGHT TOGGLE) ===== -->
+<div id="inbox-backdrop" onclick="toggleInbox()"></div>
+<div id="inbox-toggle-btn" onclick="toggleInbox()" title="Inbox & Pesan">
+    <span class="inbox-icon"><i class="bi bi-envelope-fill text-dark"></i></span>
+    <span id="inbox-unread-dot"></span>
+</div>
+
+<div id="inbox-sidebar">
+    <div class="inbox-header">
+        <div class="inbox-header-title">INBOX</div>
+        <button onclick="toggleInbox()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup">✕</button>
+    </div>
+    <div id="inbox-messages-list" class="scrollable">
+        <div style="text-align: center; color: rgba(255,255,255,0.4); font-size: 11px; padding: 20px 0;">Memuat pesan inbox...</div>
+    </div>
+</div>
+
+<!-- INBOX TOAST ALERT NOTIFICATION -->
+<div id="inbox-toast-alert" class="inbox-toast-alert" onclick="openInboxFromToast()">
+    <div class="inbox-toast-icon"><i class="bi bi-envelope-exclamation-fill"></i></div>
+    <div class="inbox-toast-body">
+        <div class="inbox-toast-title">PESAN BARU DARI ADMIN!</div>
+        <div class="inbox-toast-desc" id="inbox-toast-desc">Memuat pesan...</div>
+    </div>
+    <button class="inbox-toast-close" onclick="event.stopPropagation(); closeInboxToast()">&times;</button>
+</div>
+
 <!-- PWA Install Alert Dialog -->
 <div id="pwa-install-alert" class="pwa-install-alert">
     <div class="pwa-alert-header">
@@ -1227,7 +1598,79 @@
 
 @push('scripts')
 <script>
+(function() {
+    var synced = sessionStorage.getItem('synced_this_session');
+    var currentVer = localStorage.getItem('app_version');
+    var serverVer = "{{ config('app.version', '1.0.5') }}";
+    if (!synced || currentVer !== serverVer) {
+        window.location.href = "{{ route('loading') }}";
+    }
+})();
 {
+    // Custom HTML Modals (Confirm & Alert) using existing game-layout.css styles
+    window.showHTMLAlert = function(message, title = "INFORMASI") {
+        return new Promise((resolve) => {
+            const overlay = document.createElement('div');
+            overlay.id = 'fullscreen-modal-overlay';
+            overlay.innerHTML = `
+                <div class="fullscreen-modal-card">
+                    <div class="fullscreen-modal-title">${title}</div>
+                    <div class="fullscreen-modal-body">${message}</div>
+                    <div class="fullscreen-modal-buttons">
+                        <button class="fullscreen-btn fullscreen-btn-yes" id="custom-alert-ok-btn" style="width: 120px;">OKE</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            overlay.offsetHeight;
+            overlay.classList.add('show');
+            const okBtn = overlay.querySelector('#custom-alert-ok-btn');
+            okBtn.addEventListener('click', () => {
+                overlay.classList.remove('show');
+                setTimeout(() => {
+                    overlay.remove();
+                    resolve();
+                }, 300);
+            });
+        });
+    };
+
+    window.showHTMLConfirm = function(message, title = "✦ KONFIRMASI ✦") {
+        return new Promise((resolve) => {
+            const overlay = document.createElement('div');
+            overlay.id = 'fullscreen-modal-overlay';
+            overlay.innerHTML = `
+                <div class="fullscreen-modal-card">
+                    <div class="fullscreen-modal-title">${title}</div>
+                    <div class="fullscreen-modal-body">${message}</div>
+                    <div class="fullscreen-modal-buttons">
+                        <button class="fullscreen-btn fullscreen-btn-yes" id="custom-confirm-yes-btn" style="width: 100px;">YA</button>
+                        <button class="fullscreen-btn fullscreen-btn-no" id="custom-confirm-no-btn" style="width: 100px;">BATAL</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            overlay.offsetHeight;
+            overlay.classList.add('show');
+            const yesBtn = overlay.querySelector('#custom-confirm-yes-btn');
+            const noBtn = overlay.querySelector('#custom-confirm-no-btn');
+            yesBtn.addEventListener('click', () => {
+                overlay.classList.remove('show');
+                setTimeout(() => {
+                    overlay.remove();
+                    resolve(true);
+                }, 300);
+            });
+            noBtn.addEventListener('click', () => {
+                overlay.classList.remove('show');
+                setTimeout(() => {
+                    overlay.remove();
+                    resolve(false);
+                }, 300);
+            });
+        });
+    };
+
     // Close existing global chat WebSocket connection to prevent duplication
     if (window.chatWs) {
         window.chatWs.close();
@@ -1688,6 +2131,278 @@
     }
 
     initGlobalChat();
+
+    // ============= INBOX SYSTEM & TOAST ALERT =============
+    let inboxOpen = false;
+    let inboxData = [];
+    let inboxUnreadCount = 0;
+    let inboxToastTimer = null;
+
+    window.fetchGameInbox = function(checkNewToast = true) {
+        fetch('/inbox/list')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    inboxData = data.inboxes || [];
+                    inboxUnreadCount = data.unread_count || 0;
+                    renderInboxList();
+                    updateInboxBadge();
+
+                    if (checkNewToast && inboxUnreadCount > 0) {
+                        checkAndShowInboxToast();
+                    }
+                }
+            })
+            .catch(err => console.error('[Inbox] Fetch error:', err));
+    };
+
+    function updateInboxBadge() {
+        const dot = document.getElementById('inbox-unread-dot');
+        if (dot) {
+            dot.style.display = inboxUnreadCount > 0 ? 'block' : 'none';
+        }
+    }
+
+    function renderInboxList() {
+        const container = document.getElementById('inbox-messages-list');
+        if (!container) return;
+
+        if (!inboxData || inboxData.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; color: rgba(255,255,255,0.4); font-size: 11px; padding: 40px 10px;">
+                    <i class="bi bi-inbox" style="font-size: 28px; display: block; margin-bottom: 8px; opacity: 0.5;"></i>
+                    Belum ada pesan
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        inboxData.forEach(item => {
+            const isUnread = !item.is_read;
+            const hasReward = item.reward_coins > 0;
+
+            let typeBadge = '';
+            if (item.type === 'reward') {
+                typeBadge = '<span style="font-size:7px; background:rgba(245,158,11,0.2); color:#fbbf24; border:1px solid rgba(245,158,11,0.4); border-radius:3px; padding:1px 4px; font-family:\'Press Start 2P\',monospace;">HADIAH</span>';
+            } else if (item.type === 'announcement') {
+                typeBadge = '<span style="font-size:7px; background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid rgba(59,130,246,0.4); border-radius:3px; padding:1px 4px; font-family:\'Press Start 2P\',monospace;">PENGUMUMAN</span>';
+            } else if (item.type === 'warning') {
+                typeBadge = '<span style="font-size:7px; background:rgba(239,68,68,0.2); color:#f87171; border:1px solid rgba(239,68,68,0.4); border-radius:3px; padding:1px 4px; font-family:\'Press Start 2P\',monospace;">PERINGATAN</span>';
+            } else {
+                typeBadge = '<span style="font-size:7px; background:rgba(148,163,184,0.2); color:#cbd5e1; border:1px solid rgba(148,163,184,0.4); border-radius:3px; padding:1px 4px; font-family:\'Press Start 2P\',monospace;">INFO</span>';
+            }
+
+            html += `
+                <div class="inbox-card ${isUnread ? 'unread' : ''}" id="inbox-card-${item.id}">
+                    <div class="inbox-card-top">
+                        <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                            ${typeBadge}
+                            <div class="inbox-card-title">${escapeHTML(item.title)}</div>
+                        </div>
+                        <span class="inbox-card-badge ${isUnread ? 'inbox-badge-new' : 'inbox-badge-read'}">
+                            ${isUnread ? 'BARU' : 'DIBACA'}
+                        </span>
+                    </div>
+                    <div class="inbox-card-time"><i class="bi bi-clock me-1"></i>${item.created_at_formatted}</div>
+                    <div class="inbox-card-content">${escapeHTML(item.content)}</div>
+            `;
+
+            if (hasReward) {
+                html += `
+                    <div class="inbox-reward-box">
+                        <span class="inbox-reward-text">
+                            <i class="bi bi-coin"></i> +${item.reward_coins.toLocaleString('id-ID')} KP
+                        </span>
+                        <button class="inbox-claim-btn ${item.is_claimed ? 'claimed' : ''}"
+                                id="claim-btn-${item.id}"
+                                onclick="claimInboxReward(${item.id}, ${item.reward_coins})"
+                                ${item.is_claimed ? 'disabled' : ''}>
+                            ${item.is_claimed ? 'SUDAH DIKLAIM' : 'KLAIM KOIN'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            html += `
+                    <div class="inbox-card-footer">
+                        <button class="inbox-del-btn" onclick="deleteInboxMessage(${item.id})" title="Hapus Pesan">
+                            <i class="bi bi-trash-fill me-1"></i>Hapus
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    window.toggleInbox = function() {
+        inboxOpen = !inboxOpen;
+        const sidebar = document.getElementById('inbox-sidebar');
+        const backdrop = document.getElementById('inbox-backdrop');
+
+        if (inboxOpen && chatOpen) {
+            toggleChat();
+        }
+
+        if (sidebar) {
+            if (inboxOpen) {
+                sidebar.classList.add('open');
+                if (backdrop) backdrop.classList.add('show');
+                fetchGameInbox(false);
+                markAllUnreadAsRead();
+            } else {
+                sidebar.classList.remove('open');
+                if (backdrop) backdrop.classList.remove('show');
+            }
+        }
+    };
+
+    function markAllUnreadAsRead() {
+        const unreadItems = inboxData.filter(i => !i.is_read);
+        if (unreadItems.length === 0) return;
+
+        unreadItems.forEach(item => {
+            fetch(`/inbox/${item.id}/read`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                }
+            }).catch(e => console.error(e));
+            item.is_read = true;
+        });
+
+        inboxUnreadCount = 0;
+        updateInboxBadge();
+        setTimeout(renderInboxList, 300);
+    }
+
+    window.claimInboxReward = function(inboxId, coins) {
+        const btn = document.getElementById(`claim-btn-${inboxId}`);
+        if (btn) btn.disabled = true;
+
+        fetch(`/inbox/${inboxId}/claim`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(async data => {
+            if (data.success) {
+                const coinEl = document.getElementById('header-coin-count');
+                if (coinEl && data.new_coins !== undefined) {
+                    coinEl.innerText = data.new_coins.toLocaleString('id-ID');
+                    localStorage.setItem('coins', String(data.new_coins));
+                }
+
+                if (btn) {
+                    btn.classList.add('claimed');
+                    btn.textContent = 'SUDAH DIKLAIM';
+                }
+
+                const item = inboxData.find(i => i.id === inboxId);
+                if (item) {
+                    item.is_claimed = true;
+                    item.is_read = true;
+                }
+
+                await showHTMLAlert(`+${coins.toLocaleString('id-ID')} KOIN KP BERHASIL DIKLAIM!`, "KLAIM HADIAH");
+            } else {
+                await showHTMLAlert(data.message || 'Gagal mengklaim koin.', "PERINGATAN");
+                if (btn) btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error('Claim reward error:', err);
+            if (btn) btn.disabled = false;
+        });
+    };
+
+    window.deleteInboxMessage = async function(inboxId) {
+        const confirmed = await showHTMLConfirm('Hapus pesan inbox ini?', 'HAPUS PESAN');
+        if (!confirmed) return;
+
+        fetch(`/inbox/${inboxId}/delete`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                inboxData = inboxData.filter(i => i.id !== inboxId);
+                const card = document.getElementById(`inbox-card-${inboxId}`);
+                if (card) card.remove();
+                if (inboxData.length === 0) renderInboxList();
+            }
+        })
+        .catch(err => console.error(err));
+    };
+
+    function checkAndShowInboxToast() {
+        const unreadItems = inboxData.filter(i => !i.is_read);
+        if (unreadItems.length === 0) return;
+
+        const latestUnread = unreadItems[0];
+        const notifiedIds = JSON.parse(localStorage.getItem('notified_inbox_ids') || '[]');
+
+        if (!notifiedIds.includes(latestUnread.id)) {
+            showInboxToastAlert(latestUnread);
+            notifiedIds.push(latestUnread.id);
+            localStorage.setItem('notified_inbox_ids', JSON.stringify(notifiedIds));
+        }
+    }
+
+    function showInboxToastAlert(inboxItem) {
+        const toast = document.getElementById('inbox-toast-alert');
+        const desc = document.getElementById('inbox-toast-desc');
+        if (!toast || !desc) return;
+
+        desc.innerText = `${inboxItem.title} — ${inboxItem.content}`;
+        toast.classList.add('show');
+
+        if (inboxToastTimer) clearTimeout(inboxToastTimer);
+        inboxToastTimer = setTimeout(() => {
+            closeInboxToast();
+        }, 7000);
+    }
+
+    window.closeInboxToast = function() {
+        const toast = document.getElementById('inbox-toast-alert');
+        if (toast) toast.classList.remove('show');
+        if (inboxToastTimer) clearTimeout(inboxToastTimer);
+    };
+
+    window.openInboxFromToast = function() {
+        closeInboxToast();
+        if (!inboxOpen) {
+            toggleInbox();
+        }
+    };
+
+    // Close inbox when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!inboxOpen) return;
+        const sidebar = document.getElementById('inbox-sidebar');
+        const toggleBtn = document.getElementById('inbox-toggle-btn');
+        if (sidebar && !sidebar.contains(e.target) && toggleBtn && !toggleBtn.contains(e.target)) {
+            toggleInbox();
+        }
+    });
+
+    // Initial Inbox load & periodic check
+    fetchGameInbox(true);
+    setInterval(() => {
+        if (!inboxOpen) {
+            fetchGameInbox(true);
+        }
+    }, 20000);
 
 
 

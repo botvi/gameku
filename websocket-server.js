@@ -32,7 +32,9 @@ wss.on('connection', (ws) => {
                         readyStates: new Map(),
                         arenaReadyStates: new Map(),
                         customizations: new Map(),
-                        names: new Map()
+                        names: new Map(),
+                        raceStates: new Map(),
+                        gameStarted: false
                     });
                 }
 
@@ -58,6 +60,22 @@ wss.on('connection', (ws) => {
                     type: 'room_update',
                     payload: getRoomPlayersData(roomId)
                 });
+
+                // If game is already in progress, send current race states to the joining player
+                if (room.gameStarted && room.raceStates.size > 0) {
+                    const raceData = {};
+                    for (const [pId, pState] of room.raceStates.entries()) {
+                        raceData[pId] = pState;
+                    }
+                    if (ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({
+                            type: 'game_in_progress',
+                            payload: {
+                                raceStates: raceData
+                            }
+                        }));
+                    }
+                }
             }
 
             else if (type === 'ready') {
@@ -99,6 +117,7 @@ wss.on('connection', (ws) => {
                         room.arenaReadyStates.get(playersArray[0]) === true &&
                         room.arenaReadyStates.get(playersArray[1]) === true) {
 
+                        room.gameStarted = true;
                         console.log(`Both players arena-ready in room ${currentRoomId}. Broadcasting countdown start...`);
                         broadcastToRoom(currentRoomId, {
                             type: 'start_countdown',
@@ -109,9 +128,15 @@ wss.on('connection', (ws) => {
             }
 
             else if (type === 'game_state_sync') {
-                // Relay game state to the opponent (speed, distance)
+                // Relay game state to the opponent (speed, distance) and save in room
                 const room = rooms.get(currentRoomId);
                 if (room) {
+                    room.raceStates.set(userId, {
+                        speed: payload.speed,
+                        distance: payload.distance,
+                        timestamp: Date.now()
+                    });
+
                     for (const [pId, pWs] of room.players.entries()) {
                         if (pId !== userId && pWs.readyState === WebSocket.OPEN) {
                             pWs.send(JSON.stringify({
@@ -135,6 +160,8 @@ wss.on('connection', (ws) => {
             else if (type === 'game_over') {
                 const room = rooms.get(currentRoomId);
                 if (room) {
+                    room.gameStarted = false;
+                    room.raceStates.clear();
                     console.log(`Game over in room ${currentRoomId}. Winner ID: ${payload.winnerId}`);
                     broadcastToRoom(currentRoomId, {
                         type: 'game_finished',

@@ -1556,7 +1556,36 @@ if ($winsCount >= 100) {
             if (this.isMultiplayer) {
                 this.initWebSocket();
             } else {
-                this.startCountdownSequence();
+                const vsAiStateKey = 'vsai_state_lvl_' + AI_LEVEL;
+                const savedVsAiState = localStorage.getItem(vsAiStateKey);
+                let isRestored = false;
+                if (savedVsAiState) {
+                    try {
+                        const parsed = JSON.parse(savedVsAiState);
+                        if (Date.now() - parsed.timestamp < 300000 && parsed.playerDistance > 0 && parsed.opponentDistance > 0) {
+                            this.playerDistance = parsed.playerDistance;
+                            this.opponentDistance = parsed.opponentDistance;
+                            this.playerSpeed = parsed.playerSpeed || 5.0;
+                            this.opponentSpeed = parsed.opponentSpeed || 5.0;
+                            isRestored = true;
+                        }
+                    } catch (e) {
+                        console.error('Failed to restore VS AI state:', e);
+                    }
+                }
+
+                if (isRestored) {
+                    this.countdownText.setFontSize(20);
+                    this.countdownText.setText('LANJUTKAN!');
+                    this.countdownText.setTint(0x00ffff, 0x00ffff, 0x22c55e, 0x22c55e);
+                    this.startRaceAmbientSounds();
+                    this.gameState = 'racing';
+                    this.time.delayedCall(800, () => {
+                        this.countdownText.setVisible(false);
+                    });
+                } else {
+                    this.startCountdownSequence();
+                }
             }
         }
 
@@ -2038,6 +2067,9 @@ if ($winsCount >= 100) {
             this.gameState = 'finished';
             this.playerSpeed = 0;
             this.opponentSpeed = 0;
+            if (!this.isMultiplayer) {
+                localStorage.removeItem('vsai_state_lvl_' + AI_LEVEL);
+            }
 
             this.stopRaceAmbientSounds();
 
@@ -2316,6 +2348,13 @@ if ($winsCount >= 100) {
 
                 if (!this.isMultiplayer) {
                     this.opponentSpeed = Math.min(13.0, 4.0 + (AI_LEVEL - 1) * 0.09);
+                    localStorage.setItem('vsai_state_lvl_' + AI_LEVEL, JSON.stringify({
+                        playerDistance: this.playerDistance,
+                        opponentDistance: this.opponentDistance,
+                        playerSpeed: this.playerSpeed,
+                        opponentSpeed: this.opponentSpeed,
+                        timestamp: Date.now()
+                    }));
                 }
 
                 let baseSpeed = this.isMultiplayer ? 5.0 : this.opponentSpeed;

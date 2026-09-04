@@ -16,12 +16,11 @@ class SuperadminSeeder extends Seeder
     public function run()
     {
         User::create([
-            'username' => 'superadmin',
-            'nama' => 'Superadmin',
-            'role' => 'superadmin',
+            'nama_jalur' => 'Superadmin',
+            'kuansing_poin' => 1000,
+            'role' => 'admin',
             'email' => 'superadmin@gmail.com',
-            'no_wa' => '085156985698',
-            'password' => Hash::make('password'), // Pastikan mengganti 'password' dengan kata sandi yang aman
+            'password' => Hash::make('password'),
         ]);
     }
 }

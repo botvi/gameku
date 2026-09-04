@@ -966,6 +966,27 @@ if ($winsCount >= 100) {
             this.opponentSpeed = 0;
             this.maxSpeed = 25;
             this.gameState = 'countdown';
+            this.isRestoredMatch = false;
+
+            if (this.isMultiplayer && this.roomId) {
+                const multiStateKey = 'arena_multi_state_' + this.roomId;
+                const savedMultiState = localStorage.getItem(multiStateKey);
+                if (savedMultiState) {
+                    try {
+                        const parsed = JSON.parse(savedMultiState);
+                        if (Date.now() - parsed.timestamp < 180000 && parsed.playerDistance > 0) {
+                            this.playerDistance = parsed.playerDistance;
+                            this.opponentDistance = parsed.opponentDistance;
+                            this.playerSpeed = parsed.playerSpeed || 5.0;
+                            this.opponentSpeed = parsed.opponentSpeed || 5.0;
+                            this.isRestoredMatch = true;
+                        }
+                    } catch (e) {
+                        console.error('Failed to parse multi state:', e);
+                    }
+                }
+            }
+
             this.scrollSpeed = 0;
             this.elapsedTime = 0;
             this.pointerX = 0;
@@ -1692,7 +1713,11 @@ if ($winsCount >= 100) {
                 }));
 
                 const overlay = document.getElementById('ready-overlay');
-                if (overlay) overlay.style.display = 'flex';
+                if (this.isRestoredMatch) {
+                    if (overlay) overlay.style.display = 'none';
+                } else {
+                    if (overlay) overlay.style.display = 'flex';
+                }
             };
 
             this.ws.onmessage = (event) => {
@@ -1735,6 +1760,18 @@ if ($winsCount >= 100) {
                         if (opponent.customizations && opponent.customizations.statusText) {
                             this.oppStatusText.setText("⚡ " + opponent.customizations.statusText.toUpperCase() + " ⚡");
                         }
+
+                        if (this.gameState === 'racing' && this.ws && this.ws.readyState === WebSocket.OPEN) {
+                            this.ws.send(JSON.stringify({
+                                type: 'game_state_sync',
+                                roomId: this.roomId,
+                                payload: {
+                                    speed: this.playerSpeed,
+                                    distance: this.playerDistance,
+                                    isTapped: false
+                                }
+                            }));
+                        }
                     }
 
                     if (opponent && opponent.userName) {
@@ -1744,7 +1781,7 @@ if ($winsCount >= 100) {
                 }
 
                 else if (type === 'start_countdown') {
-                    if (this.isWaitingForOpponentToLoad) {
+                    if (this.isWaitingForOpponentToLoad && !this.isRestoredMatch) {
                         this.isWaitingForOpponentToLoad = false;
                         const overlay = document.getElementById('ready-overlay');
                         if (overlay) {
@@ -1753,6 +1790,41 @@ if ($winsCount >= 100) {
                             setTimeout(() => { overlay.style.display = 'none'; overlay.style.opacity = '1'; }, 500);
                         }
                         this.startCountdownSequence();
+                    }
+                }
+
+                else if (type === 'game_in_progress') {
+                    this.isWaitingForOpponentToLoad = false;
+                    const overlay = document.getElementById('ready-overlay');
+                    if (overlay) overlay.style.display = 'none';
+
+                    if (this.opponentId && payload.raceStates && payload.raceStates[this.opponentId]) {
+                        const oppState = payload.raceStates[this.opponentId];
+                        this.opponentDistance = oppState.distance;
+                        this.opponentSpeed = oppState.speed;
+                    }
+
+                    if (this.gameState !== 'racing') {
+                        this.gameState = 'racing';
+                        this.countdownText.setFontSize(20);
+                        this.countdownText.setText('LANJUTKAN!');
+                        this.countdownText.setTint(0x00ffff, 0x00ffff, 0x22c55e, 0x22c55e);
+                        this.startRaceAmbientSounds();
+                        this.time.delayedCall(800, () => {
+                            this.countdownText.setVisible(false);
+                        });
+                    }
+
+                    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                        this.ws.send(JSON.stringify({
+                            type: 'game_state_sync',
+                            roomId: this.roomId,
+                            payload: {
+                                speed: this.playerSpeed,
+                                distance: this.playerDistance,
+                                isTapped: false
+                            }
+                        }));
                     }
                 }
 
@@ -2142,6 +2214,9 @@ if ($winsCount >= 100) {
             this.gameState = 'finished';
             this.playerSpeed = 0;
             this.opponentSpeed = 0;
+            if (this.isMultiplayer && this.roomId) {
+                localStorage.removeItem('arena_multi_state_' + this.roomId);
+            }
 
             this.stopRaceAmbientSounds();
 
@@ -2215,7 +2290,7 @@ if ($winsCount >= 100) {
             modalBg.strokeRoundedRect(-modalW / 2, -modalH / 2, modalW, modalH, 16);
             modal.add(modalBg);
 
-            const titleStr = isWinner ? '✦ KEMENANGAN ✦' : '✦ KEKALAHAN ✦';
+            const titleStr = isWinner ? '✦ MENANG ✦' : '✦ KALAH ✦';
             const titleCol = isWinner ? '#16a34a' : '#dc2626';
             const strokeCol = isWinner ? '#dcfce7' : '#fee2e2';
 
@@ -2371,6 +2446,16 @@ if ($winsCount >= 100) {
                 this.pointerTime += delta;
                 this.pointerX = Math.sin(this.pointerTime / 250) * 100;
                 this.pointerGfx.x = this.pointerX;
+
+                if (this.isMultiplayer && this.roomId) {
+                    localStorage.setItem('arena_multi_state_' + this.roomId, JSON.stringify({
+                        playerDistance: this.playerDistance,
+                        opponentDistance: this.opponentDistance,
+                        playerSpeed: this.playerSpeed,
+                        opponentSpeed: this.opponentSpeed,
+                        timestamp: Date.now()
+                    }));
+                }
 
                 let baseSpeed = 5.0;
                 if (this.playerSpeed > baseSpeed) {
@@ -2623,9 +2708,14 @@ if ($winsCount >= 100) {
         resumeArenaBGM();
         if (window.activeMultiplayerArenaGame) {
             const scene = window.activeMultiplayerArenaGame.scene.getScene('ArenaScene');
-            if (scene && scene.ws) {
-                console.log("Closing WebSocket in ArenaScene...");
-                scene.ws.close();
+            if (scene) {
+                if (scene.allowExit && scene.roomId) {
+                    localStorage.removeItem('arena_multi_state_' + scene.roomId);
+                }
+                if (scene.ws) {
+                    console.log("Closing WebSocket in ArenaScene...");
+                    scene.ws.close();
+                }
             }
             window.activeMultiplayerArenaGame.destroy(true);
             window.activeMultiplayerArenaGame = null;

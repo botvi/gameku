@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Setting;
+use App\Models\GameSetting;
 use App\Models\CoinPackage;
 use App\Models\TopupTransaction;
 use App\Models\Room;
@@ -77,14 +78,16 @@ class DashboardSuperAdminController extends Controller
     }
 
     /**
-     * KlikQRIS API Settings.
+     * KlikQRIS API & Game Settings.
      */
     public function settings()
     {
         $apiKey = Setting::get('klikqris_api_key', '');
         $merchantId = Setting::get('klikqris_merchant_id', '');
+        $gameSetting = GameSetting::instance();
+        $fullscreen = $gameSetting->fullscreen ? 1 : 0;
 
-        return view('pagesuperadmin.settings.index', compact('apiKey', 'merchantId'));
+        return view('pagesuperadmin.settings.index', compact('apiKey', 'merchantId', 'fullscreen'));
     }
 
     /**
@@ -93,14 +96,19 @@ class DashboardSuperAdminController extends Controller
     public function saveSettings(Request $request)
     {
         $request->validate([
-            'klikqris_api_key' => 'required|string',
-            'klikqris_merchant_id' => 'required|string',
+            'klikqris_api_key' => 'nullable|string',
+            'klikqris_merchant_id' => 'nullable|string',
         ]);
 
-        Setting::set('klikqris_api_key', $request->klikqris_api_key);
-        Setting::set('klikqris_merchant_id', $request->klikqris_merchant_id);
+        Setting::set('klikqris_api_key', $request->klikqris_api_key ?? '');
+        Setting::set('klikqris_merchant_id', $request->klikqris_merchant_id ?? '');
 
-        Alert::success('Berhasil', 'Kredensial API KlikQRIS berhasil diperbarui.');
+        // Save fullscreen boolean (1 = ON, 0 = OFF) in GameSetting model
+        $gameSetting = GameSetting::instance();
+        $gameSetting->fullscreen = ($request->has('fullscreen') && $request->input('fullscreen') == '1') ? 1 : 0;
+        $gameSetting->save();
+
+        Alert::success('Berhasil', 'Pengaturan sistem & game berhasil diperbarui.');
 
         return redirect()->back();
     }

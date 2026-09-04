@@ -328,31 +328,36 @@
     function handleGoogleLogin(e) {
         e.preventDefault();
 
-        var width = 500, height = 650;
-        var left = (window.screen.width / 2) - (width / 2);
-        var top = (window.screen.height / 2) - (height / 2);
-        var popup = window.open('about:blank', 'GoogleLoginPopup', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',status=no,resizable=yes,scrollbars=yes');
-
-        if (!popup) {
-            alert('Silakan aktifkan pop-up browser Anda untuk login.');
-            return;
-        }
-
         // Show connecting overlay
         var overlay = document.getElementById('connecting-overlay');
         if (overlay) overlay.classList.add('show');
 
+        var width = 500, height = 650;
+        var left = (window.screen.width / 2) - (width / 2);
+        var top = (window.screen.height / 2) - (height / 2);
+        var popup = null;
+
+        try {
+            popup = window.open('about:blank', 'GoogleLoginPopup', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',status=no,resizable=yes,scrollbars=yes');
+        } catch (err) {}
+
+        if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+            // Popup diblokir oleh browser / PWA -> fallback langsung redirect ke halaman Google login!
+            window.location.href = '{{ route('google.login') }}';
+            return;
+        }
+
         // Redirect popup after slight delay
         setTimeout(function () {
             if (popup) popup.location.href = '{{ route('google.login') }}';
-        }, 1200);
+        }, 300);
 
         // Periodically check if popup closed
         var checkTimer = setInterval(function () {
             if (popup && popup.closed) {
                 clearInterval(checkTimer);
                 if (!window._googleLoginRedirecting) {
-                    window.location.reload();
+                    if (overlay) overlay.classList.remove('show');
                 }
             }
         }, 500);

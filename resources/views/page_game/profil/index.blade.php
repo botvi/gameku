@@ -628,18 +628,56 @@
         window.navigateToPage('/main-menu');
     };
 
-    // Initialize boat preview widget
+    // Guard agar tidak double-init
+    var _profilPreviewStarted = false;
+
     function initProfilPreview() {
-        if (typeof window.initJalurPreview === 'function' && document.getElementById('jalur-preview-container')) {
-            window.initJalurPreview('jalur-preview-container', 'jalur-name');
-        }
+        // Reset guard setiap kali fungsi ini dipanggil dari event navigasi
+        _profilPreviewStarted = false;
+        _tryStartPreview();
     }
 
-    initProfilPreview();
-    document.addEventListener('game:page-ready', function () {
-        if (!document.getElementById('profile-dashboard')) return;
+    function _tryStartPreview() {
+        if (_profilPreviewStarted) return;
+        if (!document.getElementById('jalur-preview-container')) return;
+
+        if (typeof window.initJalurPreview !== 'function') {
+            // Belum ready — tunggu sedikit lalu coba lagi (max 3 detik)
+            var attempt = 0;
+            var poll = setInterval(function () {
+                attempt++;
+                if (typeof window.initJalurPreview === 'function') {
+                    clearInterval(poll);
+                    if (!_profilPreviewStarted && document.getElementById('jalur-preview-container')) {
+                        _profilPreviewStarted = true;
+                        window.initJalurPreview('jalur-preview-container', 'jalur-name');
+                    }
+                } else if (attempt > 30) {
+                    clearInterval(poll);
+                }
+            }, 100);
+            return;
+        }
+
+        _profilPreviewStarted = true;
+        window.initJalurPreview('jalur-preview-container', 'jalur-name');
+    }
+
+    // 1. Livewire SPA navigation
+    document.addEventListener('livewire:navigated', function () {
+        if (!document.getElementById('jalur-preview-container')) return;
         initProfilPreview();
     });
+
+    // 2. Hard reload / full page load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () {
+            if (document.getElementById('jalur-preview-container')) initProfilPreview();
+        });
+    } else {
+        // DOM sudah siap
+        if (document.getElementById('jalur-preview-container')) initProfilPreview();
+    }
 
     // Load correct avatar GIF based on local storage or database
     (function () {

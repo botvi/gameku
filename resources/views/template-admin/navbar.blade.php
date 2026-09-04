@@ -69,6 +69,12 @@
                             <span class="pc-mtext">Spanduk Sponsor</span>
                         </a>
                     </li>
+                    <li class="pc-item {{ request()->routeIs('superadmin.inbox') ? 'active' : '' }}">
+                        <a href="{{ route('superadmin.inbox') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-mail"></i></span>
+                            <span class="pc-mtext">Inbox & Pengumuman</span>
+                        </a>
+                    </li>
 
                     <!-- Pengaturan -->
                     <li class="pc-item pc-caption">
@@ -76,8 +82,14 @@
                     </li>
                     <li class="pc-item {{ request()->routeIs('superadmin.settings') ? 'active' : '' }}">
                         <a href="{{ route('superadmin.settings') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-settings"></i></span>
+                            <span class="pc-mtext">Pengaturan Game</span>
+                        </a>
+                    </li>
+                    <li class="pc-item">
+                        <a href="{{ route('superadmin.settings') }}#klikqris" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-key"></i></span>
-                            <span class="pc-mtext">KlikQRIS Credentials</span>
+                            <span class="pc-mtext">Kredensial KlikQRIS</span>
                         </a>
                     </li>
 

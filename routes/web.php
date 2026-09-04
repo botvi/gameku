@@ -11,6 +11,7 @@ use App\Http\Controllers\superadmin\{
     DashboardSuperAdminController,
     ShopItemController,
     SponsorController,
+    InboxController,
 };
 
 use App\Http\Controllers\auth\{
@@ -28,6 +29,8 @@ use App\Http\Controllers\pagegame\{
     SplahScreenController,
     VsAiController,
     LeaderboardController,
+    InboxGameController,
+    LoadingController,
 };
 
 /*
@@ -89,12 +92,21 @@ Route::group(['middleware' => ['auth', 'role:admin', 'check.blocked']], function
     Route::post('/dashboard-superadmin/sponsors/{id}/update', [SponsorController::class, 'update'])->name('superadmin.sponsors.update');
     Route::post('/dashboard-superadmin/sponsors/{id}/delete', [SponsorController::class, 'destroy'])->name('superadmin.sponsors.delete');
     Route::post('/dashboard-superadmin/sponsors/{id}/toggle', [SponsorController::class, 'toggleActive'])->name('superadmin.sponsors.toggle');
+
+    // Inbox CRUD
+    Route::get('/dashboard-superadmin/inbox', [InboxController::class, 'index'])->name('superadmin.inbox');
+    Route::post('/dashboard-superadmin/inbox/store', [InboxController::class, 'store'])->name('superadmin.inbox.store');
+    Route::post('/dashboard-superadmin/inbox/{id}/update', [InboxController::class, 'update'])->name('superadmin.inbox.update');
+    Route::post('/dashboard-superadmin/inbox/{id}/delete', [InboxController::class, 'destroy'])->name('superadmin.inbox.delete');
+    Route::post('/dashboard-superadmin/inbox/{id}/toggle', [InboxController::class, 'toggleActive'])->name('superadmin.inbox.toggle');
 });
 
 // Webhook KlikQRIS (no CSRF, public)
 Route::post('/webhook/klikqris', [\App\Http\Controllers\pagegame\TopupController::class, 'webhook'])->name('klikqris.webhook');
 
 Route::middleware(['auth', 'check.blocked'])->group(function () {
+    Route::get('/loading', [LoadingController::class, 'index'])->name('loading');
+    Route::get('/api/player/sync-data', [LoadingController::class, 'syncData'])->name('api.player.sync-data');
     Route::get('/main-menu', [MainMenuController::class, 'index'])->name('main-menu');
     Route::get('/arena-pacu', [ArenaPacuController::class, 'index'])->name('arena-pacu');
     Route::post('/arena-pacu/add-coins', [ArenaPacuController::class, 'addCoins'])->name('arena-pacu.add-coins');
@@ -105,6 +117,8 @@ Route::middleware(['auth', 'check.blocked'])->group(function () {
     Route::post('/room/join', [RoomController::class, 'join'])->name('room.join');
     Route::post('/room/join-by-code', [RoomController::class, 'joinByCode'])->name('room.join-by-code');
     Route::post('/room/matchmake', [RoomController::class, 'matchmake'])->name('room.matchmake');
+    Route::post('/room/matchmake/status', [RoomController::class, 'matchmakeStatus'])->name('room.matchmake.status');
+    Route::post('/room/matchmake/cancel', [RoomController::class, 'matchmakeCancel'])->name('room.matchmake.cancel');
     Route::get('/room/lobby/{id}', [RoomController::class, 'lobby'])->name('room.lobby');
     Route::post('/room/ready', [RoomController::class, 'ready'])->name('room.ready');
     Route::post('/room/leave', [RoomController::class, 'leave'])->name('room.leave');
@@ -128,6 +142,12 @@ Route::middleware(['auth', 'check.blocked'])->group(function () {
     Route::post('/vsai/add-coins', [VsAiController::class, 'addCoins'])->name('vsai.add-coins');
     // Leaderboard
     Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
+
+    // Inbox User Routes
+    Route::get('/inbox/list', [InboxGameController::class, 'list'])->name('inbox.list');
+    Route::post('/inbox/{id}/read', [InboxGameController::class, 'markAsRead'])->name('inbox.read');
+    Route::post('/inbox/{id}/claim', [InboxGameController::class, 'claimReward'])->name('inbox.claim');
+    Route::post('/inbox/{id}/delete', [InboxGameController::class, 'deleteInbox'])->name('inbox.delete');
 
     // Topup & QRIS Snap
     Route::post('/topup/create', [\App\Http\Controllers\pagegame\TopupController::class, 'createTransaction'])->name('topup.create');
