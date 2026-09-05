@@ -104,6 +104,8 @@
         flex-direction: column;
         width: 100%;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
         z-index: 11;
         scrollbar-width: thin;
         scrollbar-color: rgba(239, 68, 68, 0.4) rgba(255, 255, 255, 0.02);
@@ -166,6 +168,8 @@
         display: flex;
         gap: 10px;
         width: 100%;
+        position: relative;
+        z-index: 2;
     }
 
     #search-dashboard .search-input {
@@ -179,6 +183,8 @@
         color: #ffffff;
         outline: none;
         transition: all 0.2s ease;
+        position: relative;
+        z-index: 2;
     }
 
     #search-dashboard .search-input::placeholder {
@@ -374,13 +380,14 @@ $user = auth()->user();
     </div>
 
     <!-- Main Search Area -->
-    <div class="search-container">
+    <div class="search-container scrollable">
         <!-- Search Box -->
         <div class="search-card">
             <div class="search-title"><i class="bi bi-search me-1"></i> CARI PAMACU</div>
-            <form action="/cari-pemain" method="GET" class="search-form">
+            <form action="/cari-pemain" method="GET" class="search-form" onsubmit="handleSearchSubmit(event)">
                 <input
                     type="text"
+                    id="search-input-field"
                     name="search"
                     class="search-input"
                     placeholder="Masukkan nama jalur..."
@@ -449,6 +456,13 @@ $user = auth()->user();
 
     window.viewDetail = function(id) {
         window.navigateToPage('/cari-pemain/detail/' + id);
+    };
+
+    window.handleSearchSubmit = function(e) {
+        if (e) e.preventDefault();
+        const input = document.getElementById('search-input-field');
+        const query = input ? input.value.trim() : '';
+        window.navigateToPage('/cari-pemain?search=' + encodeURIComponent(query));
     };
 }
 </script>

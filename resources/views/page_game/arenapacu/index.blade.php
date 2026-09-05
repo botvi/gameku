@@ -790,8 +790,16 @@ if ($winsCount >= 100) {
                 maskCanvas.height = displayH;
                 const ctx = maskCanvas.getContext('2d');
 
-                ctx.imageSmoothingEnabled = false;
-                ctx.drawImage(img, 0, 0, displayW, displayH);
+                const scaleFactor = (displayW / img.width);
+                const drawW = displayW;
+                const drawH = Math.round(img.height * scaleFactor);
+                const drawX = 0;
+                const drawY = Math.round((displayH - drawH) / 2);
+
+                const isPixelArt = (img.width <= 256 && img.height <= 256);
+                ctx.imageSmoothingEnabled = !isPixelArt;
+                if (ctx.imageSmoothingEnabled) ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
                 const imageData = ctx.getImageData(0, 0, displayW, displayH);
                 const data = imageData.data;
@@ -806,14 +814,21 @@ if ($winsCount >= 100) {
                 }
                 ctx.putImageData(imageData, 0, 0);
 
+                ctx.imageSmoothingEnabled = false;
                 ctx.globalCompositeOperation = 'destination-in';
                 ctx.drawImage(boatSource, 0, 0, displayW, displayH);
                 ctx.globalCompositeOperation = 'source-over';
+                ctx.imageSmoothingEnabled = true;
 
                 if (this.textures.exists('player_corak_texture')) {
                     this.textures.remove('player_corak_texture');
                 }
                 this.textures.addCanvas('player_corak_texture', maskCanvas);
+
+                if (boatGroup.playerCorakSprite) {
+                    boatGroup.playerCorakSprite.destroy();
+                    boatGroup.playerCorakSprite = null;
+                }
 
                 const corakSprite = this.make.image({
                     x: 0,
@@ -826,6 +841,7 @@ if ($winsCount >= 100) {
                 corakSprite.setBlendMode(Phaser.BlendModes.MULTIPLY);
 
                 boatGroup.add(corakSprite);
+                boatGroup.playerCorakSprite = corakSprite;
                 if (boatImg && boatGroup.list.includes(boatImg)) {
                     const boatIdx = boatGroup.getIndex(boatImg);
                     boatGroup.moveTo(corakSprite, boatIdx + 1);
@@ -881,6 +897,12 @@ if ($winsCount >= 100) {
                 }
                 this.textures.addCanvas('player_lambai_texture', canvas);
 
+                if (boatGroup.lambaiSprite) {
+                    if (boatGroup.lambaiTween) boatGroup.lambaiTween.stop();
+                    boatGroup.lambaiSprite.destroy();
+                    boatGroup.lambaiSprite = null;
+                }
+
                 const lambaiSprite = this.make.image({
                     x: LAMBAI_OFFSET_X,
                     y: LAMBAI_OFFSET_Y,
@@ -896,6 +918,15 @@ if ($winsCount >= 100) {
                     boatGroup.moveTo(lambaiSprite, boatIdx);
                 }
                 boatGroup.lambaiSprite = lambaiSprite;
+
+                boatGroup.lambaiTween = this.tweens.add({
+                    targets: lambaiSprite,
+                    angle: { from: 0, to: 0 },
+                    duration: 850,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
             };
             img.src = dataUrl;
         }
@@ -967,6 +998,7 @@ if ($winsCount >= 100) {
             this.maxSpeed = 25;
             this.gameState = 'countdown';
             this.isRestoredMatch = false;
+            this.lastTapTime = 0;
 
             if (this.isMultiplayer && this.roomId) {
                 const multiStateKey = 'arena_multi_state_' + this.roomId;
@@ -1440,49 +1472,69 @@ if ($winsCount >= 100) {
             paddleBtn.on('pointerdown', () => {
                 if (this.gameState !== 'racing') return;
 
+                const now = Date.now();
+                const timeSinceLastTap = now - (this.lastTapTime || 0);
+                this.lastTapTime = now;
+
                 this.tweens.add({
                     targets: paddleBtn,
                     scaleX: 0.9, scaleY: 0.9,
                     duration: 50, yoyo: true
                 });
 
-                const absX = Math.abs(this.pointerX);
                 let speedBoost = 0;
                 let feedbackStr = "";
                 let tintTop = 0xffffff;
                 let tintBottom = 0xffffff;
                 let feedbackStroke = "";
 
-                if (absX <= 20) {
-                    speedBoost = 5;
-                    feedbackStr = "BAKABUUIKKK!!";
-                    tintTop = 0xffea00;
-                    tintBottom = 0xff0055;
-                    feedbackStroke = "#4c0519";
-                    this.cameras.main.shake(100, 0.004);
-                    this.playerRowers.emitters.forEach(emitter => {
-                        emitter.explode(22);
-                    });
-                    this.spawnCoinRewardAnimation();
-                } else if (absX <= 60) {
-                    speedBoost = 2;
-                    feedbackStr = "KAYUAHHHHH!";
-                    tintTop = 0x00ffff;
-                    tintBottom = 0x0000ff;
-                    feedbackStroke = "#0f172a";
-                    this.cameras.main.shake(60, 0.002);
-                    this.playerRowers.emitters.forEach(emitter => {
-                        emitter.explode(10);
-                    });
+                // Anti-spam protection: Must wait at least 200ms between taps
+                if (timeSinceLastTap < 200) {
+                    speedBoost = -3.0;
+                    feedbackStr = "TERBURU-BURU!";
+                    tintTop = 0xef4444;
+                    tintBottom = 0x7f1d1d;
+                    feedbackStroke = "#450a0a";
+                    this.cameras.main.shake(40, 0.001);
                 } else {
-                    speedBoost = 0;
-                    feedbackStr = "LOMAHHHH!";
-                    tintTop = 0xff0000;
-                    tintBottom = 0x440000;
-                    feedbackStroke = "#000000";
+                    const absX = Math.abs(this.pointerX);
+                    if (absX <= 20) {
+                        speedBoost = 5;
+                        feedbackStr = "BAKABUUIKKK!!";
+                        tintTop = 0xffea00;
+                        tintBottom = 0xff0055;
+                        feedbackStroke = "#4c0519";
+                        this.cameras.main.shake(100, 0.004);
+                        if (this.playerRowers && this.playerRowers.emitters) {
+                            this.playerRowers.emitters.forEach(emitter => {
+                                emitter.explode(22);
+                            });
+                        }
+                        this.spawnCoinRewardAnimation();
+                    } else if (absX <= 60) {
+                        speedBoost = 2;
+                        feedbackStr = "KAYUAHHHHH!";
+                        tintTop = 0x00ffff;
+                        tintBottom = 0x0000ff;
+                        feedbackStroke = "#0f172a";
+                        this.cameras.main.shake(60, 0.002);
+                        if (this.playerRowers && this.playerRowers.emitters) {
+                            this.playerRowers.emitters.forEach(emitter => {
+                                emitter.explode(10);
+                            });
+                        }
+                    } else {
+                        // PENALTY for tapping on RED zone
+                        speedBoost = -2.5;
+                        feedbackStr = "LOMAHHHH!";
+                        tintTop = 0xef4444;
+                        tintBottom = 0x7f1d1d;
+                        feedbackStroke = "#000000";
+                        this.cameras.main.shake(40, 0.001);
+                    }
                 }
 
-                this.playerSpeed = Math.min(this.maxSpeed, this.playerSpeed + speedBoost);
+                this.playerSpeed = Math.max(5.0, Math.min(this.maxSpeed, this.playerSpeed + speedBoost));
                 this.showFeedbackText(feedbackStr, tintTop, tintBottom, feedbackStroke);
 
                 if (this.isMultiplayer && this.ws && this.ws.readyState === WebSocket.OPEN) {
@@ -1501,6 +1553,13 @@ if ($winsCount >= 100) {
                     }));
                 }
             });
+
+            if (this.input && this.input.keyboard) {
+                const spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+                spaceKey.on('down', () => {
+                    paddleBtn.emit('pointerdown');
+                });
+            }
 
             // Panel Speedometer
             const speedContainer = this.add.container(cx, 114);
@@ -1938,8 +1997,16 @@ if ($winsCount >= 100) {
                 maskCanvas.height = displayH;
                 const ctx = maskCanvas.getContext('2d');
 
-                ctx.imageSmoothingEnabled = false;
-                ctx.drawImage(img, 0, 0, displayW, displayH);
+                const scaleFactor = (displayW / img.width);
+                const drawW = displayW;
+                const drawH = Math.round(img.height * scaleFactor);
+                const drawX = 0;
+                const drawY = Math.round((displayH - drawH) / 2);
+
+                const isPixelArt = (img.width <= 256 && img.height <= 256);
+                ctx.imageSmoothingEnabled = !isPixelArt;
+                if (ctx.imageSmoothingEnabled) ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
                 const imageData = ctx.getImageData(0, 0, displayW, displayH);
                 const data = imageData.data;
@@ -1954,15 +2021,22 @@ if ($winsCount >= 100) {
                 }
                 ctx.putImageData(imageData, 0, 0);
 
+                ctx.imageSmoothingEnabled = false;
                 ctx.globalCompositeOperation = 'destination-in';
                 ctx.drawImage(boatSource, 0, 0, displayW, displayH);
                 ctx.globalCompositeOperation = 'source-over';
+                ctx.imageSmoothingEnabled = true;
 
                 const oppCorakKey = 'opponent_corak_texture';
                 if (this.textures.exists(oppCorakKey)) {
                     this.textures.remove(oppCorakKey);
                 }
                 this.textures.addCanvas(oppCorakKey, maskCanvas);
+
+                if (boatGroup.opponentCorakSprite) {
+                    boatGroup.opponentCorakSprite.destroy();
+                    boatGroup.opponentCorakSprite = null;
+                }
 
                 const corakSprite = this.make.image({
                     x: 0,
@@ -1975,6 +2049,7 @@ if ($winsCount >= 100) {
                 corakSprite.setBlendMode(Phaser.BlendModes.MULTIPLY);
 
                 boatGroup.add(corakSprite);
+                boatGroup.opponentCorakSprite = corakSprite;
                 if (boatImg && boatGroup.list.includes(boatImg)) {
                     const boatIdx = boatGroup.getIndex(boatImg);
                     boatGroup.moveTo(corakSprite, boatIdx + 1);
@@ -2031,6 +2106,12 @@ if ($winsCount >= 100) {
                 }
                 this.textures.addCanvas(oppLambaiKey, canvas);
 
+                if (boatGroup.lambaiSprite) {
+                    if (boatGroup.lambaiTween) boatGroup.lambaiTween.stop();
+                    boatGroup.lambaiSprite.destroy();
+                    boatGroup.lambaiSprite = null;
+                }
+
                 const lambaiSprite = this.make.image({
                     x: LAMBAI_OFFSET_X,
                     y: LAMBAI_OFFSET_Y,
@@ -2046,6 +2127,15 @@ if ($winsCount >= 100) {
                     boatGroup.moveTo(lambaiSprite, boatIdx);
                 }
                 boatGroup.lambaiSprite = lambaiSprite;
+
+                boatGroup.lambaiTween = this.tweens.add({
+                    targets: lambaiSprite,
+                    angle: { from: 0, to: 0 },
+                    duration: 850,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
             };
             img.src = dataUrl;
         }

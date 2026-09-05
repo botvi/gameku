@@ -25,10 +25,11 @@ class VsAiController extends Controller
         ];
         $corakDataUrl  = $modelJalurData['corak_data_url'] ?? null;
         $lambaiDataUrl = $modelJalurData['lambai_data_url'] ?? null;
+        $vsaiUnlocked  = intval($modelJalurData['vsai_unlocked'] ?? 1);
 
         $sponsors = Sponsor::where('is_active', true)->pluck('image_path')->map(fn($p) => asset($p))->toArray();
 
-        return compact('customColors', 'corakDataUrl', 'lambaiDataUrl', 'sponsors');
+        return compact('customColors', 'corakDataUrl', 'lambaiDataUrl', 'sponsors', 'vsaiUnlocked');
     }
 
     public function level()
@@ -47,10 +48,32 @@ class VsAiController extends Controller
     public function addCoins(Request $request)
     {
         $user = auth()->user();
+        $vsaiUnlocked = 1;
         if ($user) {
             $user->kuansing_poin += intval($request->input('coins', 0));
             $user->save();
+
+            $levelPassed = intval($request->input('vsai_unlocked', 0));
+            $modelJalur = ModelJalur::firstOrCreate(
+                ['user_id' => $user->id],
+                ['model_jalur' => []]
+            );
+            $modelData = $modelJalur->model_jalur ?? [];
+            $currentVsai = intval($modelData['vsai_unlocked'] ?? 1);
+
+            if ($levelPassed > $currentVsai) {
+                $modelData['vsai_unlocked'] = $levelPassed;
+                $modelJalur->model_jalur = $modelData;
+                $modelJalur->save();
+                $vsaiUnlocked = $levelPassed;
+            } else {
+                $vsaiUnlocked = $currentVsai;
+            }
         }
-        return response()->json(['success' => true, 'coins' => $user->kuansing_poin ?? 0]);
+        return response()->json([
+            'success' => true,
+            'coins' => $user->kuansing_poin ?? 0,
+            'vsai_unlocked' => $vsaiUnlocked
+        ]);
     }
 }

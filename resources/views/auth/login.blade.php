@@ -405,7 +405,7 @@
         if ('serviceWorker' in navigator && !window._swRegistered) {
             window._swRegistered = true;
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('/sw.js?v={{ config("app.version") }}')
                     .then(function (reg) { console.log('[PWA] SW registered:', reg.scope); })
                     .catch(function (err) { console.error('[PWA] SW failed:', err); });
             });

@@ -44,6 +44,21 @@ use App\Http\Controllers\pagegame\{
 |
 */
 
+// Dynamic Service Worker route (automatically injects APP_VERSION from .env / config)
+Route::get('/sw.js', function () {
+    $version = config('app.version', '1.0.6');
+    $swPath = public_path('sw.js');
+    if (!file_exists($swPath)) {
+        return response('', 404);
+    }
+    $content = file_get_contents($swPath);
+    $content = preg_replace("/const CACHE_NAME = 'pacu-jalur-the-pixel-v[^']*';/", "const CACHE_NAME = 'pacu-jalur-the-pixel-v{$version}';", $content);
+    return response($content, 200, [
+        'Content-Type' => 'application/javascript',
+        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+    ]);
+});
+
 // Manual
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

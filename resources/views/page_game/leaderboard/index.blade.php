@@ -154,6 +154,8 @@
     #leaderboard-dashboard .lb-scroll {
         flex: 1;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
         z-index: 11;
         padding: 0 14px;
         scrollbar-width: thin;
@@ -386,7 +388,7 @@ $user = auth()->user();
     </div>
 
     <!-- Scrollable List -->
-    <div class="lb-scroll">
+    <div class="lb-scroll scrollable">
         <!-- Header Labels -->
         <div class="rank-header">
             <span class="rh-rank">#</span>

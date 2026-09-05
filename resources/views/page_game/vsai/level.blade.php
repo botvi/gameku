@@ -392,7 +392,10 @@
     }
 
     // Load level progression
-    const vsaiUnlocked = parseInt(localStorage.getItem('vsai_unlocked') || '1');
+    const serverVsAi = {{ $vsaiUnlocked ?? 1 }};
+    const localVsAi = parseInt(localStorage.getItem('vsai_unlocked') || '1', 10);
+    const vsaiUnlocked = Math.max(serverVsAi, localVsAi);
+    localStorage.setItem('vsai_unlocked', String(vsaiUnlocked));
     const totalLevels = 100;
     let currentSlide = vsaiUnlocked - 1; // Center on current unlocked level
     if (currentSlide < 0) currentSlide = 0;

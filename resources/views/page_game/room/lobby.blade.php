@@ -368,9 +368,9 @@
     }
 
     #chat-backdrop {
-        position: absolute;
+        position: fixed;
         top: 0; left: 0;
-        width: 100%; height: 100%;
+        width: 100vw; height: 100vh;
         background: rgba(0, 0, 0, 0.45);
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
@@ -385,12 +385,13 @@
     }
 
     #chat-sidebar {
-        position: absolute;
+        position: fixed;
         top: 0; left: 0;
         width: 260px;
         max-width: 82vw;
         height: 100%;
-        background: rgba(8,15,30,0.95);
+        max-height: 100dvh;
+        background: rgba(8,15,30,0.96);
         border-right: 1px solid rgba(255,255,255,0.12);
         backdrop-filter: blur(18px);
         -webkit-backdrop-filter: blur(18px);
@@ -401,6 +402,7 @@
         visibility: hidden;
         transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), visibility 0.32s;
         box-sizing: border-box;
+        overflow: hidden;
     }
     #chat-sidebar.open {
         transform: translateX(0);
@@ -415,7 +417,8 @@
         padding: 12px 14px 10px;
         border-bottom: 1px solid rgba(255,255,255,0.08);
         display: flex; align-items: center; justify-content: space-between;
-        position: relative; z-index: 1; flex-shrink: 0;
+        position: relative; z-index: 2; flex-shrink: 0;
+        background: rgba(8, 15, 30, 0.98);
     }
     .chat-header-title {
         font-family: 'Press Start 2P', monospace; font-size: 7px;
@@ -448,6 +451,7 @@
         display: flex; flex-direction: column; gap: 8px;
         position: relative; z-index: 1;
         scrollbar-width: thin; scrollbar-color: rgba(34,197,94,0.3) rgba(255,255,255,0.02);
+        -webkit-overflow-scrolling: touch; touch-action: pan-y;
     }
     #chat-messages::-webkit-scrollbar { width: 3px; }
     #chat-messages::-webkit-scrollbar-thumb { background: rgba(34,197,94,0.3); border-radius: 3px; }
@@ -485,7 +489,8 @@
     }
     .chat-input-area {
         padding: 10px 12px; border-top: 1px solid rgba(255,255,255,0.08);
-        display: flex; gap: 7px; position: relative; z-index: 1; flex-shrink: 0;
+        display: flex; gap: 7px; position: relative; z-index: 2; flex-shrink: 0;
+        background: rgba(8, 15, 30, 0.98);
     }
     #chat-input {
         flex: 1; background: rgba(255,255,255,0.05);
@@ -569,7 +574,7 @@
 </div>
 
 <!-- ===== GLOBAL CHAT SIDEBAR ===== -->
-<div id="chat-backdrop" onclick="toggleChat()"></div>
+<div id="chat-backdrop" onclick="handleChatBackdropClick(event)"></div>
 <div id="chat-toggle-btn" onclick="toggleChat()">
     <span class="chat-icon"><i class="bi bi-chat-dots-fill"></i></span>
     <span id="chat-unread-dot"></span>
@@ -991,6 +996,30 @@
         }
     };
 
+    function adaptChatSidebarViewport() {
+        const sidebar = document.getElementById('chat-sidebar');
+        if (!sidebar || !chatOpen) return;
+        if (window.visualViewport) {
+            sidebar.style.height = window.visualViewport.height + 'px';
+            sidebar.style.top = window.visualViewport.offsetTop + 'px';
+        }
+        window.scrollTo(0, 0);
+    }
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', adaptChatSidebarViewport);
+        window.visualViewport.addEventListener('scroll', adaptChatSidebarViewport);
+    }
+
+    window.handleChatBackdropClick = function(e) {
+        const inp = document.getElementById('chat-input');
+        if (inp && document.activeElement === inp) {
+            inp.blur();
+            return;
+        }
+        toggleChat();
+    };
+
     window.sendChat = function() {
         const input = document.getElementById('chat-input');
         if (!input) return;
@@ -1002,7 +1031,9 @@
             payload: { userId: chatCurrentUserId, userName: chatCurrentUser, message: msg }
         }));
         input.value = '';
-        input.focus();
+        chatOpen = true;
+        const container = document.getElementById('chat-messages');
+        if (container) container.scrollTop = container.scrollHeight;
     };
 
     window.shareRoomToChat = function() {
@@ -1028,7 +1059,8 @@
             chatUnread = 0;
             const dot = document.getElementById('chat-unread-dot');
             if (dot) dot.style.display = 'none';
-            setTimeout(() => { if (inp) inp.focus(); }, 350);
+            adaptChatSidebarViewport();
+            setTimeout(() => { if (inp) inp.focus(); }, 300);
             const msgs = document.getElementById('chat-messages');
             if (msgs) msgs.scrollTop = msgs.scrollHeight;
         } else {
@@ -1036,6 +1068,10 @@
             if (backdrop) backdrop.classList.remove('show');
             if (inp) inp.blur();
             if (document.activeElement) document.activeElement.blur();
+            if (sidebar) {
+                sidebar.style.height = '100%';
+                sidebar.style.top = '0';
+            }
             setTimeout(() => {
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 document.body.scrollTop = 0;
@@ -1055,17 +1091,36 @@
         if (!chatOpen) return;
         const sidebar = document.getElementById('chat-sidebar');
         const btn = document.getElementById('chat-toggle-btn');
-        if (sidebar && !sidebar.contains(e.target) && btn && !btn.contains(e.target)) {
-            toggleChat();
+        const inp = document.getElementById('chat-input');
+
+        if ((sidebar && sidebar.contains(e.target)) || (btn && btn.contains(e.target))) {
+            return;
         }
+
+        if (inp && document.activeElement === inp) {
+            inp.blur();
+            return;
+        }
+
+        toggleChat();
     };
     document.addEventListener('click', chatClickOutside);
 
     // Reset mobile viewport scroll when input loses focus
     const chatInputLobby = document.getElementById('chat-input');
     if (chatInputLobby) {
+        chatInputLobby.addEventListener('focus', function() {
+            setTimeout(adaptChatSidebarViewport, 100);
+        });
         chatInputLobby.addEventListener('blur', function() {
             setTimeout(() => {
+                const sidebar = document.getElementById('chat-sidebar');
+                if (sidebar && !sidebar.classList.contains('open')) {
+                    sidebar.style.height = '100%';
+                    sidebar.style.top = '0';
+                } else {
+                    adaptChatSidebarViewport();
+                }
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 document.body.scrollTop = 0;
                 document.documentElement.scrollTop = 0;

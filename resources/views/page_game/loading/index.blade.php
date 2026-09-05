@@ -193,34 +193,37 @@
 
     async function clearStaleCaches(newVersion) {
         var currentVersion = localStorage.getItem('app_version');
-        
-        // Unregister service worker or clear Cache Storage if app version changed
-        if (currentVersion !== newVersion) {
-            console.log('[Sync] App version update detected (' + currentVersion + ' -> ' + newVersion + '). Invalidation cache...');
-            
-            if ('serviceWorker' in navigator) {
-                try {
-                    var registrations = await navigator.serviceWorker.getRegistrations();
-                    for (var reg of registrations) {
-                        await reg.update();
-                    }
-                } catch (e) {
-                    console.warn('[Sync] ServiceWorker update warning:', e);
-                }
-            }
+        var forceRefresh = (currentVersion !== newVersion);
 
-            if ('caches' in window) {
-                try {
-                    var cacheKeys = await caches.keys();
-                    for (var key of cacheKeys) {
-                        if (!key.includes(newVersion)) {
-                            console.log('[Sync] Menghapus cache lama:', key);
-                            await caches.delete(key);
-                        }
+        if (forceRefresh) {
+            console.log('[Sync] App version update detected (' + currentVersion + ' -> ' + newVersion + '). Invalidating caches...');
+        }
+
+        if ('serviceWorker' in navigator) {
+            try {
+                var registrations = await navigator.serviceWorker.getRegistrations();
+                for (var reg of registrations) {
+                    await reg.update();
+                    if (reg.waiting) {
+                        reg.waiting.postMessage({ type: 'SKIP_WAITING' });
                     }
-                } catch (e) {
-                    console.warn('[Sync] Cache purge error:', e);
                 }
+            } catch (e) {
+                console.warn('[Sync] ServiceWorker update warning:', e);
+            }
+        }
+
+        if (forceRefresh && 'caches' in window) {
+            try {
+                var cacheKeys = await caches.keys();
+                for (var key of cacheKeys) {
+                    if (!key.includes(newVersion)) {
+                        console.log('[Sync] Menghapus cache lama:', key);
+                        await caches.delete(key);
+                    }
+                }
+            } catch (e) {
+                console.warn('[Sync] Cache purge error:', e);
             }
         }
     }
@@ -286,7 +289,11 @@
 
                 localStorage.setItem('boat_unlocked', data.customization.boat_unlocked ? 'true' : 'false');
                 localStorage.setItem('lambai_unlocked', data.customization.lambai_unlocked ? 'true' : 'false');
-                localStorage.setItem('vsai_unlocked', String(data.customization.vsai_unlocked || 1));
+
+                var localVsAi = parseInt(localStorage.getItem('vsai_unlocked') || '1', 10);
+                var serverVsAi = parseInt(data.customization.vsai_unlocked || 1, 10);
+                var finalVsAi = Math.max(localVsAi, serverVsAi);
+                localStorage.setItem('vsai_unlocked', String(finalVsAi));
             }
 
             // Store current app version

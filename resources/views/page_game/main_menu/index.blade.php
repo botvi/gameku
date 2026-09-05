@@ -682,9 +682,9 @@
     }
 
     #chat-backdrop {
-        position: absolute;
+        position: fixed;
         top: 0; left: 0;
-        width: 100%; height: 100%;
+        width: 100vw; height: 100vh;
         background: rgba(0, 0, 0, 0.45);
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
@@ -699,12 +699,13 @@
     }
 
     #chat-sidebar {
-        position: absolute;
+        position: fixed;
         top: 0; left: 0;
         width: 260px;
         max-width: 82vw;
         height: 100%;
-        background: rgba(8, 15, 30, 0.95);
+        max-height: 100dvh;
+        background: rgba(8, 15, 30, 0.96);
         border-right: 1px solid rgba(255,255,255,0.12);
         backdrop-filter: blur(18px);
         -webkit-backdrop-filter: blur(18px);
@@ -716,6 +717,7 @@
         visibility: hidden;
         transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.32s;
         box-sizing: border-box;
+        overflow: hidden;
     }
 
     #chat-sidebar.open {
@@ -743,8 +745,9 @@
         align-items: center;
         justify-content: space-between;
         position: relative;
-        z-index: 1;
+        z-index: 2;
         flex-shrink: 0;
+        background: rgba(8, 15, 30, 0.98);
     }
 
     .chat-header-title {
@@ -782,6 +785,8 @@
         z-index: 1;
         scrollbar-width: thin;
         scrollbar-color: rgba(34,197,94,0.3) rgba(255,255,255,0.02);
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
     }
 
     #chat-messages::-webkit-scrollbar { width: 3px; }
@@ -853,8 +858,9 @@
         display: flex;
         gap: 7px;
         position: relative;
-        z-index: 1;
+        z-index: 2;
         flex-shrink: 0;
+        background: rgba(8, 15, 30, 0.98);
     }
 
     #chat-input {
@@ -936,9 +942,9 @@
     }
 
     #inbox-backdrop {
-        position: absolute;
+        position: fixed;
         top: 0; left: 0;
-        width: 100%; height: 100%;
+        width: 100vw; height: 100vh;
         background: rgba(0, 0, 0, 0.45);
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
@@ -953,11 +959,12 @@
     }
 
     #inbox-sidebar {
-        position: absolute;
+        position: fixed;
         top: 0; right: 0;
         width: 270px;
         max-width: 85vw;
         height: 100%;
+        max-height: 100dvh;
         background: rgba(8, 15, 30, 0.96);
         border-left: 1px solid rgba(255,255,255,0.12);
         backdrop-filter: blur(18px);
@@ -970,6 +977,7 @@
         visibility: hidden;
         transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.32s;
         box-sizing: border-box;
+        overflow: hidden;
     }
 
     #inbox-sidebar.open {
@@ -984,8 +992,9 @@
         align-items: center;
         justify-content: space-between;
         position: relative;
-        z-index: 1;
+        z-index: 2;
         flex-shrink: 0;
+        background: rgba(8, 15, 30, 0.98);
     }
 
     .inbox-header-title {
@@ -1007,6 +1016,8 @@
         z-index: 1;
         scrollbar-width: thin;
         scrollbar-color: rgba(56,189,248,0.3) rgba(255,255,255,0.02);
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
     }
 
     .inbox-card {
@@ -1523,7 +1534,7 @@
 </div>
 
 <!-- ===== GLOBAL CHAT SIDEBAR ===== -->
-<div id="chat-backdrop" onclick="toggleChat()"></div>
+<div id="chat-backdrop" onclick="handleChatBackdropClick(event)"></div>
 <div id="chat-toggle-btn" onclick="toggleChat()">
     <span class="chat-icon"><i class="bi bi-chat-dots-fill"></i></span>
     <span id="chat-unread-dot"></span>
@@ -2047,6 +2058,30 @@
         }
     }
 
+    function adaptChatSidebarViewport() {
+        const sidebar = document.getElementById('chat-sidebar');
+        if (!sidebar || !chatOpen) return;
+        if (window.visualViewport) {
+            sidebar.style.height = window.visualViewport.height + 'px';
+            sidebar.style.top = window.visualViewport.offsetTop + 'px';
+        }
+        window.scrollTo(0, 0);
+    }
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', adaptChatSidebarViewport);
+        window.visualViewport.addEventListener('scroll', adaptChatSidebarViewport);
+    }
+
+    window.handleChatBackdropClick = function(e) {
+        const inp = document.getElementById('chat-input');
+        if (inp && document.activeElement === inp) {
+            inp.blur();
+            return;
+        }
+        toggleChat();
+    };
+
     window.sendChat = function() {
         const input = document.getElementById('chat-input');
         if (!input) return;
@@ -2065,7 +2100,9 @@
             }
         }));
         input.value = '';
-        input.focus();
+        chatOpen = true;
+        const container = document.getElementById('chat-messages');
+        if (container) container.scrollTop = container.scrollHeight;
     };
 
     window.toggleChat = function() {
@@ -2080,9 +2117,10 @@
                 chatUnread = 0;
                 const dot = document.getElementById('chat-unread-dot');
                 if (dot) dot.style.display = 'none';
+                adaptChatSidebarViewport();
                 setTimeout(() => {
                     if (inp) inp.focus();
-                }, 350);
+                }, 300);
                 const msgs = document.getElementById('chat-messages');
                 if (msgs) msgs.scrollTop = msgs.scrollHeight;
             } else {
@@ -2090,6 +2128,10 @@
                 if (backdrop) backdrop.classList.remove('show');
                 if (inp) inp.blur();
                 if (document.activeElement) document.activeElement.blur();
+                if (sidebar) {
+                    sidebar.style.height = '100%';
+                    sidebar.style.top = '0';
+                }
                 setTimeout(() => {
                     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                     document.body.scrollTop = 0;
@@ -2099,30 +2141,40 @@
         }
     };
 
-    function escapeHTML(str) {
-        return String(str)
-            .replace(/&/g,'&amp;')
-            .replace(/</g,'&lt;')
-            .replace(/>/g,'&gt;')
-            .replace(/"/g,'&quot;')
-            .replace(/'/g,'&#39;');
-    }
-
     // Close chat when clicking outside
     document.addEventListener('click', function(e) {
         if (!chatOpen) return;
         const sidebar = document.getElementById('chat-sidebar');
         const toggleBtn = document.getElementById('chat-toggle-btn');
-        if (sidebar && !sidebar.contains(e.target) && toggleBtn && !toggleBtn.contains(e.target)) {
-            toggleChat();
+        const inp = document.getElementById('chat-input');
+
+        if ((sidebar && sidebar.contains(e.target)) || (toggleBtn && toggleBtn.contains(e.target))) {
+            return;
         }
+
+        if (inp && document.activeElement === inp) {
+            inp.blur();
+            return;
+        }
+
+        toggleChat();
     });
 
     // Reset mobile viewport scroll when input loses focus
     const chatInputEl = document.getElementById('chat-input');
     if (chatInputEl) {
+        chatInputEl.addEventListener('focus', function() {
+            setTimeout(adaptChatSidebarViewport, 100);
+        });
         chatInputEl.addEventListener('blur', function() {
             setTimeout(() => {
+                const sidebar = document.getElementById('chat-sidebar');
+                if (sidebar && !sidebar.classList.contains('open')) {
+                    sidebar.style.height = '100%';
+                    sidebar.style.top = '0';
+                } else {
+                    adaptChatSidebarViewport();
+                }
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 document.body.scrollTop = 0;
                 document.documentElement.scrollTop = 0;
@@ -2237,6 +2289,25 @@
         container.innerHTML = html;
     }
 
+    function adaptInboxSidebarViewport() {
+        const sidebar = document.getElementById('inbox-sidebar');
+        if (!sidebar || !inboxOpen) return;
+        if (window.visualViewport) {
+            sidebar.style.height = window.visualViewport.height + 'px';
+            sidebar.style.top = window.visualViewport.offsetTop + 'px';
+        }
+        window.scrollTo(0, 0);
+    }
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            if (inboxOpen) adaptInboxSidebarViewport();
+        });
+        window.visualViewport.addEventListener('scroll', () => {
+            if (inboxOpen) adaptInboxSidebarViewport();
+        });
+    }
+
     window.toggleInbox = function() {
         inboxOpen = !inboxOpen;
         const sidebar = document.getElementById('inbox-sidebar');
@@ -2250,11 +2321,16 @@
             if (inboxOpen) {
                 sidebar.classList.add('open');
                 if (backdrop) backdrop.classList.add('show');
+                adaptInboxSidebarViewport();
                 fetchGameInbox(false);
                 markAllUnreadAsRead();
             } else {
                 sidebar.classList.remove('open');
                 if (backdrop) backdrop.classList.remove('show');
+                if (sidebar) {
+                    sidebar.style.height = '100%';
+                    sidebar.style.top = '0';
+                }
             }
         }
     };
@@ -2415,7 +2491,7 @@
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
+            navigator.serviceWorker.register('/sw.js?v={{ config("app.version") }}')
                 .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
                 .catch(err => console.error('[PWA] Service Worker registration failed:', err));
         });

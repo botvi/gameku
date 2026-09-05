@@ -336,6 +336,7 @@
     #detail-pemain-dashboard #jalur-preview-container {
         width: 250px;
         height: 85px;
+        max-width: 100%;
         border-radius: 10px;
         overflow: hidden;
         background: rgba(0, 0, 0, 0.35);
@@ -343,6 +344,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    #detail-pemain-dashboard #jalur-preview-container canvas {
+        max-width: 100% !important;
+        height: auto !important;
+        object-fit: contain;
     }
 
     #detail-pemain-dashboard #jalur-name {
@@ -704,6 +711,10 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
             transparent: true,
             parent: containerId,
             pixelArt: true,
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH
+            },
             scene: {
                 preload: function () {
                     this.load.image('jalur_boat', '/game_pacu/assets/image/jalur/jalur.png');
@@ -816,10 +827,11 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
                     if (corakDataUrl) {
                         const img = new Image();
                         img.onload = () => {
-                            if (!scene.sys.isActive()) return;
+                            if (!scene.sys || !scene.sys.isActive()) return;
                             const boatSource = scene.textures.get('jalur_boat').getSourceImage();
-                            const displayW = Math.round(boatSource.width * BOAT_SCALE);
-                            const displayH = Math.round(boatSource.height * BOAT_SCALE);
+                            const CORAK_SCALE = BOAT_SCALE;
+                            const displayW = Math.round(boatSource.width * CORAK_SCALE);
+                            const displayH = Math.round(boatSource.height * CORAK_SCALE);
 
                             const maskCanvas = document.createElement('canvas');
                             maskCanvas.width = displayW; maskCanvas.height = displayH;
@@ -828,23 +840,37 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
                             const scaleFactor = (displayW / img.width);
                             const drawW = displayW;
                             const drawH = Math.round(img.height * scaleFactor);
-                            ctx.drawImage(img, 0, Math.round((displayH - drawH) / 2), drawW, drawH);
+                            const drawX = 0;
+                            const drawY = Math.round((displayH - drawH) / 2);
+
+                            const isPixelArt = (img.width <= 256 && img.height <= 256);
+                            ctx.imageSmoothingEnabled = !isPixelArt;
+                            if (ctx.imageSmoothingEnabled) ctx.imageSmoothingQuality = 'high';
+                            ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
                             const imageData = ctx.getImageData(0, 0, displayW, displayH);
                             const data = imageData.data;
+                            const WHITE_THRESHOLD = 240;
                             for (let i = 0; i < data.length; i += 4) {
-                                if (data[i] > 240 && data[i + 1] > 240 && data[i + 2] > 240) {
-                                    data[i + 3] = 0;
+                                const r = data[i], g = data[i + 1], b = data[i + 2];
+                                if (r > WHITE_THRESHOLD && g > WHITE_THRESHOLD && b > WHITE_THRESHOLD) {
+                                    const brightness = Math.min(r, g, b);
+                                    const fade = (brightness - WHITE_THRESHOLD) / (255 - WHITE_THRESHOLD);
+                                    data[i + 3] = Math.round(255 * (1 - fade));
                                 }
                             }
                             ctx.putImageData(imageData, 0, 0);
+
+                            ctx.imageSmoothingEnabled = false;
                             ctx.globalCompositeOperation = 'destination-in';
                             ctx.drawImage(boatSource, 0, 0, displayW, displayH);
                             ctx.globalCompositeOperation = 'source-over';
+                            ctx.imageSmoothingEnabled = true;
 
                             if (scene.textures.exists('corak_texture')) scene.textures.remove('corak_texture');
                             scene.textures.addCanvas('corak_texture', maskCanvas);
                             const corakSprite = scene.make.image({ x: BOAT_OFFSET_X, y: BOAT_OFFSET_Y, key: 'corak_texture', add: false });
+                            corakSprite.setScale(1.0);
                             corakSprite.setAlpha(0.82);
                             corakSprite.setBlendMode(Phaser.BlendModes.MULTIPLY);
                             boatGroup.add(corakSprite);
@@ -857,7 +883,7 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
                     if (lambaiDataUrl) {
                         const img = new Image();
                         img.onload = () => {
-                            if (!scene.sys.isActive()) return;
+                            if (!scene.sys || !scene.sys.isActive()) return;
                             const LAMBAI_SCALE = 1.3 * scaleMult;
                             const LAMBAI_OFFSET_X = 125 * scaleMult;
                             const LAMBAI_OFFSET_Y = -18 * scaleMult;
@@ -874,8 +900,14 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
 
                             const imageData = ctx.getImageData(0, 0, w, h);
                             const data = imageData.data;
+                            const WHITE_THRESHOLD = 240;
                             for (let i = 0; i < data.length; i += 4) {
-                                if (data[i] > 240 && data[i + 1] > 240 && data[i + 2] > 240) data[i + 3] = 0;
+                                const r = data[i], g = data[i + 1], b = data[i + 2];
+                                if (r > WHITE_THRESHOLD && g > WHITE_THRESHOLD && b > WHITE_THRESHOLD) {
+                                    const brightness = Math.min(r, g, b);
+                                    const fade = (brightness - WHITE_THRESHOLD) / (255 - WHITE_THRESHOLD);
+                                    data[i + 3] = Math.round(255 * (1 - fade));
+                                }
                             }
                             ctx.putImageData(imageData, 0, 0);
 
@@ -886,6 +918,15 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
                             lambaiSprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
                             boatGroup.add(lambaiSprite);
                             boatGroup.moveTo(lambaiSprite, boatGroup.getIndex(boatImg));
+
+                            scene.tweens.add({
+                                targets: lambaiSprite,
+                                angle: { from: 0, to: 0 },
+                                duration: 850,
+                                yoyo: true,
+                                repeat: -1,
+                                ease: 'Sine.easeInOut'
+                            });
                         };
                         img.src = lambaiDataUrl;
                     }

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pacu-jalur-the-pixel-v1.0.5';
+const CACHE_NAME = 'pacu-jalur-the-pixel-v1.0.6';
 const ASSETS_TO_CACHE = [
   '/',
   '/login',
@@ -49,11 +49,11 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET' || 
-      event.request.url.includes('/api/') || 
-      event.request.url.includes('socket') || 
-      event.request.url.includes('livewire') || 
-      event.request.url.includes('/broadcasting/')) {
+  if (event.request.method !== 'GET' ||
+    event.request.url.includes('/api/') ||
+    event.request.url.includes('socket') ||
+    event.request.url.includes('livewire') ||
+    event.request.url.includes('/broadcasting/')) {
     return;
   }
 
