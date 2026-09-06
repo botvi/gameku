@@ -57,7 +57,7 @@
     }
 
     #shop-dashboard .page-title {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Pixelify Sans', monospace;
         font-size: 13px;
         color: #22c55e;
         text-shadow: 0 0 10px rgba(34, 197, 94, 0.6), 2px 2px 0px #064e3b;
@@ -111,7 +111,7 @@
     }
 
     #shop-dashboard .banner-title {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Pixelify Sans', monospace;
         font-size: 10px;
         font-weight: bold;
         color: #22c55e;
@@ -143,7 +143,7 @@
     #shop-dashboard .tab-btn {
         flex: 1;
         padding: 8px 0;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Pixelify Sans', monospace;
         font-size: 9px;
         color: #94a3b8;
         background: transparent;
@@ -246,7 +246,7 @@
         border: 2px solid #16a34a;
         border-radius: 8px;
         color: #ffffff;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Pixelify Sans', monospace;
         font-size: 8px;
         cursor: pointer;
         text-shadow: 0 1px 2px rgba(0,0,0,0.5);
@@ -308,7 +308,7 @@
     }
 
     .item-title {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Pixelify Sans', monospace;
         font-size: 8px;
         font-weight: bold;
         color: #1e3a8a;
@@ -335,7 +335,7 @@
         border: 2px solid #0284c7;
         border-radius: 8px;
         color: #ffffff;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Pixelify Sans', monospace;
         font-size: 7px;
         cursor: pointer;
         text-shadow: 0 1px 2px #0369a1;
@@ -413,7 +413,7 @@
         border: 2px solid #16a34a;
         border-radius: 8px;
         color: white;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Pixelify Sans', monospace;
         font-size: 9px;
         cursor: pointer;
         box-shadow: 0 3px 0 #14532d;
@@ -426,7 +426,7 @@
         border: 2px solid #dc2626;
         border-radius: 8px;
         color: white;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Pixelify Sans', monospace;
         font-size: 9px;
         cursor: pointer;
         box-shadow: 0 3px 0 #991b1b;
@@ -444,7 +444,7 @@
         border-radius: 10px;
         padding: 10px 16px;
         color: #ffffff;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Pixelify Sans', monospace;
         font-size: 9px;
         z-index: 200;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);

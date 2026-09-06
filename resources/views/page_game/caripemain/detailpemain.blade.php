@@ -335,7 +335,7 @@
 
     #detail-pemain-dashboard #jalur-preview-container {
         width: 250px;
-        height: 150px;
+        height: 200px;
         max-width: 100%;
         border-radius: 10px;
         overflow: hidden;
@@ -714,7 +714,7 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
         window.activePreviewGame = new Phaser.Game({
             type: Phaser.AUTO,
             width: 250,
-            height: 85,
+            height: 140,
             transparent: true,
             parent: containerId,
             pixelArt: true,
@@ -759,7 +759,7 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
 
                     const ROWER_SPACING = 35 * scaleMult;
 
-                    const boatGroup = scene.add.container(125, 40);
+                    const boatGroup = scene.add.container(125, 75);
 
                     // Recolor character image function
                     function recolorCharacterImage(sourceKey) {
