@@ -838,6 +838,12 @@
         color: #d1fae5;
     }
 
+    .chat-msg-bubble.room-share {
+        background: rgba(251,191,36,0.08);
+        border-color: rgba(251,191,36,0.3);
+        color: #fef3c7;
+    }
+
     .chat-msg-time {
         font-size: 9px;
         color: rgba(255,255,255,0.2);
@@ -1684,6 +1690,7 @@
 
     // Close existing global chat WebSocket connection to prevent duplication
     if (window.chatWs) {
+        window.chatWs.onclose = null;
         window.chatWs.close();
         window.chatWs = null;
     }
@@ -1958,9 +1965,21 @@
         setTimeout(updateCarousel, 50);
         setTimeout(updateCarousel, 400);
         initMenuSwipeGestures();
+        initGlobalChat();
     });
     setTimeout(updateCarousel, 100);
     initMenuSwipeGestures();
+
+    // Helper escapeHTML
+    window.escapeHTML = window.escapeHTML || function(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    };
 
     // ============= GLOBAL CHAT =============
     const chatCurrentUserId  = {{ auth()->id() }};
@@ -2035,12 +2054,13 @@
         const d = new Date(payload.timestamp);
         const hh = String(d.getHours()).padStart(2,'0');
         const mm = String(d.getMinutes()).padStart(2,'0');
+        const isRoomShare = payload.message && payload.message.startsWith('🏔 ROOM:');
 
         const msgEl = document.createElement('div');
         msgEl.className = 'chat-msg' + (isMe ? ' is-me' : '');
         msgEl.innerHTML = `
-            <div class="chat-msg-name">${escapeHTML(payload.userName)}</div>
-            <div class="chat-msg-bubble">${escapeHTML(payload.message)}</div>
+            <div class="chat-msg-name">${window.escapeHTML(payload.userName)}</div>
+            <div class="chat-msg-bubble${isRoomShare ? ' room-share' : ''}">${window.escapeHTML(payload.message)}</div>
             <div class="chat-msg-time">${hh}:${mm}</div>
         `;
         container.appendChild(msgEl);
