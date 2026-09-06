@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Menu Utama')
+@section('title', 'Pacu Jalur: The Pixel â€” Menu Utama')
 
 @section('content')
 <style>
@@ -9,7 +9,7 @@
         padding: 0;
         background-color: #060d18;
         color: #e2e8f0;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Jersey 25', sans-serif;
         overflow: hidden;
     }
 
@@ -187,7 +187,7 @@
     }
 
     #header-coin-count {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 13px;
         font-weight: bold;
         color: #000000;
@@ -214,7 +214,7 @@
     }
 
     .title-banner {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 12px;
         background: linear-gradient(180deg, #ffffff 0%, #a5f3fc 100%);
         -webkit-background-clip: text;
@@ -336,7 +336,7 @@
     }
 
     .ps5-card-label {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 8px;
         text-align: center;
         color: #ffffff;
@@ -350,7 +350,7 @@
         position: absolute;
         bottom: 4px;
         right: 6px;
-        font-family: Arial, sans-serif;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 20px;
         font-weight: bold;
         color: rgba(255, 255, 255, 0.04);
@@ -416,7 +416,7 @@
     }
 
     .ps5-details-title {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 11px;
         letter-spacing: 1px;
         color: #ffffff;
@@ -426,7 +426,7 @@
     }
 
     .ps5-details-desc {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 12px;
         color: rgba(255, 255, 255, 0.8);
         margin-bottom: 12px;
@@ -466,7 +466,7 @@
             0 5px 0 #14532d,
             0 6px 14px rgba(34, 197, 94, 0.35);
         color: white;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 9px;
         padding: 14px;
         width: 100%;
@@ -595,7 +595,7 @@
     }
 
     .loading-text {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 14px;
         color: #22c55e;
         -webkit-text-stroke: 1px #ffffff;
@@ -751,7 +751,7 @@
     }
 
     .chat-header-title {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 7px;
         color: #22c55e;
         text-shadow: 0 0 8px rgba(34,197,94,0.5);
@@ -810,7 +810,7 @@
     .chat-msg.is-me { align-items: flex-end; }
 
     .chat-msg-name {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 5.5px;
         color: rgba(255,255,255,0.45);
         padding: 0 6px;
@@ -852,7 +852,7 @@
 
     .chat-system-msg {
         text-align: center;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 5.5px;
         color: rgba(255,255,255,0.25);
         padding: 4px 0;
@@ -875,7 +875,7 @@
         border: 1.5px solid rgba(255,255,255,0.12);
         border-radius: 8px;
         padding: 8px 10px;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 13px;
         color: #ffffff;
         outline: none;
@@ -1004,7 +1004,7 @@
     }
 
     .inbox-header-title {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 7px;
         color: #38bdf8;
         text-shadow: 0 0 8px rgba(56,189,248,0.5);
@@ -1051,7 +1051,7 @@
     }
 
     .inbox-card-title {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 8px;
         color: #ffffff;
         line-height: 1.3;
@@ -1061,7 +1061,7 @@
         font-size: 7.5px;
         padding: 2px 6px;
         border-radius: 4px;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         text-transform: uppercase;
         flex-shrink: 0;
     }
@@ -1082,7 +1082,7 @@
     }
 
     .inbox-card-content {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 11.5px;
         color: #cbd5e1;
         line-height: 1.4;
@@ -1104,7 +1104,7 @@
     }
 
     .inbox-reward-text {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 7.5px;
         color: #fbbf24;
         display: flex;
@@ -1121,7 +1121,7 @@
         border: 1px solid #ffffff;
         border-radius: 6px;
         color: #ffffff;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 7px;
         padding: 6px 10px;
         cursor: pointer;
@@ -1230,7 +1230,7 @@
     }
 
     .inbox-toast-title {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 7px;
         color: #38bdf8;
         text-shadow: 0 0 6px rgba(56, 189, 248, 0.4);
@@ -1238,7 +1238,7 @@
     }
 
     .inbox-toast-desc {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 11px;
         color: #e2e8f0;
         white-space: nowrap;
@@ -1305,7 +1305,7 @@
     }
 
     .pwa-alert-title {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 9px;
         color: #22c55e;
         text-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
@@ -1313,7 +1313,7 @@
     }
 
     .pwa-alert-desc {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 12px;
         color: rgba(255, 255, 255, 0.8);
         margin: 0;
@@ -1328,7 +1328,7 @@
 
     .pwa-btn {
         flex: 1;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 8px;
         padding: 12px 0;
         border: 3px solid #000000;
@@ -1370,7 +1370,7 @@
     }
 
     .pwa-ios-instructions {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 11px;
         color: rgba(255, 255, 255, 0.9);
         background: rgba(34, 197, 94, 0.1);
@@ -1510,9 +1510,9 @@
     <div id="coming-soon-modal"
         style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); z-index: 210; align-items: center; justify-content: center; box-sizing: border-box;">
         <div class="coming-soon-card"
-            style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
+            style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Jersey 25', sans-serif;">
             <div style="font-size: 10px; color: #a855f7; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;"><i class="bi bi-gear-fill me-1"></i> FITUR DUMMY</div>
-            <p style="font-family: 'Pixelify Sans', monospace; font-size: 13px; color: #374151; margin-bottom: 20px; line-height: 1.5;">Menu ini adalah simulasi dummy dan akan segera dikembangkan di masa mendatang!</p>
+            <p style="font-family: 'Jersey 25', sans-serif; font-size: 13px; color: #374151; margin-bottom: 20px; line-height: 1.5;">Menu ini adalah simulasi dummy dan akan segera dikembangkan di masa mendatang!</p>
             <button class="pixel-btn" onclick="closeComingSoon()"
                 style="margin-top: 0; background-color: #a855f7; border: 3px solid #000000; box-shadow: inset 0 2px 0px rgba(255,255,255,0.4), 0px 4px 0px #000000; color: white; padding: 12px; font-size: 9px; cursor: pointer; text-transform: uppercase; width: 100%; text-shadow: 1.5px 1.5px 0px #000000;">OKE</button>
         </div>
@@ -1522,7 +1522,7 @@
     <div id="audio-settings-modal"
         style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 30, 20, 0.88); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; box-sizing: border-box;">
         <div class="audio-modal-card"
-            style="background: #0f1a12; border: 3px solid #22c55e; box-shadow: 0 0 24px rgba(34,197,94,0.3), 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
+            style="background: #0f1a12; border: 3px solid #22c55e; box-shadow: 0 0 24px rgba(34,197,94,0.3), 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Jersey 25', sans-serif;">
             <!-- Title -->
             <div style="font-size: 10px; color: #34d399; margin-bottom: 18px; border-bottom: 2px dashed #22c55e; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">
                 PENGATURAN SUARA
@@ -1530,11 +1530,11 @@
             <!-- BGM Row -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                 <span style="font-size: 8px; color: #d1fae5; text-align: left;">MUSIK (BGM)</span>
-                <button id="bgm-toggle-btn" onclick="toggleBGMSetting()" style="font-family: 'Press Start 2P', monospace; font-size: 8px; width: 72px; padding: 8px 0; border: 3px solid #000000; border-radius: 6px; cursor: pointer; text-shadow: 1.5px 1.5px 0px #000000; color: white; transition: background-color 0.1s; box-shadow: 0px 3px 0px #000000;">ON</button>
+                <button id="bgm-toggle-btn" onclick="toggleBGMSetting()" style="font-family: 'Jersey 25', sans-serif; font-size: 8px; width: 72px; padding: 8px 0; border: 3px solid #000000; border-radius: 6px; cursor: pointer; text-shadow: 1.5px 1.5px 0px #000000; color: white; transition: background-color 0.1s; box-shadow: 0px 3px 0px #000000;">ON</button>
             </div>
            
             <!-- Close Button -->
-            <button onclick="closeAudioSettings()" style="font-family: 'Press Start 2P', monospace; background-color: #22c55e; border: 3px solid #000000; box-shadow: inset 0 2px 0px rgba(255,255,255,0.3), 0px 4px 0px #000000; color: white; padding: 12px; font-size: 9px; cursor: pointer; text-transform: uppercase; width: 100%; text-shadow: 1.5px 1.5px 0px #000000; border-radius: 6px;">OKE</button>
+            <button onclick="closeAudioSettings()" style="font-family: 'Jersey 25', sans-serif; background-color: #22c55e; border: 3px solid #000000; box-shadow: inset 0 2px 0px rgba(255,255,255,0.3), 0px 4px 0px #000000; color: white; padding: 12px; font-size: 9px; cursor: pointer; text-transform: uppercase; width: 100%; text-shadow: 1.5px 1.5px 0px #000000; border-radius: 6px;">OKE</button>
         </div>
     </div>
 </div>
@@ -1554,11 +1554,11 @@
                 <span class="chat-online-dot"></span>
                 <span id="chat-online-count">0</span> online
             </div>
-            <button onclick="toggleChat()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup">✕</button>
+            <button onclick="toggleChat()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup">âœ•</button>
         </div>
     </div>
     <div id="chat-messages" class="scrollable">
-        <div class="chat-system-msg">— Selamat datang di Global Chat —</div>
+        <div class="chat-system-msg">â€” Selamat datang di Global Chat â€”</div>
     </div>
     <div class="chat-input-area">
         <input type="text" id="chat-input" placeholder="Ketik pesan..." maxlength="200" onkeydown="if(event.key==='Enter') sendChat()">
@@ -1576,7 +1576,7 @@
 <div id="inbox-sidebar">
     <div class="inbox-header">
         <div class="inbox-header-title">INBOX</div>
-        <button onclick="toggleInbox()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup">✕</button>
+        <button onclick="toggleInbox()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup">âœ•</button>
     </div>
     <div id="inbox-messages-list" class="scrollable">
         <div style="text-align: center; color: rgba(255,255,255,0.4); font-size: 11px; padding: 20px 0;">Memuat pesan inbox...</div>
@@ -1652,7 +1652,7 @@
         });
     };
 
-    window.showHTMLConfirm = function(message, title = "✦ KONFIRMASI ✦") {
+    window.showHTMLConfirm = function(message, title = "âœ¦ KONFIRMASI âœ¦") {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.id = 'fullscreen-modal-overlay';
@@ -1780,7 +1780,7 @@
         window.updateSoundIcon();
     };
 
-    // Override updateSoundIcon — ganti ikon berdasarkan status BGM di localStorage
+    // Override updateSoundIcon â€” ganti ikon berdasarkan status BGM di localStorage
     window.updateSoundIcon = function() {
         const soundIcon = document.getElementById('sound-icon');
         if (!soundIcon) return;
@@ -2054,7 +2054,7 @@
         const d = new Date(payload.timestamp);
         const hh = String(d.getHours()).padStart(2,'0');
         const mm = String(d.getMinutes()).padStart(2,'0');
-        const isRoomShare = payload.message && payload.message.startsWith('🏔 ROOM:');
+        const isRoomShare = payload.message && payload.message.startsWith('ðŸ” ROOM:');
 
         const msgEl = document.createElement('div');
         msgEl.className = 'chat-msg' + (isMe ? ' is-me' : '');
@@ -2460,7 +2460,7 @@
         const desc = document.getElementById('inbox-toast-desc');
         if (!toast || !desc) return;
 
-        desc.innerText = `${inboxItem.title} — ${inboxItem.content}`;
+        desc.innerText = `${inboxItem.title} â€” ${inboxItem.content}`;
         toast.classList.add('show');
 
         if (inboxToastTimer) clearTimeout(inboxToastTimer);
@@ -2571,3 +2571,4 @@
 }
 </script>
 @endpush
+

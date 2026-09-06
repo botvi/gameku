@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="{{ asset_v('game_pacu/assets/image/ui/pwa-icon-192.png') }}">
     <link rel="stylesheet" href="{{ asset_v('game_pacu/assets/css/game-layout.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
         .sprint-icon {
             color: #f8a73c;

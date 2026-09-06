@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Room Lobby')
+@section('title', 'Pacu Jalur: The Pixel â€” Room Lobby')
 
 @section('content')
 <style>
@@ -9,7 +9,7 @@
         padding: 0;
         background-color: #060d18;
         color: #e2e8f0;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Jersey 25', sans-serif;
         overflow: hidden;
     }
 
@@ -47,7 +47,7 @@
     }
 
     .title-banner {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 12px;
         background: linear-gradient(180deg, #ffffff 0%, #a5f3fc 100%);
         -webkit-background-clip: text;
@@ -98,7 +98,7 @@
     }
 
     .panel-title {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 8px;
         color: #ffaa00;
         margin-bottom: 10px;
@@ -125,13 +125,13 @@
         box-sizing: border-box;
     }
     .room-code-label {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 6px;
         color: rgba(251,191,36,0.7);
         letter-spacing: 0.5px;
     }
     .room-code-value {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 13px;
         color: #fbbf24;
         letter-spacing: 3px;
@@ -142,7 +142,7 @@
         border: 1px solid rgba(251,191,36,0.35);
         border-radius: 7px;
         padding: 5px 9px;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 6px;
         color: #fbbf24;
         cursor: pointer;
@@ -225,7 +225,7 @@
     }
 
     .player-role {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 7px;
         background: #e53e3e;
         color: #ffffff;
@@ -237,7 +237,7 @@
     }
 
     .ready-badge {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 7px;
         padding: 6px 10px;
         border-radius: 8px;
@@ -279,7 +279,7 @@
             inset 0 1px 0 rgba(255,255,255,0.35),
             0 5px 0 #14532d;
         color: white;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 9px;
         padding: 14px;
         width: 100%;
@@ -328,7 +328,7 @@
     }
 
     .connection-status {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 7px;
         margin-top: 15px;
         color: #ef4444;
@@ -421,7 +421,7 @@
         background: rgba(8, 15, 30, 0.98);
     }
     .chat-header-title {
-        font-family: 'Press Start 2P', monospace; font-size: 7px;
+        font-family: 'Jersey 25', sans-serif; font-size: 7px;
         color: #22c55e; letter-spacing: 0.5px;
     }
     .chat-online-badge { display:flex; align-items:center; gap:5px; font-size:10px; color:rgba(255,255,255,0.4); }
@@ -434,7 +434,7 @@
         border: 1px dashed rgba(251,191,36,0.4);
         border-radius: 8px;
         padding: 7px 10px;
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Jersey 25', sans-serif;
         font-size: 5.5px;
         color: #fbbf24;
         cursor: pointer;
@@ -462,7 +462,7 @@
     }
     .chat-msg.is-me { align-items: flex-end; }
     .chat-msg-name {
-        font-family: 'Press Start 2P', monospace; font-size: 5.5px;
+        font-family: 'Jersey 25', sans-serif; font-size: 5.5px;
         color: rgba(255,255,255,0.45); padding: 0 6px;
     }
     .chat-msg.is-me .chat-msg-name { color: rgba(34,197,94,0.7); }
@@ -484,7 +484,7 @@
     }
     .chat-msg-time { font-size: 9px; color: rgba(255,255,255,0.2); padding: 0 6px; }
     .chat-system-msg {
-        text-align: center; font-family: 'Press Start 2P', monospace;
+        text-align: center; font-family: 'Jersey 25', sans-serif;
         font-size: 5.5px; color: rgba(255,255,255,0.25); padding: 4px 0;
     }
     .chat-input-area {
@@ -495,7 +495,7 @@
     #chat-input {
         flex: 1; background: rgba(255,255,255,0.05);
         border: 1.5px solid rgba(255,255,255,0.12); border-radius: 8px;
-        padding: 8px 10px; font-family: 'Pixelify Sans', monospace;
+        padding: 8px 10px; font-family: 'Jersey 25', sans-serif;
         font-size: 13px; color: #fff; outline: none; transition: all 0.2s;
     }
     #chat-input:focus {
@@ -559,7 +559,7 @@
             <!-- Player 2 (Guest) -->
             <div class="player-card empty" id="guest-card">
                 <div class="searching-radar"></div>
-                <div style="font-family: 'Pixelify Sans', monospace; font-size: 10px; font-weight: bold; color: #fca5a5; text-shadow: 0 1px 2px rgba(0,0,0,0.5); text-align: center;">
+                <div style="font-family: 'Jersey 25', sans-serif; font-size: 10px; font-weight: bold; color: #fca5a5; text-shadow: 0 1px 2px rgba(0,0,0,0.5); text-align: center;">
                     MENUNGGU LAWAN...</div>
             </div>
         </div>
@@ -587,7 +587,7 @@
                 <span class="chat-online-dot"></span>
                 <span id="chat-online-count">0</span> online
             </div>
-            <button onclick="toggleChat()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup">✕</button>
+            <button onclick="toggleChat()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup">âœ•</button>
         </div>
     </div>
     <!-- Share Room Button -->
@@ -595,7 +595,7 @@
         <i class="bi bi-share-fill me-1"></i> BAGIKAN KODE ROOM INI KE CHAT
     </button>
     <div id="chat-messages" class="scrollable">
-        <div class="chat-system-msg">— Global Chat —</div>
+        <div class="chat-system-msg">â€” Global Chat â€”</div>
     </div>
     <div class="chat-input-area">
         <input type="text" id="chat-input" placeholder="Ketik pesan..." maxlength="200" onkeydown="if(event.key==='Enter') sendChat()">
@@ -820,7 +820,7 @@
             // Revert to empty card
             guestCard.innerHTML = `
                 <div class="searching-radar"></div>
-                <div style="font-family: 'Pixelify Sans', monospace; font-size: 10px; font-weight: bold; color: #fca5a5; text-shadow: 0 1px 2px rgba(0,0,0,0.5); text-align: center;">MENUNGGU LAWAN...</div>
+                <div style="font-family: 'Jersey 25', sans-serif; font-size: 10px; font-weight: bold; color: #fca5a5; text-shadow: 0 1px 2px rgba(0,0,0,0.5); text-align: center;">MENUNGGU LAWAN...</div>
             `;
             guestCard.className = 'player-card empty';
         }
@@ -891,7 +891,7 @@
             const btn = document.getElementById('copy-code-btn');
             if (btn) {
                 const orig = btn.innerText;
-                btn.innerText = '✅ TERSALIN!';
+                btn.innerText = 'âœ… TERSALIN!';
                 setTimeout(() => { btn.innerText = orig; }, 2000);
             }
         }).catch(() => {
@@ -904,8 +904,8 @@
             document.body.removeChild(ta);
             const btn = document.getElementById('copy-code-btn');
             if (btn) {
-                btn.innerText = '✅ TERSALIN!';
-                setTimeout(() => { btn.innerText = '📋 SALIN'; }, 2000);
+                btn.innerText = 'âœ… TERSALIN!';
+                setTimeout(() => { btn.innerText = 'ðŸ“‹ SALIN'; }, 2000);
             }
         });
     };
@@ -976,7 +976,7 @@
         const d = new Date(payload.timestamp);
         const hh = String(d.getHours()).padStart(2,'0');
         const mm = String(d.getMinutes()).padStart(2,'0');
-        const isRoomShare = payload.message && payload.message.startsWith('🏔 ROOM:');
+        const isRoomShare = payload.message && payload.message.startsWith('ðŸ” ROOM:');
 
         const msgEl = document.createElement('div');
         msgEl.className = 'chat-msg' + (isMe ? ' is-me' : '');
@@ -1038,7 +1038,7 @@
 
     window.shareRoomToChat = function() {
         if (!chatWs || chatWs.readyState !== WebSocket.OPEN) return;
-        const shareMsg = `🏔 ROOM: ${chatRoomName} | KODE: ${chatRoomCode} | Masuk via menu Custom Room → masukkan kode`;
+        const shareMsg = `ðŸ” ROOM: ${chatRoomName} | KODE: ${chatRoomCode} | Masuk via menu Custom Room â†’ masukkan kode`;
         chatWs.send(JSON.stringify({
             type: 'global_chat',
             roomId: 'global_chat',
@@ -1155,3 +1155,4 @@
 }
 </script>
 @endpush
+
