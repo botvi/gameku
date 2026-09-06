@@ -335,7 +335,7 @@
 
     #detail-pemain-dashboard #jalur-preview-container {
         width: 250px;
-        height: 85px;
+        height: 150px;
         max-width: 100%;
         border-radius: 10px;
         overflow: hidden;

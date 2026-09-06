@@ -176,6 +176,36 @@
 (function () {
     'use strict';
 
+    // ─────────────────────────────────────────────────────────────
+    // AUTO HARD RELOAD — Sekali per sesi saat player masuk loading
+    // Membersihkan Service Worker & semua cache lama secara paksa,
+    // lalu reload halaman dengan asset fresh dari server.
+    // ─────────────────────────────────────────────────────────────
+    var HARD_RELOAD_KEY = 'hard_reloaded_v{{ config("app.version", "1.0.0") }}';
+    if (!sessionStorage.getItem(HARD_RELOAD_KEY)) {
+        sessionStorage.setItem(HARD_RELOAD_KEY, '1');
+        (async function () {
+            // 1. Unregister semua Service Worker
+            if ('serviceWorker' in navigator) {
+                try {
+                    var regs = await navigator.serviceWorker.getRegistrations();
+                    for (var r of regs) { await r.unregister(); }
+                } catch (e) {}
+            }
+            // 2. Hapus semua cache browser
+            if ('caches' in window) {
+                try {
+                    var keys = await caches.keys();
+                    for (var k of keys) { await caches.delete(k); }
+                } catch (e) {}
+            }
+            // 3. Hard reload — paksa browser ambil semua asset fresh dari server
+            window.location.reload(true);
+        })();
+        return; // Hentikan eksekusi sisa skrip ini, reload akan menangani sisanya
+    }
+    // ─────────────────────────────────────────────────────────────
+
     var fill = document.getElementById('progress-fill');
     var percentEl = document.getElementById('percent-val');
     var statusEl = document.getElementById('status-text');

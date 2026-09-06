@@ -46,7 +46,7 @@ use App\Http\Controllers\pagegame\{
 
 // Dynamic Service Worker route (automatically injects APP_VERSION from .env / config)
 Route::get('/sw.js', function () {
-    $version = config('app.version', '1.0.8');
+    $version = config('app.version', '2.0.0');
     $swPath = public_path('sw.js');
     if (!file_exists($swPath)) {
         return response('', 404);
