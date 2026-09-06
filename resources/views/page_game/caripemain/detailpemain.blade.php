@@ -12,7 +12,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        background: #0c111d url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
+        background: #0c111d url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
         box-sizing: border-box;
@@ -562,10 +562,10 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
     <div>
         <div class="top-bar">
             <div class="back-btn-container" onclick="goBack()">
-                <img class="back-btn" src="/game_pacu/assets/image/ui/back.png" alt="Kembali">
+                <img class="back-btn" src="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" alt="Kembali">
             </div>
             <div class="coin-display" onclick="window.navigateToPage('/shop')">
-                <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+                <span class="sprint-icon me-1"><img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
                 <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
             </div>
         </div>
@@ -588,20 +588,20 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
                         } elseif (strpos($dbFoto, '/') !== false || strpos($dbFoto, '.gif') !== false) {
                             $profileImgSrc = (strpos($dbFoto, '/') === 0) ? $dbFoto : '/' . $dbFoto;
                         } else {
-                            $profileImgSrc = '/game_pacu/assets/image/ui/' . $dbFoto . '.gif';
+                            $profileImgSrc = 'game_pacu/assets/image/ui/' . $dbFoto . '.gif';
                         }
                     } else {
-                        $profileImgSrc = '/game_pacu/assets/image/ui/profil.gif';
+                        $profileImgSrc = 'game_pacu/assets/image/ui/profil.gif';
                     }
                     @endphp
-                    <img src="{{ $profileImgSrc }}" alt="profil" class="profile-avatar-img">
+                    <img src="{{ asset_v($profileImgSrc) }}" alt="profil" class="profile-avatar-img">
                 </div>
                 <div class="status-dot-pulse"></div>
             </div>
 
             <!-- Identity -->
             <div class="profile-name">{{ $targetUser->nama_jalur ?? $targetUser->email }}</div>
-            <div class="profile-badge"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 16px; height: 16px; object-fit: contain; vertical-align: middle;" class="me-1"> {{ $statusText }}</div>
+            <div class="profile-badge"><img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: 16px; height: 16px; object-fit: contain; vertical-align: middle;" class="me-1"> {{ $statusText }}</div>
 
             <!-- Trophy Stats Grid -->
             <div class="stats-row">

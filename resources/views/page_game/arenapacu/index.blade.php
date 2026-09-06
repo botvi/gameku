@@ -358,7 +358,7 @@ if ($winsCount >= 100) {
 @endsection
 
 @push('scripts')
-<script src="/game_pacu/assets/js/phaser.min.js"></script>
+<script src="{{ asset_v('game_pacu/assets/js/phaser.min.js') }}"></script>
 <script>
 {
     const GAME_WIDTH = 360;

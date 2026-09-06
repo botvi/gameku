@@ -22,7 +22,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        background: url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
+        background: url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
         padding-bottom: 20px;
@@ -413,7 +413,7 @@
         style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.5;"></canvas>
 
     <div class="back-btn" onclick="window.navigateToPage('/room')">
-        <img src="/game_pacu/assets/image/ui/back.png" alt="Back">
+        <img src="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" alt="Back">
     </div>
 
     <div class="title-banner">CUSTOM ROOM</div>

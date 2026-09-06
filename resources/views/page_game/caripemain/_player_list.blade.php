@@ -15,16 +15,16 @@
             } elseif (strpos($dbAvatar, '/') !== false || strpos($dbAvatar, '.gif') !== false) {
                 $avatarUrl = (strpos($dbAvatar, '/') === 0) ? $dbAvatar : '/' . $dbAvatar;
             } else {
-                $avatarUrl = '/game_pacu/assets/image/ui/' . $dbAvatar . '.gif';
+                $avatarUrl = 'game_pacu/assets/image/ui/' . $dbAvatar . '.gif';
             }
         } else {
-            $avatarUrl = '/game_pacu/assets/image/ui/profil.gif';
+            $avatarUrl = 'game_pacu/assets/image/ui/profil.gif';
         }
         @endphp
         <div class="player-row">
             <div class="player-info">
                 <div class="player-avatar-wrapper">
-                    <img src="{{ $avatarUrl }}" alt="Avatar" class="player-avatar-img">
+                    <img src="{{ asset_v($avatarUrl) }}" alt="Avatar" class="player-avatar-img">
                 </div>
                 <div class="player-details">
                     <div class="player-name">{{ $player->nama_jalur ?? $player->email }}</div>

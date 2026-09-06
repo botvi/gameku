@@ -23,7 +23,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        background: url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
+        background: url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
         overflow: hidden;
@@ -338,12 +338,12 @@
 
     <!-- Tombol Back ke Room Menu -->
     <button class="back-btn" onclick="window.navigateToPage('/room')">
-        <img src="/game_pacu/assets/image/ui/back.png" alt="Back">
+        <img src="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" alt="Back">
     </button>
 
     <!-- Wallet Koin -->
     <div class="coin-display" onclick="window.navigateToPage('/shop')">
-        <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+        <span class="sprint-icon me-1"><img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
         <span id="coin-count">...</span>
     </div>
 
@@ -353,7 +353,7 @@
         <!-- Carousel Menu PS5 -->
         <div class="ps5-carousel-container">
             <button class="carousel-nav-btn prev-btn" onclick="prevSlide(event)">
-                <img src="/game_pacu/assets/image/ui/btn_kiri.png" alt="Left">
+                <img src="{{ asset_v('game_pacu/assets/image/ui/btn_kiri.png') }}" alt="Left">
             </button>
             <div class="ps5-carousel-view">
                 <div class="ps5-carousel-track" id="carousel-track">
@@ -361,7 +361,7 @@
                 </div>
             </div>
             <button class="carousel-nav-btn next-btn" onclick="nextSlide(event)">
-                <img src="/game_pacu/assets/image/ui/btn_kanan.png" alt="Right">
+                <img src="{{ asset_v('game_pacu/assets/image/ui/btn_kanan.png') }}" alt="Right">
             </button>
         </div>
 
@@ -370,7 +370,7 @@
             <div class="ps5-details-title" id="active-title">LEVEL 1</div>
             <div class="ps5-details-desc" id="active-desc">TERBUKA</div>
             <div class="reward-badge">
-                <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 18px; height: 18px; object-fit: contain;"></span>
+                <span class="sprint-icon me-1"><img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: 18px; height: 18px; object-fit: contain;"></span>
                 <span id="active-reward">+5 SPRINT</span>
             </div>
 

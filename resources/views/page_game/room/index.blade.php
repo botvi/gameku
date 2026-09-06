@@ -23,7 +23,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        background: url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
+        background: url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
         overflow: hidden;
@@ -645,7 +645,7 @@
     <div id="ps5-backdrop" class="ps5-backdrop-glow bg-slide-0"></div>
 
     <div class="back-btn" onclick="window.navigateToPage('/main-menu')">
-        <img src="/game_pacu/assets/image/ui/back.png" alt="Back">
+        <img src="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" alt="Back">
     </div>
 
     <div class="menu-panel">
@@ -654,14 +654,14 @@
         <!-- Carousel Menu PS5 -->
         <div class="ps5-carousel-container">
             <button class="carousel-nav-btn prev-btn" onclick="prevSlide(event)">
-                <img src="/game_pacu/assets/image/ui/btn_kiri.png" alt="Left">
+                <img src="{{ asset_v('game_pacu/assets/image/ui/btn_kiri.png') }}" alt="Left">
             </button>
             <div class="ps5-carousel-view">
                 <div class="ps5-carousel-track" id="carousel-track">
                     <!-- Slide 0: CARI LAWAN -->
                     <div class="ps5-card card-green active" data-index="0" onclick="selectSlide(0, event)">
                         <div class="ps5-card-icon">
-                            <img src="/game_pacu/assets/image/ui/magnifer.png" alt="Search">
+                            <img src="{{ asset_v('game_pacu/assets/image/ui/magnifer.png') }}" alt="Search">
                         </div>
                         <div class="ps5-card-label">CARI LAWAN</div>
                         <div class="ps5-pattern">&#9587;</div>
@@ -669,7 +669,7 @@
                     <!-- Slide 1: CUSTOM ROOM -->
                     <div class="ps5-card card-blue" data-index="1" onclick="selectSlide(1, event)">
                         <div class="ps5-card-icon">
-                            <img src="/game_pacu/assets/image/ui/customroom.png" alt="Custom">
+                            <img src="{{ asset_v('game_pacu/assets/image/ui/customroom.png') }}" alt="Custom">
                         </div>
                         <div class="ps5-card-label">CUSTOM ROOM</div>
                         <div class="ps5-pattern">&#9711;</div>
@@ -677,7 +677,7 @@
                     <!-- Slide 2: VS AI -->
                     <div class="ps5-card card-orange" data-index="2" onclick="selectSlide(2, event)">
                         <div class="ps5-card-icon">
-                            <img src="/game_pacu/assets/image/ui/vsai.png" alt="VS AI">
+                            <img src="{{ asset_v('game_pacu/assets/image/ui/vsai.png') }}" alt="VS AI">
                         </div>
                         <div class="ps5-card-label">VS AI</div>
                         <div class="ps5-pattern">&#9633;</div>
@@ -685,7 +685,7 @@
                     <!-- Slide 3: TOURNAMENT -->
                     <div class="ps5-card card-purple" data-index="3" onclick="selectSlide(3, event)">
                         <div class="ps5-card-icon">
-                            <img src="/game_pacu/assets/image/ui/piala.png" alt="Tournament">
+                            <img src="{{ asset_v('game_pacu/assets/image/ui/piala.png') }}" alt="Tournament">
                         </div>
                         <div class="ps5-card-label">TOURNAMENT</div>
                         <div class="ps5-pattern">&#9651;</div>
@@ -693,7 +693,7 @@
                 </div>
             </div>
             <button class="carousel-nav-btn next-btn" onclick="nextSlide(event)">
-                <img src="/game_pacu/assets/image/ui/btn_kanan.png" alt="Right">
+                <img src="{{ asset_v('game_pacu/assets/image/ui/btn_kanan.png') }}" alt="Right">
             </button>
         </div>
 

@@ -12,7 +12,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        background: #0c111d url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
+        background: #0c111d url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
         box-sizing: border-box;
@@ -122,69 +122,52 @@
         border-radius: 4px;
     }
 
-    #search-dashboard .search-card {
-        background: rgba(15, 23, 42, 0.88);
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-radius: 20px;
-        padding: 18px;
-        box-shadow:
-            0 10px 32px rgba(0, 0, 0, 0.7),
-            0 0 0 1px rgba(255, 255, 255, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-bottom: 16px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    #search-dashboard .search-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: repeating-linear-gradient(
-            0deg, transparent, transparent 3px,
-            rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px
-        );
-        pointer-events: none;
-        z-index: 0;
-        border-radius: 20px;
-    }
-
-    #search-dashboard .search-title {
-        font-family: 'Press Start 2P', monospace;
-        font-size: 10px;
-        color: #f87171;
-        text-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
-        letter-spacing: 0.5px;
-        margin-bottom: 2px;
-    }
-
     #search-dashboard .search-form {
-        display: flex;
-        gap: 10px;
         width: 100%;
+        margin-bottom: 14px;
+    }
+
+    #search-dashboard .search-input-wrapper {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        background: rgba(22, 28, 45, 0.9);
+        border: 1.5px solid rgba(239, 68, 68, 0.4);
+        border-radius: 9999px;
+        padding: 0 16px;
+        height: 46px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        transition: all 0.2s ease;
         position: relative;
-        z-index: 2;
+        box-sizing: border-box;
+    }
+
+    #search-dashboard .search-input-wrapper:focus-within {
+        border-color: #ef4444;
+        box-shadow: 0 0 14px rgba(239, 68, 68, 0.5), 0 4px 16px rgba(0, 0, 0, 0.6);
+        background: rgba(15, 20, 35, 0.95);
+    }
+
+    #search-dashboard .search-icon {
+        color: #f87171;
+        font-size: 16px;
+        margin-right: 10px;
+        flex-shrink: 0;
+        pointer-events: none;
     }
 
     #search-dashboard .search-input {
         flex: 1;
-        background: rgba(0, 0, 0, 0.4);
-        border: 1.5px solid rgba(255, 255, 255, 0.15);
-        border-radius: 12px;
-        padding: 10px 14px;
-        font-family: 'Pixelify Sans', monospace;
-        font-size: 14px;
-        color: #ffffff;
+        background: transparent;
+        border: none;
         outline: none;
-        transition: all 0.2s ease;
-        position: relative;
-        z-index: 20;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 10px;
+        color: #f87171;
+        letter-spacing: 0.5px;
+        padding: 0;
+        height: 100%;
+        text-transform: uppercase;
         user-select: text !important;
         -webkit-user-select: text !important;
         touch-action: auto !important;
@@ -192,36 +175,31 @@
     }
 
     #search-dashboard .search-input::placeholder {
-        color: rgba(255, 255, 255, 0.35);
-    }
-
-    #search-dashboard .search-input:focus {
-        border-color: #f87171;
-        box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
-        background: rgba(0, 0, 0, 0.5);
-    }
-
-    #search-dashboard .search-btn {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-        border: none;
-        border-radius: 12px;
-        padding: 10px 18px;
+        color: #f87171;
+        opacity: 0.85;
         font-family: 'Press Start 2P', monospace;
-        font-size: 8px;
-        color: #ffffff;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    #search-dashboard .search-clear-btn {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 16px;
+        padding: 0;
         cursor: pointer;
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        transition: all 0.15s ease;
-        text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.15s ease;
+        margin-left: 8px;
+        flex-shrink: 0;
     }
 
-    #search-dashboard .search-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
-    }
-
-    #search-dashboard .search-btn:active {
-        transform: translateY(1px);
+    #search-dashboard .search-clear-btn:hover {
+        color: #ef4444;
     }
 
     #search-dashboard .section-header {
@@ -374,10 +352,10 @@ $user = auth()->user();
     <div>
         <div class="top-bar">
             <div class="back-btn-container" onclick="goBack()">
-                <img class="back-btn" src="/game_pacu/assets/image/ui/back.png" alt="Kembali">
+                <img class="back-btn" src="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" alt="Kembali">
             </div>
             <div class="coin-display" onclick="window.navigateToPage('/shop')">
-                <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+                <span class="sprint-icon me-1"><img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
                 <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
             </div>
         </div>
@@ -386,22 +364,31 @@ $user = auth()->user();
     <!-- Main Search Area -->
     <div class="search-container scrollable">
         <!-- Search Box -->
-        <div class="search-card">
-            <div class="search-title"><i class="bi bi-search me-1"></i> CARI PAMACU</div>
-            <form action="/cari-pemain" method="GET" class="search-form" onsubmit="handleSearchSubmit(event)">
+        <form action="/cari-pemain" method="GET" class="search-form" onsubmit="handleSearchSubmit(event)">
+            <div class="search-input-wrapper">
+                <i class="bi bi-search search-icon"></i>
                 <input
                     type="text"
                     id="search-input-field"
                     name="search"
                     class="search-input"
-                    placeholder="Masukkan nama jalur..."
+                    placeholder="CARI PAMACU"
                     value="{{ $search }}"
                     autocomplete="off"
                     oninput="handleSearchInput(event)"
                 >
-                <button type="submit" class="search-btn">CARI</button>
-            </form>
-        </div>
+                <button
+                    type="button"
+                    id="search-clear-btn"
+                    class="search-clear-btn"
+                    onclick="clearSearchInput()"
+                    style="{{ $search ? 'display: flex;' : 'display: none;' }}"
+                    title="Hapus pencarian"
+                >
+                    <i class="bi bi-x-circle-fill"></i>
+                </button>
+            </div>
+        </form>
 
         <!-- Player List Header -->
         <div class="section-header" id="search-section-header">
@@ -429,6 +416,19 @@ $user = auth()->user();
         window.navigateToPage('/cari-pemain/detail/' + id);
     };
 
+    window.clearSearchInput = function() {
+        const input = document.getElementById('search-input-field');
+        const clearBtn = document.getElementById('search-clear-btn');
+        if (input) {
+            input.value = '';
+            input.focus();
+        }
+        if (clearBtn) {
+            clearBtn.style.display = 'none';
+        }
+        window.performPlayerSearch('');
+    };
+
     window.performPlayerSearch = function(query) {
         const listContainer = document.getElementById('players-list-container');
         const headerEl = document.getElementById('search-section-header');
@@ -453,10 +453,14 @@ $user = auth()->user();
     };
 
     window.handleSearchInput = function(e) {
+        const query = e.target.value;
+        const clearBtn = document.getElementById('search-clear-btn');
+        if (clearBtn) {
+            clearBtn.style.display = query.length > 0 ? 'flex' : 'none';
+        }
         clearTimeout(searchDebounceTimer);
-        const query = e.target.value.trim();
         searchDebounceTimer = setTimeout(() => {
-            window.performPlayerSearch(query);
+            window.performPlayerSearch(query.trim());
         }, 300);
     };
 

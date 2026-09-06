@@ -22,7 +22,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        background: url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
+        background: url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
         padding-bottom: 20px;
@@ -543,13 +543,13 @@
                         } elseif (strpos($hostFoto, '/') !== false || strpos($hostFoto, '.gif') !== false) {
                             $hostImg = (strpos($hostFoto, '/') === 0) ? $hostFoto : '/' . $hostFoto;
                         } else {
-                            $hostImg = '/game_pacu/assets/image/ui/' . $hostFoto . '.gif';
+                            $hostImg = 'game_pacu/assets/image/ui/' . $hostFoto . '.gif';
                         }
                     } else {
-                        $hostImg = '/game_pacu/assets/image/ui/profil.gif';
+                        $hostImg = 'game_pacu/assets/image/ui/profil.gif';
                     }
                     @endphp
-                    <img src="{{ $hostImg }}" alt="Host">
+                    <img src="{{ asset_v($hostImg) }}" alt="Host">
                 </div>
                 <div class="player-name">{{ $room->host->nama_jalur ?? $room->host->email }}</div>
                 <div class="player-role">HOST</div>
@@ -792,15 +792,15 @@
             guestId = parseInt(guestPlayer.userId);
 
             // Construct profile image
-            let guestImgSrc = '/game_pacu/assets/image/ui/profil.gif';
+            let guestImgSrc = window.assetV('/game_pacu/assets/image/ui/profil.gif');
             const guestPhoto = guestPlayer.customizations.photo;
             if (guestPhoto) {
                 if (guestPhoto.indexOf('http://') === 0 || guestPhoto.indexOf('https://') === 0) {
                     guestImgSrc = guestPhoto;
                 } else if (guestPhoto.indexOf('/') !== -1 || guestPhoto.indexOf('.gif') !== -1) {
-                    guestImgSrc = guestPhoto.indexOf('/') === 0 ? guestPhoto : '/' + guestPhoto;
+                    guestImgSrc = window.assetV(guestPhoto.indexOf('/') === 0 ? guestPhoto : '/' + guestPhoto);
                 } else {
-                    guestImgSrc = '/game_pacu/assets/image/ui/' + guestPhoto + '.gif';
+                    guestImgSrc = window.assetV('/game_pacu/assets/image/ui/' + guestPhoto + '.gif');
                 }
             }
 

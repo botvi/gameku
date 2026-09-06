@@ -152,8 +152,8 @@
     </div>
 
     <div class="sync-middle">
-        <img src="{{ asset('env/nyx_nobg.png') }}" alt="Logo Nyx Studio" class="pixel-logo">
-        <img id="player-avatar" src="{{ asset(auth()->user()->foto_profile ?? 'profiles/default.gif') }}" class="player-avatar-preview" alt="Avatar">
+        <img src="{{ asset_v('env/nyx_nobg.png') }}" alt="Logo Nyx Studio" class="pixel-logo">
+        <img id="player-avatar" src="{{ asset_v(auth()->user()->foto_profile ?? 'profiles/default.gif') }}" class="player-avatar-preview" alt="Avatar">
         <div id="player-name" class="player-welcome-name">HALO, {{ strtoupper(auth()->user()->nama_jalur ?? auth()->user()->email) }}!</div>
     </div>
 

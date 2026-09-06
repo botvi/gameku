@@ -165,7 +165,7 @@ if ($winsCount >= 100) {
 
 <!-- Sound Toggle (Top Middle) -->
 <button id="sound-btn" class="sound-btn" onclick="openAudioSettings()">
-    <img id="sound-icon" src="/game_pacu/assets/image/ui/sound_on.png" alt="Sound">
+    <img id="sound-icon" src="{{ asset_v('game_pacu/assets/image/ui/sound_on.png') }}" alt="Sound">
 </button>
 
 <!-- Custom Audio Settings Modal -->
@@ -186,7 +186,7 @@ if ($winsCount >= 100) {
 @endsection
 
 @push('scripts')
-<script src="/game_pacu/assets/js/phaser.min.js"></script>
+<script src="{{ asset_v('game_pacu/assets/js/phaser.min.js') }}"></script>
 <script>
 {
     const AI_LEVEL = {{ $level }};

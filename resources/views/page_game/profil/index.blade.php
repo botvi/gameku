@@ -12,7 +12,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        background: #0c111d url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
+        background: #0c111d url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
         box-sizing: border-box;
@@ -522,10 +522,10 @@
     <div>
         <div class="top-bar">
             <div class="back-btn-container" onclick="goBack()">
-                <img class="back-btn" src="/game_pacu/assets/image/ui/back.png" alt="Kembali">
+                <img class="back-btn" src="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" alt="Kembali">
             </div>
             <div class="coin-display" onclick="window.navigateToPage('/shop')">
-                <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+                <span class="sprint-icon me-1"><img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
                 <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
             </div>
         </div>
@@ -539,14 +539,14 @@
             <!-- Avatar overlapping cover -->
             <div class="profile-avatar-wrapper">
                 <div class="profile-avatar-container">
-                    <img id="profil-gif-page" src="/game_pacu/assets/image/ui/profil.gif" alt="profil" class="profile-avatar-img">
+                    <img id="profil-gif-page" src="{{ asset_v('game_pacu/assets/image/ui/profil.gif') }}" alt="profil" class="profile-avatar-img">
                 </div>
                 <div class="status-dot-pulse"></div>
             </div>
 
             <!-- Identity -->
             <div class="profile-name">{{ $user->nama_jalur ?? $user->email }}</div>
-            <div class="profile-badge"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 16px; height: 16px; object-fit: contain; vertical-align: middle;" class="me-1"> {{ $statusText }}</div>
+            <div class="profile-badge"><img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: 16px; height: 16px; object-fit: contain; vertical-align: middle;" class="me-1"> {{ $statusText }}</div>
 
             <!-- Trophy Stats Grid -->
             <div class="stats-row">
@@ -621,8 +621,8 @@
 @endsection
 
 @push('scripts')
-<script src="/game_pacu/assets/js/phaser.min.js"></script>
-<script src="{{ asset('game_pacu/assets/js/jalur-preview-phaser.js') }}?v={{ filemtime(public_path('game_pacu/assets/js/jalur-preview-phaser.js')) }}"></script>
+<script src="{{ asset_v('game_pacu/assets/js/phaser.min.js') }}"></script>
+<script src="{{ asset_v('game_pacu/assets/js/jalur-preview-phaser.js') }}"></script>
 <script>
 {
     window.goBack = function() {

@@ -79,10 +79,10 @@
 <div id="tukangjaluar-dashboard">
     <div class="top-bar">
         <div class="back-btn-container" onclick="window.navigateToPage('/main-menu')">
-            <img src="/game_pacu/assets/image/ui/back.png" alt="Back" class="back-btn">
+            <img src="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" alt="Back" class="back-btn">
         </div>
         <div class="coin-display">
-            <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+            <span class="sprint-icon me-1"><img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
             <span id="tukangjaluar-coin-count" class="coin-amount">{{ number_format(auth()->user()->kuansing_poin, 0, ',', '.') }}</span>
         </div>
     </div>

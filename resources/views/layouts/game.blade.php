@@ -7,9 +7,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Pacu Jalur: The Pixel')</title>
-    <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/game_pacu/assets/image/ui/pwa-icon-192.png">
-    <link rel="stylesheet" href="/game_pacu/assets/css/game-layout.css?v={{ config('app.version', '1.0.5') }}">
+    <link rel="manifest" href="{{ asset_v('manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ asset_v('game_pacu/assets/image/ui/pwa-icon-192.png') }}">
+    <link rel="stylesheet" href="{{ asset_v('game_pacu/assets/css/game-layout.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -44,10 +44,10 @@
         }
     </style>
     {{-- Load Phaser.js lokal secara global agar selalu siap saat SPA navigation --}}
-    <script src="/game_pacu/assets/js/phaser.min.js"></script>
+    <script src="{{ asset_v('game_pacu/assets/js/phaser.min.js') }}"></script>
     {{-- Preload asset arena yang sering dipakai --}}
-    <link rel="preload" href="/game_pacu/assets/image/bg/bgmenu.jpg" as="image">
-    <link rel="preload" href="/game_pacu/assets/image/ui/back.png" as="image">
+    <link rel="preload" href="{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}" as="image">
+    <link rel="preload" href="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" as="image">
     @livewireStyles
     @stack('styles')
 </head>
@@ -83,9 +83,17 @@
     <script>
         window.GAME_VERSION = "{{ filemtime(public_path('game_pacu/assets/js/game-layout.js')) }}";
         window.autoFullscreenEnabled = {{ \App\Models\GameSetting::isFullscreenEnabled() ? 'true' : 'false' }};
+        window.assetV = function(path) {
+            if (!path || typeof path !== 'string') return path;
+            if (path.indexOf('?v=') !== -1 || path.indexOf('&v=') !== -1 || path.startsWith('data:') || path.startsWith('blob:') || path.startsWith('http://') || path.startsWith('https://')) {
+                return path;
+            }
+            const v = window.GAME_VERSION || '{{ config("app.version", "2.0.2") }}';
+            return path + (path.includes('?') ? '&v=' : '?v=') + v;
+        };
     </script>
     @livewireScripts
-    <script src="{{ asset('game_pacu/assets/js/game-layout.js') }}?v={{ filemtime(public_path('game_pacu/assets/js/game-layout.js')) }}"></script>
+    <script src="{{ asset_v('game_pacu/assets/js/game-layout.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

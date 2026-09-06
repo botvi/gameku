@@ -140,7 +140,7 @@
     <!-- Middle: Logo -->
     <div class="splash-middle">
         <div class="logo-wrapper">
-            <img src="{{ asset('env/nyx_nobg.png') }}" alt="Logo Nyx Studio" class="pixel-logo">
+            <img src="{{ asset_v('env/nyx_nobg.png') }}" alt="Logo Nyx Studio" class="pixel-logo">
         </div>
     </div>
 

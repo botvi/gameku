@@ -12,7 +12,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        background: #0c111d url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
+        background: #0c111d url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
         box-sizing: border-box;
@@ -476,10 +476,10 @@
     <div>
         <div class="top-bar">
             <div class="back-btn-container" onclick="window.navigateToPage('/main-menu')">
-                <img src="/game_pacu/assets/image/ui/back.png" alt="Back" class="back-btn">
+                <img src="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" alt="Back" class="back-btn">
             </div>
             <div class="coin-display">
-                <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+                <span class="sprint-icon me-1"><img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
                 <span id="shop-coin-count" class="coin-amount">{{ number_format(auth()->user()->kuansing_poin, 0, ',', '.') }}</span>
             </div>
         </div>
@@ -512,7 +512,7 @@
                 @endphp
                 <div class="topup-card">
                     <div style="display:flex; justify-content:center; align-items:center; margin: 10px 0;">
-                        <img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: {{ 32 * $scale }}px; height: {{ 32 * $scale }}px; object-fit: contain;">
+                        <img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: {{ 32 * $scale }}px; height: {{ 32 * $scale }}px; object-fit: contain;">
                     </div>
                     <div class="topup-amount">+{{ number_format($pkg->coin_amount, 0, ',', '.') }} Sprint</div>
                     <div class="topup-price">Rp {{ number_format($pkg->price, 0, ',', '.') }}</div>

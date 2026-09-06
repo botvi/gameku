@@ -12,7 +12,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        background: #0c111d url('/game_pacu/assets/image/bg/bgmenu.jpg') no-repeat center center;
+        background: #0c111d url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
         box-sizing: border-box;
@@ -309,10 +309,10 @@ $user = auth()->user();
     <div>
         <div class="top-bar">
             <div class="back-btn-container" onclick="goBack()">
-                <img class="back-btn" src="/game_pacu/assets/image/ui/back.png" alt="Kembali">
+                <img class="back-btn" src="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" alt="Kembali">
             </div>
             <div class="coin-display" onclick="window.navigateToPage('/shop')">
-                <span class="sprint-icon me-1"><img src="/game_pacu/assets/image/ui/sprint.png" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
+                <span class="sprint-icon me-1"><img src="{{ asset_v('game_pacu/assets/image/ui/sprint.png') }}" alt="Sprint" style="width: 20px; height: 20px; object-fit: contain;"></span>
                 <span class="coin-amount">{{ number_format($user->kuansing_poin, 0, ',', '.') }}</span>
             </div>
         </div>
@@ -436,23 +436,24 @@ $user = auth()->user();
                     } elseif (strpos($dbAvatar, '/') !== false || strpos($dbAvatar, '.gif') !== false) {
                         $avatarUrl = (strpos($dbAvatar, '/') === 0) ? $dbAvatar : '/' . $dbAvatar;
                     } else {
-                        $avatarUrl = '/game_pacu/assets/image/ui/' . $dbAvatar . '.gif';
+                        $avatarUrl = 'game_pacu/assets/image/ui/' . $dbAvatar . '.gif';
                     }
                 } else {
-                    $avatarUrl = '/game_pacu/assets/image/ui/profil.gif';
+                    $avatarUrl = 'game_pacu/assets/image/ui/profil.gif';
                 }
 
                 $winrate = $player->winrate ?? 0;
                 @endphp
-                <div class="{{ $rowClass }}"
-                     onclick="viewDetail({{ $player->id }})">
+                <div class="{{ $rowClass }}" onclick="viewPlayerProfile({{ $player->id }})" style="cursor: pointer;">
                     <!-- Rank -->
                     <div class="{{ $rankClass }}">{!! $rankLabel !!}</div>
 
                     <!-- Avatar -->
-                    <div class="lb-avatar-wrap">
-                        <img src="{{ $avatarUrl }}" alt="Avatar"
-                             onerror="this.src='/game_pacu/assets/image/ui/profil.gif'">
+                    <div class="lb-player-cell">
+                        <div class="lb-avatar-wrapper">
+                            <img src="{{ asset_v($avatarUrl) }}" alt="Avatar" class="lb-avatar"
+                                 onerror="this.src='{{ asset_v('game_pacu/assets/image/ui/profil.gif') }}'">
+                        </div>
                     </div>
 
                     <!-- Name + total -->
