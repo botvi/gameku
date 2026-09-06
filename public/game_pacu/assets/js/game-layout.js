@@ -433,7 +433,8 @@
   document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
 
   var _autoFsTriggered = false;
-  function triggerAutoFullscreenOnGesture() {
+  function triggerAutoFullscreenOnGesture(e) {
+   if (e && e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')) return;
    if (window.autoFullscreenEnabled === false || _autoFsTriggered) return;
    var isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
    if (!isFS) {

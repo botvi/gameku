@@ -1,38 +1,18 @@
-/**
- * game-layout.js
- * Script pendukung layout game mobile.
- *
- * CARA PAKAI di file PHP baru:
- *   <script src="assets/js/game-layout.js"></script>
- *   (letakkan sebelum </body>)
- *
- * Yang dilakukan script ini:
- *   1. Memblokir semua scroll (touch, wheel, keyboard)
- *   2. Mengupdate elemen #clock setiap menit
- */
-
 (function () {
     'use strict';
-
-    /* -----------------------------------------------
-       1. BLOKIR SCROLL — touch, wheel, keyboard
-    ----------------------------------------------- */
     document.addEventListener('touchmove', function (e) {
         if (e.target.closest('.scrollable')) {
             return;
         }
         e.preventDefault();
     }, { passive: false });
-
     document.addEventListener('wheel', function (e) {
         if (e.target.closest('.scrollable')) {
             return;
         }
         e.preventDefault();
     }, { passive: false });
-
     document.addEventListener('keydown', function (e) {
-        // Jangan blokir jika event berasal dari input atau textarea agar user bisa mengetik spasi dan navigasi arah
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
             return;
         }
@@ -42,10 +22,6 @@
             e.preventDefault();
         }
     });
-
-    /* -----------------------------------------------
-       2. JAM DIGITAL — update elemen #clock
-    ----------------------------------------------- */
     function updateClock() {
         var el = document.getElementById('clock');
         if (!el) return;
@@ -54,75 +30,8 @@
         var m = String(now.getMinutes()).padStart(2, '0');
         el.textContent = h + ':' + m;
     }
-
     updateClock();
     setInterval(updateClock, 15000);
-
-    /* -----------------------------------------------
-       3. KONFIRMASI FULLSCREEN (Jika diakses langsung)
-    ----------------------------------------------- */
-    // const isAccessedDirectly = window.self === window.top;
-    // const isFullscreenSupported = document.documentElement.requestFullscreen ||
-    //                               document.documentElement.webkitRequestFullscreen ||
-    //                               document.documentElement.msRequestFullscreen;
-
-    // if (isAccessedDirectly && isFullscreenSupported) {
-    //     // Buat elemen modal secara dinamis
-    //     const overlay = document.createElement('div');
-    //     overlay.id = 'fullscreen-modal-overlay';
-    //     overlay.innerHTML = `
-    //         <div class="fullscreen-modal-card">
-    //             <div class="fullscreen-modal-title">✦ FULLSCREEN MODE ✦</div>
-    //             <div class="fullscreen-modal-body">
-    //                 Mainkan game dalam mode Fullscreen untuk pengalaman bermain terbaik?
-    //             </div>
-    //             <div class="fullscreen-modal-buttons">
-    //                 <button class="fullscreen-btn fullscreen-btn-yes" id="fs-btn-yes">YA</button>
-    //                 <button class="fullscreen-btn fullscreen-btn-no" id="fs-btn-no">TIDAK</button>
-    //             </div>
-    //         </div>
-    //     `;
-    //     document.body.appendChild(overlay);
-
-    //     // Paksa browser melakukan reflow untuk memicu animasi masuk
-    //     overlay.offsetHeight;
-    //     overlay.classList.add('show');
-
-    //     const btnYes = document.getElementById('fs-btn-yes');
-    //     const btnNo = document.getElementById('fs-btn-no');
-
-    //     const requestFullscreen = () => {
-    //         const docEl = document.documentElement;
-    //         if (docEl.requestFullscreen) {
-    //             docEl.requestFullscreen();
-    //         } else if (docEl.webkitRequestFullscreen) {
-    //             docEl.webkitRequestFullscreen();
-    //         } else if (docEl.msRequestFullscreen) {
-    //             docEl.msRequestFullscreen();
-    //         }
-    //     };
-
-    //     const closeModal = () => {
-    //         overlay.classList.remove('show');
-    //         setTimeout(() => {
-    //             overlay.remove();
-    //         }, 300);
-    //     };
-
-    //     btnYes.addEventListener('click', function () {
-    //         requestFullscreen();
-    //         closeModal();
-    //     });
-
-    //     btnNo.addEventListener('click', function () {
-    //         closeModal();
-    //     });
-    // }
-
-    /* -----------------------------------------------
-       4. GLOBAL PAGE TRANSITION (FADE IN/OUT)
-    ----------------------------------------------- */
-    // Helper global untuk navigasi via script JS
     window.navigateToPage = function (url) {
         if (typeof Livewire !== 'undefined' && typeof Livewire.navigate === 'function') {
             Livewire.navigate(url);
@@ -139,7 +48,6 @@
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
     };
-
     var overlayRevealTimer = null;
 
     function ensurePageTransitionOverlay() {
@@ -157,7 +65,7 @@
     function waitForPageAssets() {
         var promises = [];
         if (document.fonts && document.fonts.ready) {
-            promises.push(document.fonts.ready.catch(function () {}));
+            promises.push(document.fonts.ready.catch(function () { }));
         }
         promises.push(new Promise(function (resolve) {
             setTimeout(resolve, 250);
@@ -227,61 +135,45 @@
             initCurrentPage();
         }
     });
-
-    /* -----------------------------------------------
-       5. RECOLOR CHARACTER HELPER (SHARED)
-    ----------------------------------------------- */
     window.recolorCharacterImage = function (scene, sourceKey, customColors) {
         const sourceTexture = scene.textures.get(sourceKey);
         const sourceImage = sourceTexture.getSourceImage();
-
         const canvas = document.createElement('canvas');
         canvas.width = sourceImage.width;
         canvas.height = sourceImage.height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(sourceImage, 0, 0);
-
         const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imgData.data;
-
         const targetHair = Phaser.Display.Color.HexStringToColor(customColors.hair);
         const targetShirt = Phaser.Display.Color.HexStringToColor(customColors.shirt);
         const targetPants = Phaser.Display.Color.HexStringToColor(customColors.pants);
         const targetPaddle = Phaser.Display.Color.HexStringToColor(customColors.paddle);
-
         for (let i = 0; i < data.length; i += 4) {
             const r = data[i];
             const g = data[i + 1];
             const b = data[i + 2];
             const a = data[i + 3];
-
-            if (a < 10) continue; // transparan
-
-            // Abaikan outline hitam/gelap
+            if (a < 10) continue;
             if (r < 40 && g < 40 && b < 40) continue;
-
-            // 1. Rambut (Merah): R dominan dan R - G > 100
             if (r - g > 100 && r - b > 100) {
                 const factor = Math.min(1.2, r / 199);
                 data[i] = Math.min(255, targetHair.r * factor);
                 data[i + 1] = Math.min(255, targetHair.g * factor);
                 data[i + 2] = Math.min(255, targetHair.b * factor);
             }
-            // 2. Celana (Hijau): G dominan dan G - R > 50
             else if (g - r > 50 && g - b > 40) {
                 const factor = Math.min(1.2, g / 122);
                 data[i] = Math.min(255, targetPants.r * factor);
                 data[i + 1] = Math.min(255, targetPants.g * factor);
                 data[i + 2] = Math.min(255, targetPants.b * factor);
             }
-            // 3. Dayung (Biru): B dominan dan B - R > 80
             else if (b - r > 80 && b - g > 40) {
                 const factor = Math.min(1.2, b / 203);
                 data[i] = Math.min(255, targetPaddle.r * factor);
                 data[i + 1] = Math.min(255, targetPaddle.g * factor);
                 data[i + 2] = Math.min(255, targetPaddle.b * factor);
             }
-            // 4. Baju/Badan (Abu-abu): R, G, B mirip
             else if (Math.abs(r - g) < 20 && Math.abs(g - b) < 20 && Math.abs(r - b) < 20) {
                 const factor = Math.min(1.2, ((r + g + b) / 3) / 78);
                 data[i] = Math.min(255, targetShirt.r * factor);
@@ -289,87 +181,244 @@
                 data[i + 2] = Math.min(255, targetShirt.b * factor);
             }
         }
-
         ctx.putImageData(imgData, 0, 0);
         return canvas;
     };
 
-
-    /* -----------------------------------------------
-       7. BACKGROUND MUSIC (BGM)
-    ----------------------------------------------- */
     (function () {
-        const bgmSrc = '/game_pacu/assets/sound/bgm.ogg';
-        let bgm = null;
+        var bgmSrc = '/game_pacu/assets/sound/bgm.ogg';
+
+        function isArenaBgmSuppressed() {
+            return window._arenaBgmSuppressed === true;
+        }
+
+        function applyMuteState(audio) {
+            if (isArenaBgmSuppressed()) {
+                audio.volume = 0;
+                audio.muted = true;
+                if (!audio.paused) {
+                    audio.pause();
+                }
+                return;
+            }
+            var isMuted = localStorage.getItem('bgm_muted') === 'true';
+            if (isMuted) {
+                audio.volume = 0;
+                audio.muted = true;
+            } else {
+                audio.volume = 0.5;
+                audio.muted = false;
+            }
+        }
+
+        function tryPlay(audio) {
+            applyMuteState(audio);
+            if (isArenaBgmSuppressed() || audio.muted) {
+                return;
+            }
+            audio.play().catch(function (err) {
+                console.log('[BGM] Autoplay blocked:', err);
+            });
+        }
 
         function initBGM() {
-            if (window.globalBGM) return;
+            if (window.globalBGM && window.globalBGM.src && window.globalBGM.src.includes('bgm')) {
+                applyMuteState(window.globalBGM);
+                if (window.globalBGM.paused && !window.globalBGM.muted && !isArenaBgmSuppressed()) {
+                    window.globalBGM.play().catch(function (err) {
+                        console.log('[BGM] Resume failed:', err);
+                    });
+                }
+                return;
+            }
 
-            bgm = new Audio(bgmSrc);
+            var bgm = new Audio(bgmSrc);
             bgm.loop = true;
             bgm.preload = 'auto';
             window.globalBGM = bgm;
 
-            // Sync volume/mute with settings
-            const isMuted = localStorage.getItem('bgm_muted') === 'true';
-            if (isMuted) {
-                bgm.volume = 0;
-                bgm.muted = true;
-            } else {
-                bgm.volume = 0.5;
-                bgm.muted = false;
-            }
+            sessionStorage.setItem('bgm_initialized', '1');
 
-            const startPlay = function () {
-                const isMuted = localStorage.getItem('bgm_muted') === 'true';
-                if (isMuted) {
-                    bgm.volume = 0;
-                    bgm.muted = true;
-                } else {
-                    bgm.volume = 0.5;
-                    bgm.muted = false;
+            tryPlay(bgm);
+
+            var playOnInteraction = function () {
+                if (isArenaBgmSuppressed()) return;
+                if (window.globalBGM && window.globalBGM.paused) {
+                    tryPlay(window.globalBGM);
                 }
-                bgm.play().catch(function (err) {
-                    console.log('Autoplay blocked, waiting for interaction:', err);
-                });
-            };
-
-            startPlay();
-
-            // Fallback: play on first user interaction if blocked by browser autoplay policy
-            const playOnInteraction = function () {
-                startPlay();
                 document.removeEventListener('pointerdown', playOnInteraction);
+                document.removeEventListener('touchstart', playOnInteraction);
                 document.removeEventListener('keydown', playOnInteraction);
             };
-            document.addEventListener('pointerdown', playOnInteraction);
-            document.addEventListener('keydown', playOnInteraction);
+            document.addEventListener('pointerdown', playOnInteraction, { once: true });
+            document.addEventListener('touchstart', playOnInteraction, { once: true, passive: true });
+            document.addEventListener('keydown', playOnInteraction, { once: true });
         }
 
-        // Periodically sync volume/mute state from localStorage changes
-        setInterval(function () {
-            if (bgm) {
-                const isMuted = localStorage.getItem('bgm_muted') === 'true';
-                if (isMuted) {
-                    bgm.volume = 0;
-                    bgm.muted = true;
-                } else {
-                    bgm.volume = 0.5;
-                    bgm.muted = false;
-                    if (bgm.paused) {
-                        bgm.play().catch(function (err) {
-                            console.log('Play failed on sync:', err);
-                        });
-                    }
+        document.addEventListener('visibilitychange', function () {
+            if (!window.globalBGM) return;
+            if (document.hidden) {
+                window.globalBGM.pause();
+            } else {
+                var isMuted = localStorage.getItem('bgm_muted') === 'true';
+                if (!isMuted && !isArenaBgmSuppressed() && window.globalBGM.paused) {
+                    window.globalBGM.play().catch(function (err) {
+                        console.log('[BGM] Visibility resume failed:', err);
+                    });
                 }
             }
-        }, 300);
+        });
+
+        document.addEventListener('livewire:navigated', function () {
+            if (window.globalBGM) {
+                applyMuteState(window.globalBGM);
+                var isMuted = localStorage.getItem('bgm_muted') === 'true';
+                if (!isMuted && !isArenaBgmSuppressed() && window.globalBGM.paused) {
+                    window.globalBGM.play().catch(function (err) {
+                        console.log('[BGM] Post-navigate resume:', err);
+                    });
+                }
+            }
+        });
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initBGM);
         } else {
             initBGM();
         }
-    })();
 
+        window.applyBGMMute = function () {
+            if (!window.globalBGM) return;
+            if (isArenaBgmSuppressed()) {
+                window.globalBGM.volume = 0;
+                window.globalBGM.muted = true;
+                if (!window.globalBGM.paused) {
+                    window.globalBGM.pause();
+                }
+                return;
+            }
+            var isMuted = localStorage.getItem('bgm_muted') === 'true';
+            if (isMuted) {
+                window.globalBGM.volume = 0;
+                window.globalBGM.muted = true;
+                if (!window.globalBGM.paused) {
+                    window.globalBGM.pause();
+                }
+            } else {
+                window.globalBGM.volume = 0.5;
+                window.globalBGM.muted = false;
+                if (window.globalBGM.paused) {
+                    window.globalBGM.play().catch(function (err) {
+                        console.log('[BGM] applyBGMMute play failed:', err);
+                    });
+                }
+            }
+        };
+
+        window.toggleBGMSetting = function () {
+            var bgmMuted = localStorage.getItem('bgm_muted') === 'true';
+            localStorage.setItem('bgm_muted', bgmMuted ? 'false' : 'true');
+            window.applyBGMMute();
+            if (typeof window.syncAudioModalButtons === 'function') {
+                window.syncAudioModalButtons();
+            }
+        };
+
+        window.toggleSFXSetting = function () {
+            var sfxMuted = localStorage.getItem('sfx_muted') === 'true';
+            localStorage.setItem('sfx_muted', sfxMuted ? 'false' : 'true');
+            if (typeof window.syncAudioModalButtons === 'function') {
+                window.syncAudioModalButtons();
+            }
+        };
+
+        if (!window.updateSoundIcon) {
+            window.updateSoundIcon = function () { };
+        }
+
+        window.requestGameFullscreen = function () {
+            var isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+            if (isFS) return;
+
+            var elem = document.documentElement || document.body || document.getElementById('mobile-frame');
+            var req = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.mozRequestFullScreen || elem.msRequestFullscreen;
+
+            if (req) {
+                try {
+                    var p = req.call(elem);
+                    if (p && typeof p.catch === 'function') {
+                        p.catch(function (err) {
+                            tryPhaserFullscreen();
+                        });
+                    }
+                } catch (e) {
+                    tryPhaserFullscreen();
+                }
+            } else {
+                tryPhaserFullscreen();
+            }
+        };
+
+        function tryPhaserFullscreen() {
+            if (window.activeMultiplayerArenaGame && window.activeMultiplayerArenaGame.scale) {
+                try {
+                    window.activeMultiplayerArenaGame.scale.startFullscreen();
+                } catch (e) { }
+            }
+        }
+
+        window.toggleFullscreenManual = function () {
+            var isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+            if (isFS) {
+                var exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+                if (exit) {
+                    exit.call(document).catch(function () { });
+                }
+                if (window.activeMultiplayerArenaGame && window.activeMultiplayerArenaGame.scale) {
+                    try { window.activeMultiplayerArenaGame.scale.stopFullscreen(); } catch (e) { }
+                }
+            } else {
+                window.requestGameFullscreen();
+            }
+        };
+
+        function updateFullscreenIcon() {
+            var btnIcon = document.getElementById('fullscreen-icon');
+            if (!btnIcon) return;
+            var isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+            if (isFS) {
+                btnIcon.className = 'bi bi-fullscreen-exit';
+            } else {
+                btnIcon.className = 'bi bi-fullscreen';
+            }
+        }
+
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+        document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
+
+        var _autoFsTriggered = false;
+        function triggerAutoFullscreenOnGesture(e) {
+            if (e && e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')) return;
+            if (window.autoFullscreenEnabled === false || _autoFsTriggered) return;
+            var isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+            if (!isFS) {
+                window.requestGameFullscreen();
+                setTimeout(function () {
+                    var checkFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+                    if (checkFS) {
+                        _autoFsTriggered = true;
+                    }
+                }, 200);
+            } else {
+                _autoFsTriggered = true;
+            }
+        }
+
+        ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(function (evtType) {
+            window.addEventListener(evtType, triggerAutoFullscreenOnGesture, { capture: true, passive: true });
+            document.addEventListener(evtType, triggerAutoFullscreenOnGesture, { capture: true, passive: true });
+        });
+
+    })();
 })();

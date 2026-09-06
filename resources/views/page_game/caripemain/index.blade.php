@@ -184,7 +184,11 @@
         outline: none;
         transition: all 0.2s ease;
         position: relative;
-        z-index: 2;
+        z-index: 20;
+        user-select: text !important;
+        -webkit-user-select: text !important;
+        touch-action: auto !important;
+        pointer-events: auto !important;
     }
 
     #search-dashboard .search-input::placeholder {
