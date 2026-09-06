@@ -694,13 +694,20 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
 
     initDetailPreview();
     document.addEventListener('game:page-ready', function () {
-        if (!document.getElementById('profile-dashboard')) return;
+        if (!document.getElementById('detail-pemain-dashboard')) return;
         initDetailPreview();
     });
 
     function initJalurPreviewCustom(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
         if (window.activePreviewGame) {
-            window.activePreviewGame.destroy(true);
+            try {
+                window.activePreviewGame.destroy(true);
+            } catch (e) {
+                console.warn('Error destroying activePreviewGame:', e);
+            }
             window.activePreviewGame = null;
         }
 
@@ -803,18 +810,25 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
                         return canvas;
                     }
 
-                    // Apply recolors to animations
+                    // Apply recolors to animations safely
                     const rowerSprites = [];
                     for (let f = 1; f <= 5; f++) {
                         ['char', 'timbo', 'tari', 'onjai'].forEach(prefix => {
+                            const texKey = `recolored_${prefix}${f}`;
+                            if (scene.textures.exists(texKey)) {
+                                scene.textures.remove(texKey);
+                            }
                             const canvas = recolorCharacterImage(`${prefix}${f}`);
-                            scene.textures.addCanvas(`recolored_${prefix}${f}`, canvas);
+                            scene.textures.addCanvas(texKey, canvas);
                         });
                     }
 
                     ['rowing', 'timbo', 'tari', 'onjai'].forEach(animType => {
                         const key = `${animType}_anim`;
                         const prefix = animType === 'rowing' ? 'char' : animType;
+                        if (scene.anims.exists(key)) {
+                            scene.anims.remove(key);
+                        }
                         scene.anims.create({
                             key: key,
                             frames: [

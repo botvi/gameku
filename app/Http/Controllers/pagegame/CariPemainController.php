@@ -29,6 +29,10 @@ class CariPemainController extends Controller
                 ->get();
         }
 
+        if ($request->ajax() || $request->wantsJson()) {
+            return view('page_game.caripemain._player_list', compact('players', 'search'));
+        }
+
         return view('page_game.caripemain.index', compact('players', 'search'));
     }
 

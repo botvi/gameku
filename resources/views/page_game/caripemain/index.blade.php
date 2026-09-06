@@ -397,55 +397,20 @@ $user = auth()->user();
                     placeholder="Masukkan nama jalur..."
                     value="{{ $search }}"
                     autocomplete="off"
+                    oninput="handleSearchInput(event)"
                 >
                 <button type="submit" class="search-btn">CARI</button>
             </form>
         </div>
 
         <!-- Player List Header -->
-        <div class="section-header">
+        <div class="section-header" id="search-section-header">
             {{ $search ? 'Hasil Pencarian' : 'Rekomendasi Pemain' }}
         </div>
 
         <!-- Player Cards -->
-        <div class="players-list">
-            @if (empty($players) || count($players) == 0)
-                <div class="players-empty">
-                    <div class="empty-icon"><i class="bi bi-search text-secondary" style="font-size: 28px;"></i></div>
-                    <div class="empty-title">TIDAK DITEMUKAN</div>
-                    <div class="empty-subtitle">Silakan cari dengan kata kunci lain.</div>
-                </div>
-            @else
-                @foreach ($players as $player)
-                    @php
-                    $playerWins = $player->wins()->count();
-                    $dbAvatar = $player->foto_profile;
-                    if (!empty($dbAvatar)) {
-                        if (strpos($dbAvatar, 'http://') === 0 || strpos($dbAvatar, 'https://') === 0) {
-                            $avatarUrl = $dbAvatar;
-                        } elseif (strpos($dbAvatar, '/') !== false || strpos($dbAvatar, '.gif') !== false) {
-                            $avatarUrl = (strpos($dbAvatar, '/') === 0) ? $dbAvatar : '/' . $dbAvatar;
-                        } else {
-                            $avatarUrl = '/game_pacu/assets/image/ui/' . $dbAvatar . '.gif';
-                        }
-                    } else {
-                        $avatarUrl = '/game_pacu/assets/image/ui/profil.gif';
-                    }
-                    @endphp
-                    <div class="player-row">
-                        <div class="player-info">
-                            <div class="player-avatar-wrapper">
-                                <img src="{{ $avatarUrl }}" alt="Avatar" class="player-avatar-img">
-                            </div>
-                            <div class="player-details">
-                                <div class="player-name">{{ $player->nama_jalur ?? $player->email }}</div>
-                                <div class="player-wins"><i class="bi bi-trophy-fill text-warning me-1"></i>{{ $playerWins }} Wins</div>
-                            </div>
-                        </div>
-                        <button class="detail-btn" onclick="viewDetail({{ $player->id }})">PROFIL</button>
-                    </div>
-                @endforeach
-            @endif
+        <div class="players-list" id="players-list-container">
+            @include('page_game.caripemain._player_list')
         </div>
     </div>
 </div>
@@ -454,6 +419,8 @@ $user = auth()->user();
 @push('scripts')
 <script>
 {
+    let searchDebounceTimer = null;
+
     window.goBack = function() {
         window.navigateToPage('/main-menu');
     };
@@ -462,11 +429,43 @@ $user = auth()->user();
         window.navigateToPage('/cari-pemain/detail/' + id);
     };
 
+    window.performPlayerSearch = function(query) {
+        const listContainer = document.getElementById('players-list-container');
+        const headerEl = document.getElementById('search-section-header');
+        if (headerEl) {
+            headerEl.textContent = query ? 'Hasil Pencarian' : 'Rekomendasi Pemain';
+        }
+        if (!listContainer) return;
+
+        fetch('/cari-pemain?search=' + encodeURIComponent(query), {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'text/html'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            listContainer.innerHTML = html;
+        })
+        .catch(err => {
+            console.error('Search error:', err);
+        });
+    };
+
+    window.handleSearchInput = function(e) {
+        clearTimeout(searchDebounceTimer);
+        const query = e.target.value.trim();
+        searchDebounceTimer = setTimeout(() => {
+            window.performPlayerSearch(query);
+        }, 300);
+    };
+
     window.handleSearchSubmit = function(e) {
         if (e) e.preventDefault();
         const input = document.getElementById('search-input-field');
         const query = input ? input.value.trim() : '';
-        window.navigateToPage('/cari-pemain?search=' + encodeURIComponent(query));
+        clearTimeout(searchDebounceTimer);
+        window.performPlayerSearch(query);
     };
 }
 </script>
