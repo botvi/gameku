@@ -512,35 +512,40 @@ if ($winsCount >= 100) {
                 if (txt) txt.textContent = 'Siap lawan AI!';
             });
 
-            this.load.image('bgmenu',     '/game_pacu/assets/image/bg/bgmenu.jpg');
-            this.load.image('back',       '/game_pacu/assets/image/ui/back.png');
-            this.load.image('koin',       '/game_pacu/assets/image/ui/sprint.png');
-            this.load.image('jalur_boat', '/game_pacu/assets/image/jalur/jalur.png');
+            const v = (typeof window !== 'undefined' && window.GAME_VERSION) ? `?v=${window.GAME_VERSION}` : '';
+
+            this.load.image('bgmenu',     `/game_pacu/assets/image/bg/bgmenu.jpg${v}`);
+            this.load.image('back',       `/game_pacu/assets/image/ui/back.png${v}`);
+            this.load.image('koin',       `/game_pacu/assets/image/ui/sprint.png${v}`);
+            this.load.image('jalur_boat', `/game_pacu/assets/image/jalur/jalur.png${v}`);
 
             for (let i = 1; i <= 5; i++) {
-                this.load.image(`char${i}`, `/game_pacu/assets/image/char/${i}.png`);
-                this.load.image(`timbo${i}`, `/game_pacu/assets/image/timbo_ruang/${i}.png`);
-                this.load.image(`tari${i}`, `/game_pacu/assets/image/tukang_tari/${i}.png`);
-                this.load.image(`onjai${i}`, `/game_pacu/assets/image/tukang_onjai/${i}.png`);
+                this.load.image(`char${i}`, `/game_pacu/assets/image/char/${i}.png${v}`);
+                this.load.image(`timbo${i}`, `/game_pacu/assets/image/timbo_ruang/${i}.png${v}`);
+                this.load.image(`tari${i}`, `/game_pacu/assets/image/tukang_tari/${i}.png${v}`);
+                this.load.image(`onjai${i}`, `/game_pacu/assets/image/tukang_onjai/${i}.png${v}`);
             }
             for (let i = 1; i <= 6; i++) {
-                this.load.image(`pancang${i}`, `/game_pacu/assets/image/pancang/${i}.png`);
+                this.load.image(`pancang${i}`, `/game_pacu/assets/image/pancang/${i}.png${v}`);
             }
             const sponsorUrls = {!! json_encode($sponsors ?? []) !!};
             for (let i = 1; i <= 8; i++) {
-                const defaultImg = `/game_pacu/assets/image/promosi/spanduk_${i}.png`;
-                const imgUrl = (Array.isArray(sponsorUrls) && sponsorUrls.length > 0)
+                const defaultImg = `/game_pacu/assets/image/promosi/spanduk_${i}.png${v}`;
+                let imgUrl = (Array.isArray(sponsorUrls) && sponsorUrls.length > 0)
                     ? sponsorUrls[(i - 1) % sponsorUrls.length]
                     : defaultImg;
+                if (imgUrl && !imgUrl.includes('?v=')) {
+                    imgUrl += (imgUrl.includes('?') ? '&v=' : '?v=') + (window.GAME_VERSION || '');
+                }
                 this.load.image(`promosi${i}`, imgUrl);
             }
             for (let i = 1; i <= 5; i++) {
-                this.load.image(`whiteflag${i}`, `/game_pacu/assets/image/ui/whiteflag/${i}.png`);
+                this.load.image(`whiteflag${i}`, `/game_pacu/assets/image/ui/whiteflag/${i}.png${v}`);
             }
 
-            this.load.audio('sound_321',      '/game_pacu/assets/sound/321.ogg');
-            this.load.audio('sound_suporter', '/game_pacu/assets/sound/suporter.ogg');
-            this.load.audio('sound_pluit',    '/game_pacu/assets/sound/pluit.ogg');
+            this.load.audio('sound_321',      `/game_pacu/assets/sound/321.ogg${v}`);
+            this.load.audio('sound_suporter', `/game_pacu/assets/sound/suporter.ogg${v}`);
+            this.load.audio('sound_pluit',    `/game_pacu/assets/sound/pluit.ogg${v}`);
         }
 
         create() {

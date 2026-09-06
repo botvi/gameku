@@ -622,7 +622,7 @@
 
 @push('scripts')
 <script src="/game_pacu/assets/js/phaser.min.js"></script>
-<script src="/game_pacu/assets/js/jalur-preview-phaser.js?v=2.0"></script>
+<script src="{{ asset('game_pacu/assets/js/jalur-preview-phaser.js') }}?v={{ filemtime(public_path('game_pacu/assets/js/jalur-preview-phaser.js')) }}"></script>
 <script>
 {
     window.goBack = function() {

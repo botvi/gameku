@@ -517,19 +517,20 @@
         constructor() { super({ key: 'CustomizeScene' }); }
 
         preload() {
-            this.load.image('bgmenu', '/game_pacu/assets/image/bg/bgmenu.jpg');
-            this.load.image('tukang', '/game_pacu/assets/image/ui/animasitukang.png');
-            this.load.image('bubblechat', '/game_pacu/assets/image/ui/bubblechat.png');
-            this.load.image('back', '/game_pacu/assets/image/ui/back.png');
-            this.load.image('koin', '/game_pacu/assets/image/ui/sprint.png');
-            this.load.image('btn_kiri', '/game_pacu/assets/image/ui/btn_kiri.png');
-            this.load.image('btn_kanan', '/game_pacu/assets/image/ui/btn_kanan.png');
-            this.load.image('jalur_boat', '/game_pacu/assets/image/jalur/jalur.png');
+            const v = (typeof window !== 'undefined' && window.GAME_VERSION) ? `?v=${window.GAME_VERSION}` : '';
+            this.load.image('bgmenu', `/game_pacu/assets/image/bg/bgmenu.jpg${v}`);
+            this.load.image('tukang', `/game_pacu/assets/image/ui/animasitukang.png${v}`);
+            this.load.image('bubblechat', `/game_pacu/assets/image/ui/bubblechat.png${v}`);
+            this.load.image('back', `/game_pacu/assets/image/ui/back.png${v}`);
+            this.load.image('koin', `/game_pacu/assets/image/ui/sprint.png${v}`);
+            this.load.image('btn_kiri', `/game_pacu/assets/image/ui/btn_kiri.png${v}`);
+            this.load.image('btn_kanan', `/game_pacu/assets/image/ui/btn_kanan.png${v}`);
+            this.load.image('jalur_boat', `/game_pacu/assets/image/jalur/jalur.png${v}`);
             for (let f = 1; f <= 5; f++) {
-                this.load.image(`char${f}`, `/game_pacu/assets/image/char/${f}.png`);
-                this.load.image(`timbo${f}`, `/game_pacu/assets/image/timbo_ruang/${f}.png`);
-                this.load.image(`tari${f}`, `/game_pacu/assets/image/tukang_tari/${f}.png`);
-                this.load.image(`onjai${f}`, `/game_pacu/assets/image/tukang_onjai/${f}.png`);
+                this.load.image(`char${f}`, `/game_pacu/assets/image/char/${f}.png${v}`);
+                this.load.image(`timbo${f}`, `/game_pacu/assets/image/timbo_ruang/${f}.png${v}`);
+                this.load.image(`tari${f}`, `/game_pacu/assets/image/tukang_tari/${f}.png${v}`);
+                this.load.image(`onjai${f}`, `/game_pacu/assets/image/tukang_onjai/${f}.png${v}`);
             }
         }
 

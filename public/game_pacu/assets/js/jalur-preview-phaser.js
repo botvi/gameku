@@ -1,10 +1,11 @@
 function preloadJalurAssets(scene) {
-    scene.load.image('jalur_boat', '/game_pacu/assets/image/jalur/jalur.png');
+    const v = (typeof window !== 'undefined' && window.GAME_VERSION) ? `?v=${window.GAME_VERSION}` : '';
+    scene.load.image('jalur_boat', `/game_pacu/assets/image/jalur/jalur.png${v}`);
     for (let i = 1; i <= 5; i++) {
-        scene.load.image(`char${i}`, `/game_pacu/assets/image/char/${i}.png`);
-        scene.load.image(`timbo${i}`, `/game_pacu/assets/image/timbo_ruang/${i}.png`);
-        scene.load.image(`tari${i}`, `/game_pacu/assets/image/tukang_tari/${i}.png`);
-        scene.load.image(`onjai${i}`, `/game_pacu/assets/image/tukang_onjai/${i}.png`);
+        scene.load.image(`char${i}`, `/game_pacu/assets/image/char/${i}.png${v}`);
+        scene.load.image(`timbo${i}`, `/game_pacu/assets/image/timbo_ruang/${i}.png${v}`);
+        scene.load.image(`tari${i}`, `/game_pacu/assets/image/tukang_tari/${i}.png${v}`);
+        scene.load.image(`onjai${i}`, `/game_pacu/assets/image/tukang_onjai/${i}.png${v}`);
     }
 }
 

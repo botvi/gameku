@@ -81,10 +81,11 @@
     </div>
 
     <script>
+        window.GAME_VERSION = "{{ filemtime(public_path('game_pacu/assets/js/game-layout.js')) }}";
         window.autoFullscreenEnabled = {{ \App\Models\GameSetting::isFullscreenEnabled() ? 'true' : 'false' }};
     </script>
     @livewireScripts
-    <script src="/game_pacu/assets/js/game-layout.js?v={{ config('app.version', '1.0.5') }}"></script>
+    <script src="{{ asset('game_pacu/assets/js/game-layout.js') }}?v={{ filemtime(public_path('game_pacu/assets/js/game-layout.js')) }}"></script>
     @stack('scripts')
 </body>
 </html>
