@@ -694,6 +694,9 @@ if ($winsCount >= 100) {
 
             for (let i = 1; i <= 5; i++) {
                 this.load.image(`char${i}`, `/game_pacu/assets/image/char/${i}.png`);
+                this.load.image(`timbo${i}`, `/game_pacu/assets/image/timbo_ruang/${i}.png`);
+                this.load.image(`tari${i}`, `/game_pacu/assets/image/tukang_tari/${i}.png`);
+                this.load.image(`onjai${i}`, `/game_pacu/assets/image/tukang_onjai/${i}.png`);
             }
             for (let i = 1; i <= 6; i++) {
                 this.load.image(`pancang${i}`, `/game_pacu/assets/image/pancang/${i}.png`);
@@ -740,38 +743,54 @@ if ($winsCount >= 100) {
             const prefix = isPlayer ? 'player' : 'opponent';
 
             for (let f = 1; f <= 5; f++) {
-                const sourceKey = `char${f}`;
-                const destKey = `${prefix}_char${f}`;
+                ['char', 'timbo', 'tari', 'onjai'].forEach(charPrefix => {
+                    const sourceKey = `${charPrefix}${f}`;
+                    const destKey = `${prefix}_${charPrefix}${f}`;
 
-                const canvas = recolorCharacterImage(this, sourceKey, customColors);
+                    const canvas = recolorCharacterImage(this, sourceKey, customColors);
 
-                if (this.textures.exists(destKey)) {
-                    const texture = this.textures.get(destKey);
-                    const ctx = texture.getContext();
-                    ctx.clearRect(0, 0, texture.width, texture.height);
-                    ctx.drawImage(canvas, 0, 0);
-                    texture.refresh();
-                } else {
-                    this.textures.addCanvas(destKey, canvas);
+                    if (this.textures.exists(destKey)) {
+                        const texture = this.textures.get(destKey);
+                        const ctx = texture.getContext();
+                        ctx.clearRect(0, 0, texture.width, texture.height);
+                        ctx.drawImage(canvas, 0, 0);
+                        texture.refresh();
+                    } else {
+                        this.textures.addCanvas(destKey, canvas);
+                    }
+                });
+            }
+
+            ['rowing', 'timbo', 'tari', 'onjai'].forEach(animType => {
+                const animKey = `${prefix}_${animType}_anim`;
+                if (this.anims.exists(animKey)) {
+                    this.anims.remove(animKey);
                 }
-            }
-
-            const animKey = `${prefix}_rowing_anim`;
-            if (this.anims.exists(animKey)) {
-                this.anims.remove(animKey);
-            }
-            this.anims.create({
-                key: animKey,
-                frames: [
-                    { key: `${prefix}_char1` },
-                    { key: `${prefix}_char2` },
-                    { key: `${prefix}_char3` },
-                    { key: `${prefix}_char4` },
-                    { key: `${prefix}_char5` }
-                ],
-                frameRate: 8,
-                repeat: -1
+                const charPrefix = animType === 'rowing' ? 'char' : animType;
+                this.anims.create({
+                    key: animKey,
+                    frames: [
+                        { key: `${prefix}_${charPrefix}1` },
+                        { key: `${prefix}_${charPrefix}2` },
+                        { key: `${prefix}_${charPrefix}3` },
+                        { key: `${prefix}_${charPrefix}4` },
+                        { key: `${prefix}_${charPrefix}5` }
+                    ],
+                    frameRate: animType === 'tari' ? 1 : 8,
+                    repeat: -1
+                });
             });
+
+            const rowerGroup = isPlayer ? this.playerRowers : this.opponentRowers;
+            if (rowerGroup && rowerGroup.rowers) {
+                rowerGroup.rowers.forEach((r, idx) => {
+                    let key = `${prefix}_rowing_anim`;
+                    if (idx === 0) key = `${prefix}_tari_anim`;
+                    else if (idx === 3) key = `${prefix}_timbo_anim`;
+                    else if (idx === 6) key = `${prefix}_onjai_anim`;
+                    r.play(key, true);
+                });
+            }
         }
 
         applyPlayerCorak(boatImg, boatGroup, dataUrl) {
@@ -1192,14 +1211,28 @@ if ($winsCount >= 100) {
                 this.pancangs.push({ sprite: pancangImg, dist: dist, soundPlayed: false });
             });
 
-            // --- 3. Pembentukan Kontainer Perahu Pemain & Lawan ---
             const BOAT_SCALE = 2.3;
-            const ROWER_SCALE = 0.18;
-            const ROWER_SPACING = 35;
+            const ROWER_SCALE = 0.23;
+            const TIMBO_SCALE = 0.25;
+            const TARI_SCALE = 0.25;
+            const ONJAI_SCALE = 0.25;
+
             const BOAT_OFFSET_X = 0;
             const BOAT_OFFSET_Y = 15;
-            const ROWER_OFFSET_X = -25;
-            const ROWER_OFFSET_Y = -25;
+
+            const ROWER_OFFSET_X = -30;
+            const ROWER_OFFSET_Y = -22;
+
+            const TIMBO_OFFSET_X = -25;
+            const TIMBO_OFFSET_Y = -47;
+
+            const TARI_OFFSET_X = -37;
+            const TARI_OFFSET_Y = -47;
+
+            const ONJAI_OFFSET_X = -25;
+            const ONJAI_OFFSET_Y = -47;
+
+            const ROWER_SPACING = 35;
 
             // A. Kontainer Pemain (Player)
             this.playerBoatGroup = this.add.container(cx, 420);
@@ -1231,7 +1264,7 @@ if ($winsCount >= 100) {
             this.applyPlayerLambai(this.playerBoatImg, this.playerBoatGroup, lambaiDataUrl);
 
             const pName = this.currentUserName;
-            this.playerNameText = this.add.text(0, -60, pName, {
+            this.playerNameText = this.add.text(0, -85, pName, {
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '11px',
                 color: '#ffffff',
@@ -1242,7 +1275,7 @@ if ($winsCount >= 100) {
             this.playerBoatGroup.add(this.playerNameText);
 
             const pStatus = "⚡ {{ $statusText }} ⚡";
-            this.playerStatusText = this.add.text(0, -42, pStatus, {
+            this.playerStatusText = this.add.text(0, -67, pStatus, {
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '7px',
                 color: '#fef3c7',
@@ -1255,7 +1288,7 @@ if ($winsCount >= 100) {
             let initialOppName = 'LAWAN';
             let initialOppStatus = 'LOADING...';
 
-            this.oppNameText = this.add.text(0, -60, initialOppName, {
+            this.oppNameText = this.add.text(0, -85, initialOppName, {
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '11px',
                 color: '#ffffff',
@@ -1265,7 +1298,7 @@ if ($winsCount >= 100) {
             }).setOrigin(0.5);
             this.opponentBoatGroup.add(this.oppNameText);
 
-            this.oppStatusText = this.add.text(0, -42, initialOppStatus, {
+            this.oppStatusText = this.add.text(0, -67, initialOppStatus, {
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '7px',
                 color: '#fef3c7',
@@ -1311,22 +1344,55 @@ if ($winsCount >= 100) {
             const makeRowersAndEmitters = (boatGroup, colorObj, isPlayer) => {
                 const rowers = [];
                 const emitters = [];
-                const animKey = isPlayer ? 'player_rowing_anim' : 'opponent_rowing_anim';
-                const offsetsX = [-ROWER_SPACING * 2, -ROWER_SPACING, 0, ROWER_SPACING, ROWER_SPACING * 2];
+                const prefix = isPlayer ? 'player' : 'opponent';
+                const offsetsX = [-2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5].map(m => m * ROWER_SPACING);
 
                 const emitterList = [];
-                offsetsX.forEach((offsetX) => {
-                    const rowerX = BOAT_OFFSET_X + ROWER_OFFSET_X + offsetX;
-                    const rowerY = BOAT_OFFSET_Y + ROWER_OFFSET_Y;
+                offsetsX.forEach((offsetX, idx) => {
+                    const isTari = (idx === 0);
+                    const isTimbo = (idx === 3);
+                    const isOnjai = (idx === 6);
 
-                    const rowerSprite = this.add.sprite(rowerX, rowerY, `${isPlayer ? 'player' : 'opponent'}_char1`);
-                    rowerSprite.setScale(ROWER_SCALE);
+                    let finalScale = ROWER_SCALE;
+                    let finalOffX = ROWER_OFFSET_X;
+                    let finalOffY = ROWER_OFFSET_Y;
+                    let animKey = `${prefix}_rowing_anim`;
+                    let defaultTex = `${prefix}_char1`;
+
+                    if (isTari) {
+                        finalScale = TARI_SCALE;
+                        finalOffX = TARI_OFFSET_X;
+                        finalOffY = TARI_OFFSET_Y;
+                        animKey = `${prefix}_tari_anim`;
+                        defaultTex = `${prefix}_tari1`;
+                    } else if (isTimbo) {
+                        finalScale = TIMBO_SCALE;
+                        finalOffX = TIMBO_OFFSET_X;
+                        finalOffY = TIMBO_OFFSET_Y;
+                        animKey = `${prefix}_timbo_anim`;
+                        defaultTex = `${prefix}_timbo1`;
+                    } else if (isOnjai) {
+                        finalScale = ONJAI_SCALE;
+                        finalOffX = ONJAI_OFFSET_X;
+                        finalOffY = ONJAI_OFFSET_Y;
+                        animKey = `${prefix}_onjai_anim`;
+                        defaultTex = `${prefix}_onjai1`;
+                    }
+
+                    const rowerX = BOAT_OFFSET_X + finalOffX + offsetX;
+                    const rowerY = BOAT_OFFSET_Y + finalOffY;
+
+                    const rowerSprite = this.add.sprite(rowerX, rowerY, defaultTex);
+                    rowerSprite.setScale(finalScale);
                     rowerSprite.play(animKey);
                     rowerSprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
 
                     boatGroup.add(rowerSprite);
                     rowers.push(rowerSprite);
-                    emitterList.push({ rowerX, rowerY, rowerSprite });
+
+                    if (!isTari && !isTimbo && !isOnjai) {
+                        emitterList.push({ rowerX, rowerY, rowerSprite });
+                    }
                 });
 
                 emitterList.forEach(({ rowerX, rowerY, rowerSprite }) => {
@@ -1351,7 +1417,7 @@ if ($winsCount >= 100) {
                             emitter.explode(12);
                         }
 
-                        if (rowers.indexOf(rowerSprite) === 0) {
+                        if (rowers.indexOf(rowerSprite) === 1) {
                             const bounceY = (frame.index === 1 || frame.index === 5) ? 0 :
                                 (frame.index === 2 || frame.index === 4) ? 2 : 4;
                             boatGroup.y = boatGroup.baseY + bounceY;
@@ -1434,33 +1500,33 @@ if ($winsCount >= 100) {
             this.pointerGfx.strokeTriangle(0, -7, -5, -15, 5, -15);
             barContainer.add(this.pointerGfx);
 
-            const paddleBtnY = 590;
+            const paddleBtnY = 585;
             const paddleBtn = this.add.container(cx, paddleBtnY);
             paddleBtn.setDepth(2000);
-            const pBtnW = 140;
-            const pBtnH = 38;
+            const pBtnW = 220;
+            const pBtnH = 54;
 
             const pBtnGfx = this.add.graphics();
             const drawPaddleBtn = (hovered) => {
                 pBtnGfx.clear();
                 pBtnGfx.fillStyle(hovered ? 0x15803d : 0x22c55e, 1);
-                pBtnGfx.lineStyle(3, 0x14532d, 1);
+                pBtnGfx.lineStyle(4, 0x14532d, 1);
                 pBtnGfx.fillStyle(0x14532d, 0.22);
-                pBtnGfx.fillRoundedRect(-pBtnW / 2 + 3, -pBtnH / 2 + 3, pBtnW, pBtnH, 8);
+                pBtnGfx.fillRoundedRect(-pBtnW / 2 + 4, -pBtnH / 2 + 4, pBtnW, pBtnH, 12);
                 pBtnGfx.fillStyle(hovered ? 0x15803d : 0x22c55e, 1);
-                pBtnGfx.fillRoundedRect(-pBtnW / 2, -pBtnH / 2, pBtnW, pBtnH, 8);
-                pBtnGfx.strokeRoundedRect(-pBtnW / 2, -pBtnH / 2, pBtnW, pBtnH, 8);
+                pBtnGfx.fillRoundedRect(-pBtnW / 2, -pBtnH / 2, pBtnW, pBtnH, 12);
+                pBtnGfx.strokeRoundedRect(-pBtnW / 2, -pBtnH / 2, pBtnW, pBtnH, 12);
             };
             drawPaddleBtn(false);
             paddleBtn.add(pBtnGfx);
 
             const pBtnTxt = this.add.text(0, 0, 'KAYUAH (TAP)', {
                 fontFamily: '"Press Start 2P", monospace',
-                fontSize: '10px',
+                fontSize: '14px',
                 color: '#ffffff',
                 fontStyle: 'bold',
                 stroke: '#14532d',
-                strokeThickness: 3
+                strokeThickness: 4
             }).setOrigin(0.5);
             paddleBtn.add(pBtnTxt);
 
@@ -2561,17 +2627,40 @@ if ($winsCount >= 100) {
 
                 this.speedText.setText(`SPEED: ${Math.round(this.playerSpeed * 3.6)} km/h`);
 
-                this.playerRowers.rowers.forEach(r => {
-                    if (!r.anims.isPlaying) r.play('player_rowing_anim');
-                    r.anims.timeScale = 0.8 + (this.playerSpeed / 10);
+                this.playerRowers.rowers.forEach((r, idx) => {
+                    let animKey = 'player_rowing_anim';
+                    if (idx === 0) animKey = 'player_tari_anim';
+                    else if (idx === 3) animKey = 'player_timbo_anim';
+                    else if (idx === 6) animKey = 'player_onjai_anim';
+
+                    if (!r.anims.isPlaying || r.anims.currentAnim.key !== animKey) {
+                        r.play(animKey, true);
+                    }
+
+                    if (idx === 0 || idx === 3 || idx === 6) {
+                        r.anims.timeScale = 1.0;
+                    } else {
+                        r.anims.timeScale = 0.8 + (this.playerSpeed / 10);
+                    }
                 });
 
-                if (this.opponentSpeed > 0) {
-                    this.opponentRowers.rowers.forEach(r => {
-                        if (!r.anims.isPlaying) r.play('opponent_rowing_anim');
-                        r.anims.timeScale = this.opponentSpeed / 8.5;
-                    });
-                }
+                this.opponentRowers.rowers.forEach((r, idx) => {
+                    let animKey = 'opponent_rowing_anim';
+                    if (idx === 0) animKey = 'opponent_tari_anim';
+                    else if (idx === 3) animKey = 'opponent_timbo_anim';
+                    else if (idx === 6) animKey = 'opponent_onjai_anim';
+
+                    if (!r.anims.isPlaying || r.anims.currentAnim.key !== animKey) {
+                        r.play(animKey, true);
+                    }
+
+                    if (idx === 0 || idx === 3 || idx === 6) {
+                        r.anims.timeScale = 1.0;
+                    } else {
+                        const oppSpeed = this.opponentSpeed > 0 ? this.opponentSpeed : 5.0;
+                        r.anims.timeScale = oppSpeed / 8.5;
+                    }
+                });
 
                 if (this.isMultiplayer && this.ws && this.ws.readyState === WebSocket.OPEN) {
                     if (time - this.lastSyncTime > 100) {

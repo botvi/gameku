@@ -1,10 +1,11 @@
 function preloadJalurAssets(scene) {
     scene.load.image('jalur_boat', '/game_pacu/assets/image/jalur/jalur.png');
-    scene.load.image('char1', '/game_pacu/assets/image/char/1.png');
-    scene.load.image('char2', '/game_pacu/assets/image/char/2.png');
-    scene.load.image('char3', '/game_pacu/assets/image/char/3.png');
-    scene.load.image('char4', '/game_pacu/assets/image/char/4.png');
-    scene.load.image('char5', '/game_pacu/assets/image/char/5.png');
+    for (let i = 1; i <= 5; i++) {
+        scene.load.image(`char${i}`, `/game_pacu/assets/image/char/${i}.png`);
+        scene.load.image(`timbo${i}`, `/game_pacu/assets/image/timbo_ruang/${i}.png`);
+        scene.load.image(`tari${i}`, `/game_pacu/assets/image/tukang_tari/${i}.png`);
+        scene.load.image(`onjai${i}`, `/game_pacu/assets/image/tukang_onjai/${i}.png`);
+    }
 }
 
 function recolorCharacterImage(scene, sourceKey, customColors) {
@@ -67,11 +68,26 @@ function createJalurPreview(scene, cx, cy, scaleMult = 1.0, nameElId = null) {
     };
 
     const BOAT_SCALE = 2.3 * scaleMult;
-    const ROWER_SCALE = 0.18 * scaleMult;
+    const ROWER_SCALE = 0.23 * scaleMult;
+    const TIMBO_SCALE = 0.25 * scaleMult;
+    const TARI_SCALE = 0.25 * scaleMult;
+    const ONJAI_SCALE = 0.25 * scaleMult;
+
     const BOAT_OFFSET_X = 0;
     const BOAT_OFFSET_Y = 15 * scaleMult;
-    const ROWER_OFFSET_X = -25 * scaleMult;
-    const ROWER_OFFSET_Y = -25 * scaleMult;
+
+    const ROWER_OFFSET_X = -30 * scaleMult;
+    const ROWER_OFFSET_Y = -22 * scaleMult;
+
+    const TIMBO_OFFSET_X = -25 * scaleMult;
+    const TIMBO_OFFSET_Y = -47 * scaleMult;
+
+    const TARI_OFFSET_X = -37 * scaleMult;
+    const TARI_OFFSET_Y = -47 * scaleMult;
+
+    const ONJAI_OFFSET_X = -25 * scaleMult;
+    const ONJAI_OFFSET_Y = -47 * scaleMult;
+
     const ROWER_SPACING = 35 * scaleMult;
 
     const boatGroup = scene.add.container(cx, cy);
@@ -82,21 +98,37 @@ function createJalurPreview(scene, cx, cy, scaleMult = 1.0, nameElId = null) {
     scene.applyRecolor = function () {
         if (scene.rowerSprites) scene.rowerSprites.forEach(r => r.stop());
         for (let f = 1; f <= 5; f++) {
-            const canvas = recolorCharacterImage(scene, `char${f}`, scene.customColors);
-            if (scene.textures.exists(`recolored_char${f}`)) scene.textures.remove(`recolored_char${f}`);
-            scene.textures.addCanvas(`recolored_char${f}`, canvas);
+            ['char', 'timbo', 'tari', 'onjai'].forEach(prefix => {
+                const canvas = recolorCharacterImage(scene, `${prefix}${f}`, scene.customColors);
+                if (scene.textures.exists(`recolored_${prefix}${f}`)) scene.textures.remove(`recolored_${prefix}${f}`);
+                scene.textures.addCanvas(`recolored_${prefix}${f}`, canvas);
+            });
         }
-        if (scene.anims.exists('rowing_anim')) scene.anims.remove('rowing_anim');
-        scene.anims.create({
-            key: 'rowing_anim',
-            frames: [
-                { key: 'recolored_char1' }, { key: 'recolored_char2' },
-                { key: 'recolored_char3' }, { key: 'recolored_char4' },
-                { key: 'recolored_char5' }
-            ],
-            frameRate: 8, repeat: -1
+
+        ['rowing', 'timbo', 'tari', 'onjai'].forEach(animType => {
+            const key = `${animType}_anim`;
+            if (scene.anims.exists(key)) scene.anims.remove(key);
+            const prefix = animType === 'rowing' ? 'char' : animType;
+            scene.anims.create({
+                key: key,
+                frames: [
+                    { key: `recolored_${prefix}1` }, { key: `recolored_${prefix}2` },
+                    { key: `recolored_${prefix}3` }, { key: `recolored_${prefix}4` },
+                    { key: `recolored_${prefix}5` }
+                ],
+                frameRate: animType === 'tari' ? 1 : 8,
+                repeat: -1
+            });
         });
-        if (scene.rowerSprites) scene.rowerSprites.forEach(r => r.play('rowing_anim'));
+
+        if (scene.rowerSprites) {
+            scene.rowerSprites.forEach((r, idx) => {
+                if (idx === 0) r.play('tari_anim');
+                else if (idx === 3) r.play('timbo_anim');
+                else if (idx === 6) r.play('onjai_anim');
+                else r.play('rowing_anim');
+            });
+        }
         if (scene.boatImg) {
             const boatColorInt = Phaser.Display.Color.HexStringToColor(scene.customColors.boat).color;
             scene.boatImg.setTint(boatColorInt);
@@ -240,30 +272,58 @@ function createJalurPreview(scene, cx, cy, scaleMult = 1.0, nameElId = null) {
 
     const SPLASH_OFFSET_X = -1 * scaleMult;
     const SPLASH_OFFSET_Y = 32 * scaleMult;
-    const offsetsX = [-ROWER_SPACING * 2, -ROWER_SPACING, 0, ROWER_SPACING, ROWER_SPACING * 2];
+    const offsetsX = [-2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5].map(mult => mult * ROWER_SPACING);
 
-    offsetsX.forEach((offsetX) => {
-        const rowerX = BOAT_OFFSET_X + ROWER_OFFSET_X + offsetX;
-        const rowerY = BOAT_OFFSET_Y + ROWER_OFFSET_Y;
-        const rowerSprite = scene.add.sprite(rowerX, rowerY, 'char1');
-        rowerSprite.setScale(ROWER_SCALE);
+    offsetsX.forEach((offsetX, idx) => {
+        const isTari = (idx === 0);
+        const isTimbo = (idx === 3);
+        const isOnjai = (idx === 6);
+
+        let finalScale = ROWER_SCALE;
+        let finalOffX = ROWER_OFFSET_X;
+        let finalOffY = ROWER_OFFSET_Y;
+        let defaultTex = 'char1';
+
+        if (isTari) {
+            finalScale = TARI_SCALE;
+            finalOffX = TARI_OFFSET_X;
+            finalOffY = TARI_OFFSET_Y;
+            defaultTex = 'tari1';
+        } else if (isTimbo) {
+            finalScale = TIMBO_SCALE;
+            finalOffX = TIMBO_OFFSET_X;
+            finalOffY = TIMBO_OFFSET_Y;
+            defaultTex = 'timbo1';
+        } else if (isOnjai) {
+            finalScale = ONJAI_SCALE;
+            finalOffX = ONJAI_OFFSET_X;
+            finalOffY = ONJAI_OFFSET_Y;
+            defaultTex = 'onjai1';
+        }
+
+        const rowerX = BOAT_OFFSET_X + finalOffX + offsetX;
+        const rowerY = BOAT_OFFSET_Y + finalOffY;
+        const rowerSprite = scene.add.sprite(rowerX, rowerY, defaultTex);
+        rowerSprite.setScale(finalScale);
         rowerSprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
         boatGroup.add(rowerSprite);
         scene.rowerSprites.push(rowerSprite);
 
-        const emitter = scene.add.particles(rowerX + SPLASH_OFFSET_X, rowerY + SPLASH_OFFSET_Y, 'water_particle', {
-            speed: { min: 40 * scaleMult, max: 110 * scaleMult }, angle: { min: 280, max: 340 },
-            scale: { start: 2.2 * scaleMult, end: 0 }, lifespan: { min: 300, max: 550 },
-            gravityY: 350 * scaleMult, quantity: 2, frequency: -1
-        });
-        boatGroup.add(emitter);
-        scene.waterEmitters.push(emitter);
+        if (!isTari && !isTimbo && !isOnjai) {
+            const emitter = scene.add.particles(rowerX + SPLASH_OFFSET_X, rowerY + SPLASH_OFFSET_Y, 'water_particle', {
+                speed: { min: 40 * scaleMult, max: 110 * scaleMult }, angle: { min: 280, max: 340 },
+                scale: { start: 2.2 * scaleMult, end: 0 }, lifespan: { min: 300, max: 550 },
+                gravityY: 350 * scaleMult, quantity: 2, frequency: -1
+            });
+            boatGroup.add(emitter);
+            scene.waterEmitters.push(emitter);
 
-        rowerSprite.on('animationupdate', (anim, frame) => {
-            if (frame.index === 3 || frame.index === 4) {
-                emitter.explode(18);
-            }
-        });
+            rowerSprite.on('animationupdate', (anim, frame) => {
+                if (frame.index === 3 || frame.index === 4) {
+                    emitter.explode(18);
+                }
+            });
+        }
     });
 
     scene.tweens.add({
@@ -307,16 +367,24 @@ function createJalurPreview(scene, cx, cy, scaleMult = 1.0, nameElId = null) {
     return boatGroup;
 }
 
-window.initJalurPreview = function (containerId, nameElId) {
+window.initJalurPreview = function (containerId, nameElId, canvasHeight = 120, centerY = 60) {
     if (!document.getElementById(containerId)) return;
 
     if (!window.Phaser) {
-        const script = document.createElement('script');
-        script.src = "/game_pacu/assets/js/phaser.min.js";
-        script.onload = function () {
-            window.initJalurPreview(containerId, nameElId);
-        };
-        document.head.appendChild(script);
+        if (!window._loadingPhaserScript) {
+            window._loadingPhaserScript = true;
+            const script = document.createElement('script');
+            script.src = "/game_pacu/assets/js/phaser.min.js";
+            script.onload = function () {
+                window._loadingPhaserScript = false;
+                window.initJalurPreview(containerId, nameElId, canvasHeight, centerY);
+            };
+            document.head.appendChild(script);
+        } else {
+            setTimeout(function () {
+                window.initJalurPreview(containerId, nameElId, canvasHeight, centerY);
+            }, 100);
+        }
         return;
     }
 
@@ -331,24 +399,29 @@ window.initJalurPreview = function (containerId, nameElId) {
 
     const container = document.getElementById(containerId);
     if (container) {
-        const oldCanvas = container.querySelector('canvas');
-        if (oldCanvas) oldCanvas.remove();
+        container.innerHTML = '';
     }
 
-    window.activePreviewGame = new Phaser.Game({
-        type: Phaser.AUTO,
-        width: 250,
-        height: 85,
-        transparent: true,
-        parent: containerId,
-        pixelArt: true,
-        scene: {
-            preload: function () {
-                preloadJalurAssets(this);
-            },
-            create: function () {
-                createJalurPreview(this, 125, 40, 0.8, nameElId);
+    setTimeout(function () {
+        const targetContainer = document.getElementById(containerId);
+        if (!targetContainer) return;
+        if (targetContainer.querySelector('canvas')) return;
+
+        window.activePreviewGame = new Phaser.Game({
+            type: Phaser.AUTO,
+            width: 250,
+            height: canvasHeight,
+            transparent: true,
+            parent: containerId,
+            pixelArt: true,
+            scene: {
+                preload: function () {
+                    preloadJalurAssets(this);
+                },
+                create: function () {
+                    createJalurPreview(this, 125, centerY, 0.8, nameElId);
+                }
             }
-        }
-    });
+        });
+    }, 50);
 };

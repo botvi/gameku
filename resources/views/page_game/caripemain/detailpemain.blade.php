@@ -718,21 +718,37 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
             scene: {
                 preload: function () {
                     this.load.image('jalur_boat', '/game_pacu/assets/image/jalur/jalur.png');
-                    this.load.image('char1', '/game_pacu/assets/image/char/1.png');
-                    this.load.image('char2', '/game_pacu/assets/image/char/2.png');
-                    this.load.image('char3', '/game_pacu/assets/image/char/3.png');
-                    this.load.image('char4', '/game_pacu/assets/image/char/4.png');
-                    this.load.image('char5', '/game_pacu/assets/image/char/5.png');
+                    for (let i = 1; i <= 5; i++) {
+                        this.load.image(`char${i}`, `/game_pacu/assets/image/char/${i}.png`);
+                        this.load.image(`timbo${i}`, `/game_pacu/assets/image/timbo_ruang/${i}.png`);
+                        this.load.image(`tari${i}`, `/game_pacu/assets/image/tukang_tari/${i}.png`);
+                        this.load.image(`onjai${i}`, `/game_pacu/assets/image/tukang_onjai/${i}.png`);
+                    }
                 },
                 create: function () {
                     const scene = this;
                     const scaleMult = 0.8;
                     const BOAT_SCALE = 2.3 * scaleMult;
-                    const ROWER_SCALE = 0.18 * scaleMult;
+                    const ROWER_SCALE = 0.23 * scaleMult;
+                    const TIMBO_SCALE = 0.25 * scaleMult;
+                    const TARI_SCALE = 0.25 * scaleMult;
+                    const ONJAI_SCALE = 0.25 * scaleMult;
+
                     const BOAT_OFFSET_X = 0;
                     const BOAT_OFFSET_Y = 15 * scaleMult;
-                    const ROWER_OFFSET_X = -25 * scaleMult;
-                    const ROWER_OFFSET_Y = -25 * scaleMult;
+
+                    const ROWER_OFFSET_X = -30 * scaleMult;
+                    const ROWER_OFFSET_Y = -22 * scaleMult;
+
+                    const TIMBO_OFFSET_X = -25 * scaleMult;
+                    const TIMBO_OFFSET_Y = -47 * scaleMult;
+
+                    const TARI_OFFSET_X = -37 * scaleMult;
+                    const TARI_OFFSET_Y = -47 * scaleMult;
+
+                    const ONJAI_OFFSET_X = -25 * scaleMult;
+                    const ONJAI_OFFSET_Y = -47 * scaleMult;
+
                     const ROWER_SPACING = 35 * scaleMult;
 
                     const boatGroup = scene.add.container(125, 40);
@@ -789,18 +805,25 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
                     // Apply recolors to animations
                     const rowerSprites = [];
                     for (let f = 1; f <= 5; f++) {
-                        const canvas = recolorCharacterImage(`char${f}`);
-                        scene.textures.addCanvas(`recolored_char${f}`, canvas);
+                        ['char', 'timbo', 'tari', 'onjai'].forEach(prefix => {
+                            const canvas = recolorCharacterImage(`${prefix}${f}`);
+                            scene.textures.addCanvas(`recolored_${prefix}${f}`, canvas);
+                        });
                     }
 
-                    scene.anims.create({
-                        key: 'rowing_anim',
-                        frames: [
-                            { key: 'recolored_char1' }, { key: 'recolored_char2' },
-                            { key: 'recolored_char3' }, { key: 'recolored_char4' },
-                            { key: 'recolored_char5' }
-                        ],
-                        frameRate: 8, repeat: -1
+                    ['rowing', 'timbo', 'tari', 'onjai'].forEach(animType => {
+                        const key = `${animType}_anim`;
+                        const prefix = animType === 'rowing' ? 'char' : animType;
+                        scene.anims.create({
+                            key: key,
+                            frames: [
+                                { key: `recolored_${prefix}1` }, { key: `recolored_${prefix}2` },
+                                { key: `recolored_${prefix}3` }, { key: `recolored_${prefix}4` },
+                                { key: `recolored_${prefix}5` }
+                            ],
+                            frameRate: animType === 'tari' ? 1 : 8,
+                            repeat: -1
+                        });
                     });
 
                     const boatImg = scene.add.image(BOAT_OFFSET_X, BOAT_OFFSET_Y, 'jalur_boat');
@@ -810,17 +833,47 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
                     boatImg.setTint(boatColorInt);
                     boatGroup.add(boatImg);
 
-                    const offsetsX = [-ROWER_SPACING * 2, -ROWER_SPACING, 0, ROWER_SPACING, ROWER_SPACING * 2];
+                    const offsetsX = [-2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5].map(m => m * ROWER_SPACING);
 
-                    offsetsX.forEach((offsetX) => {
-                        const rowerX = BOAT_OFFSET_X + ROWER_OFFSET_X + offsetX;
-                        const rowerY = BOAT_OFFSET_Y + ROWER_OFFSET_Y;
-                        const rowerSprite = scene.add.sprite(rowerX, rowerY, 'char1');
-                        rowerSprite.setScale(ROWER_SCALE);
+                    offsetsX.forEach((offsetX, idx) => {
+                        const isTari = (idx === 0);
+                        const isTimbo = (idx === 3);
+                        const isOnjai = (idx === 6);
+
+                        let finalScale = ROWER_SCALE;
+                        let finalOffX = ROWER_OFFSET_X;
+                        let finalOffY = ROWER_OFFSET_Y;
+                        let animKey = 'rowing_anim';
+                        let defaultTex = 'char1';
+
+                        if (isTari) {
+                            finalScale = TARI_SCALE;
+                            finalOffX = TARI_OFFSET_X;
+                            finalOffY = TARI_OFFSET_Y;
+                            animKey = 'tari_anim';
+                            defaultTex = 'tari1';
+                        } else if (isTimbo) {
+                            finalScale = TIMBO_SCALE;
+                            finalOffX = TIMBO_OFFSET_X;
+                            finalOffY = TIMBO_OFFSET_Y;
+                            animKey = 'timbo_anim';
+                            defaultTex = 'timbo1';
+                        } else if (isOnjai) {
+                            finalScale = ONJAI_SCALE;
+                            finalOffX = ONJAI_OFFSET_X;
+                            finalOffY = ONJAI_OFFSET_Y;
+                            animKey = 'onjai_anim';
+                            defaultTex = 'onjai1';
+                        }
+
+                        const rowerX = BOAT_OFFSET_X + finalOffX + offsetX;
+                        const rowerY = BOAT_OFFSET_Y + finalOffY;
+                        const rowerSprite = scene.add.sprite(rowerX, rowerY, defaultTex);
+                        rowerSprite.setScale(finalScale);
                         rowerSprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
                         boatGroup.add(rowerSprite);
                         rowerSprites.push(rowerSprite);
-                        rowerSprite.play('rowing_anim');
+                        rowerSprite.play(animKey);
                     });
 
                     // Apply Corak if unlocked

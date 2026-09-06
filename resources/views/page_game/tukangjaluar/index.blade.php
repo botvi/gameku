@@ -525,11 +525,12 @@
             this.load.image('btn_kiri', '/game_pacu/assets/image/ui/btn_kiri.png');
             this.load.image('btn_kanan', '/game_pacu/assets/image/ui/btn_kanan.png');
             this.load.image('jalur_boat', '/game_pacu/assets/image/jalur/jalur.png');
-            this.load.image('char1', '/game_pacu/assets/image/char/1.png');
-            this.load.image('char2', '/game_pacu/assets/image/char/2.png');
-            this.load.image('char3', '/game_pacu/assets/image/char/3.png');
-            this.load.image('char4', '/game_pacu/assets/image/char/4.png');
-            this.load.image('char5', '/game_pacu/assets/image/char/5.png');
+            for (let f = 1; f <= 5; f++) {
+                this.load.image(`char${f}`, `/game_pacu/assets/image/char/${f}.png`);
+                this.load.image(`timbo${f}`, `/game_pacu/assets/image/timbo_ruang/${f}.png`);
+                this.load.image(`tari${f}`, `/game_pacu/assets/image/tukang_tari/${f}.png`);
+                this.load.image(`onjai${f}`, `/game_pacu/assets/image/tukang_onjai/${f}.png`);
+            }
         }
 
         applyRecolor() {
@@ -551,6 +552,42 @@
                 this.textures.addCanvas(destKey, canvas);
             }
 
+            for (let f = 1; f <= 5; f++) {
+                const sourceKey = `timbo${f}`;
+                const destKey = `recolored_timbo${f}`;
+
+                const canvas = recolorCharacterImage(this, sourceKey, this.customColors);
+
+                if (this.textures.exists(destKey)) {
+                    this.textures.remove(destKey);
+                }
+                this.textures.addCanvas(destKey, canvas);
+            }
+
+            for (let f = 1; f <= 5; f++) {
+                const sourceKey = `tari${f}`;
+                const destKey = `recolored_tari${f}`;
+
+                const canvas = recolorCharacterImage(this, sourceKey, this.customColors);
+
+                if (this.textures.exists(destKey)) {
+                    this.textures.remove(destKey);
+                }
+                this.textures.addCanvas(destKey, canvas);
+            }
+
+            for (let f = 1; f <= 5; f++) {
+                const sourceKey = `onjai${f}`;
+                const destKey = `recolored_onjai${f}`;
+
+                const canvas = recolorCharacterImage(this, sourceKey, this.customColors);
+
+                if (this.textures.exists(destKey)) {
+                    this.textures.remove(destKey);
+                }
+                this.textures.addCanvas(destKey, canvas);
+            }
+
             if (this.anims.exists('rowing_anim')) {
                 this.anims.remove('rowing_anim');
             }
@@ -563,13 +600,69 @@
                     { key: 'recolored_char4' },
                     { key: 'recolored_char5' }
                 ],
-                frameRate: 8,
+                frameRate: typeof ROWER_FRAME_RATE !== 'undefined' ? ROWER_FRAME_RATE : 8,
+                repeat: -1
+            });
+
+            if (this.anims.exists('timbo_anim')) {
+                this.anims.remove('timbo_anim');
+            }
+            this.anims.create({
+                key: 'timbo_anim',
+                frames: [
+                    { key: 'recolored_timbo1' },
+                    { key: 'recolored_timbo2' },
+                    { key: 'recolored_timbo3' },
+                    { key: 'recolored_timbo4' },
+                    { key: 'recolored_timbo5' }
+                ],
+                frameRate: typeof TIMBO_FRAME_RATE !== 'undefined' ? TIMBO_FRAME_RATE : 8,
+                repeat: -1
+            });
+
+            if (this.anims.exists('tari_anim')) {
+                this.anims.remove('tari_anim');
+            }
+            this.anims.create({
+                key: 'tari_anim',
+                frames: [
+                    { key: 'recolored_tari1' },
+                    { key: 'recolored_tari2' },
+                    { key: 'recolored_tari3' },
+                    { key: 'recolored_tari4' },
+                    { key: 'recolored_tari5' }
+                ],
+                frameRate: typeof TARI_FRAME_RATE !== 'undefined' ? TARI_FRAME_RATE : 8,
+                repeat: -1
+            });
+
+            if (this.anims.exists('onjai_anim')) {
+                this.anims.remove('onjai_anim');
+            }
+            this.anims.create({
+                key: 'onjai_anim',
+                frames: [
+                    { key: 'recolored_onjai1' },
+                    { key: 'recolored_onjai2' },
+                    { key: 'recolored_onjai3' },
+                    { key: 'recolored_onjai4' },
+                    { key: 'recolored_onjai5' }
+                ],
+                frameRate: typeof ONJAI_FRAME_RATE !== 'undefined' ? ONJAI_FRAME_RATE : 8,
                 repeat: -1
             });
 
             if (this.rowerSprites) {
-                this.rowerSprites.forEach(rower => {
-                    rower.play('rowing_anim');
+                this.rowerSprites.forEach((rower, idx) => {
+                    if (idx === 0) {
+                        rower.play('tari_anim');
+                    } else if (idx === 3) {
+                        rower.play('timbo_anim');
+                    } else if (idx === 6) {
+                        rower.play('onjai_anim');
+                    } else {
+                        rower.play('rowing_anim');
+                    }
                 });
             }
 
@@ -682,7 +775,7 @@
             const img = new Image();
             img.onload = () => {
                 const LAMBAI_SCALE = 1.3;       
-                const LAMBAI_OFFSET_X = 125;    
+                const LAMBAI_OFFSET_X = 127;    
                 const LAMBAI_OFFSET_Y = -18;    
                 const LAMBAI_ROTATION_LIMIT = 0; 
 
@@ -788,16 +881,36 @@
             const boxX = cx;  
             const boxY = 175; 
             const boxWidth = W - 44; 
-            const boxHeight = 150;   
+            const boxHeight = 200;   
             const BOAT_SCALE = 2.3;   
-            const ROWER_SCALE = 0.18; 
+            const ROWER_SCALE = 0.23; 
+            const TIMBO_SCALE = 0.25;   
+            const TARI_SCALE = 0.25;    
+            const ONJAI_SCALE = 0.25;   
+
             const BOAT_OFFSET_X = 0;   
             const BOAT_OFFSET_Y = 15;  
-            const ROWER_OFFSET_X = -25; 
-            const ROWER_OFFSET_Y = -25; 
+
+            const ROWER_OFFSET_X = -30; 
+            const ROWER_OFFSET_Y = -22; 
+
+            const TIMBO_OFFSET_X = -25; 
+            const TIMBO_OFFSET_Y = -47; 
+
+            const TARI_OFFSET_X = -37;  
+            const TARI_OFFSET_Y = -47;  
+
+            const ONJAI_OFFSET_X = -25; 
+            const ONJAI_OFFSET_Y = -47; 
+
+            const ROWER_FRAME_RATE = 8; 
+            const TIMBO_FRAME_RATE = 8; 
+            const TARI_FRAME_RATE = 1;  
+            const ONJAI_FRAME_RATE = 8; 
+
             const ROWER_SPACING = 35;   
             const BOBBING_HEIGHT = 4;   
-            const BOBBING_SPEED = 1200;  
+            const BOBBING_SPEED = 1000;  
 
             const boxContainer = this.add.container(boxX, boxY);
             const boxBg = this.add.graphics();
@@ -849,25 +962,67 @@
             const SPLASH_OFFSET_X = -1;
             const SPLASH_OFFSET_Y = 32;
 
-            const offsetsX = [-ROWER_SPACING * 2, -ROWER_SPACING, 0, ROWER_SPACING, ROWER_SPACING * 2];
+            const offsetsX = [
+                -ROWER_SPACING * 2.5,
+                -ROWER_SPACING * 1.5,
+                -ROWER_SPACING * 0.5,
+                ROWER_SPACING * 0.5,
+                ROWER_SPACING * 1.5,
+                ROWER_SPACING * 2.5,
+                ROWER_SPACING * 3.5
+            ];
 
             const emitterList = []; 
-            offsetsX.forEach((offsetX) => {
-                const rowerX = BOAT_OFFSET_X + ROWER_OFFSET_X + offsetX;
-                const rowerY = BOAT_OFFSET_Y + ROWER_OFFSET_Y;
+            offsetsX.forEach((offsetX, idx) => {
+                const isTari  = (idx === 0);
+                const isTimbo = (idx === 3);
+                const isOnjai = (idx === 6);
 
-                const rowerSprite = this.add.sprite(rowerX, rowerY, 'recolored_char1');
-                rowerSprite.setScale(ROWER_SCALE);
-                rowerSprite.play('rowing_anim');
+                let scale = ROWER_SCALE;
+                let charOffsetX = ROWER_OFFSET_X;
+                let charOffsetY = ROWER_OFFSET_Y;
+                let animKey = 'rowing_anim';
+                let textureKey = 'recolored_char1';
+
+                if (isTari) {
+                    scale = TARI_SCALE;
+                    charOffsetX = TARI_OFFSET_X;
+                    charOffsetY = TARI_OFFSET_Y;
+                    animKey = 'tari_anim';
+                    textureKey = 'recolored_tari1';
+                } else if (isTimbo) {
+                    scale = TIMBO_SCALE;
+                    charOffsetX = TIMBO_OFFSET_X;
+                    charOffsetY = TIMBO_OFFSET_Y;
+                    animKey = 'timbo_anim';
+                    textureKey = 'recolored_timbo1';
+                } else if (isOnjai) {
+                    scale = ONJAI_SCALE;
+                    charOffsetX = ONJAI_OFFSET_X;
+                    charOffsetY = ONJAI_OFFSET_Y;
+                    animKey = 'onjai_anim';
+                    textureKey = 'recolored_onjai1';
+                }
+
+                const rowerX = BOAT_OFFSET_X + charOffsetX + offsetX;
+                const rowerY = BOAT_OFFSET_Y + charOffsetY;
+
+                const rowerSprite = this.add.sprite(rowerX, rowerY, textureKey);
+                rowerSprite.setScale(scale);
+                rowerSprite.play(animKey);
                 rowerSprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
 
                 boatGroup.add(rowerSprite);
                 this.rowerSprites.push(rowerSprite);
 
-                emitterList.push({ rowerX, rowerY, rowerSprite });
+                emitterList.push({ rowerX, rowerY, rowerSprite, idx });
             });
 
-            emitterList.forEach(({ rowerX, rowerY, rowerSprite }) => {
+            emitterList.forEach(({ rowerX, rowerY, rowerSprite, idx }) => {
+                // Tukang Tari (idx=0), Timbo Ruang (idx=3), Tukang Onjai (idx=6)
+                // tidak perlu water particle
+                if (idx === 0 || idx === 3 || idx === 6) return;
+
                 const emitter = this.add.particles(rowerX + SPLASH_OFFSET_X, rowerY + SPLASH_OFFSET_Y, 'water_particle', {
                     speed: { min: 40, max: 110 },
                     angle: { min: 280, max: 340 },
@@ -1682,7 +1837,7 @@
             // Header top-bar handled by HTML overlay (.top-bar)
 
             const tukangImg = this.add.image(W + 100, H - 100, 'tukang')
-                .setDisplaySize(96, 96)
+                .setDisplaySize(112, 112)
                 .setOrigin(0.5);
 
             addIconShimmer(this, tukangImg, 600);

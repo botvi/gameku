@@ -338,7 +338,7 @@
 
     #profile-dashboard #jalur-preview-container {
         width: 250px;
-        height: 85px;
+        height: 150px;
         border-radius: 10px;
         overflow: hidden;
         background: rgba(0, 0, 0, 0.35);
@@ -621,6 +621,7 @@
 @endsection
 
 @push('scripts')
+<script src="/game_pacu/assets/js/phaser.min.js"></script>
 <script src="/game_pacu/assets/js/jalur-preview-phaser.js?v=2.0"></script>
 <script>
 {
@@ -628,11 +629,9 @@
         window.navigateToPage('/main-menu');
     };
 
-    // Guard agar tidak double-init
     var _profilPreviewStarted = false;
 
     function initProfilPreview() {
-        // Reset guard setiap kali fungsi ini dipanggil dari event navigasi
         _profilPreviewStarted = false;
         _tryStartPreview();
     }
@@ -641,16 +640,15 @@
         if (_profilPreviewStarted) return;
         if (!document.getElementById('jalur-preview-container')) return;
 
-        if (typeof window.initJalurPreview !== 'function') {
-            // Belum ready — tunggu sedikit lalu coba lagi (max 3 detik)
+        if (typeof window.initJalurPreview !== 'function' || typeof window.Phaser === 'undefined') {
             var attempt = 0;
             var poll = setInterval(function () {
                 attempt++;
-                if (typeof window.initJalurPreview === 'function') {
+                if (typeof window.initJalurPreview === 'function' && typeof window.Phaser !== 'undefined') {
                     clearInterval(poll);
                     if (!_profilPreviewStarted && document.getElementById('jalur-preview-container')) {
                         _profilPreviewStarted = true;
-                        window.initJalurPreview('jalur-preview-container', 'jalur-name');
+                        window.initJalurPreview('jalur-preview-container', 'jalur-name', 150, 75);
                     }
                 } else if (attempt > 30) {
                     clearInterval(poll);
@@ -660,7 +658,7 @@
         }
 
         _profilPreviewStarted = true;
-        window.initJalurPreview('jalur-preview-container', 'jalur-name');
+        window.initJalurPreview('jalur-preview-container', 'jalur-name', 150, 75);
     }
 
     // 1. Livewire SPA navigation
