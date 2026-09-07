@@ -1,6 +1,6 @@
 ﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel â€” Arena VS AI')
+@section('title', 'Pacu Jalur: The Pixel ” Arena VS AI')
 
 @push('styles')
 <style>
@@ -194,7 +194,7 @@ if ($winsCount >= 100) {
     const GAME_HEIGHT = 760;
 
     // =====================================================
-    //  HELPER â€” Custom Modals (Confirm & Alert)
+    //  HELPER ” Custom Modals (Confirm & Alert)
     // =====================================================
     function showCustomConfirmModal(scene, text, onConfirm) {
         const W = scene.scale.width;
@@ -424,7 +424,7 @@ if ($winsCount >= 100) {
     }
 
     // =====================================================
-    //  HELPER â€” Dynamic Pixel Art Recoloring
+    //  HELPER ” Dynamic Pixel Art Recoloring
     // =====================================================
     function recolorCharacterImage(scene, sourceKey, customColors) {
         const sourceTexture = scene.textures.get(sourceKey);
@@ -488,7 +488,7 @@ if ($winsCount >= 100) {
     }
 
     // =====================================================
-    //  LOADING SCENE â€” preload semua assets dengan progress bar
+    //  LOADING SCENE ” preload semua assets dengan progress bar
     // =====================================================
     class LoadingScene extends Phaser.Scene {
         constructor() { super({ key: 'LoadingScene' }); }
@@ -565,7 +565,7 @@ if ($winsCount >= 100) {
         constructor() { super({ key: 'ArenaScene' }); }
 
         preload() {
-            // Kosong â€” semua sudah di-load oleh LoadingScene
+            // Kosong ” semua sudah di-load oleh LoadingScene
         }
 
         applyRecolor(isPlayer, customColors) {

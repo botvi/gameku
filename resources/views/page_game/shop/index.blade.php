@@ -1,6 +1,6 @@
 ﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel â€” Shop')
+@section('title', 'Pacu Jalur: The Pixel ” Shop')
 
 @section('content')
 <style>
@@ -163,8 +163,12 @@
 
     #shop-dashboard .shop-content-scroll {
         flex: 1;
+        min-height: 0;
         overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        overscroll-behavior: contain;
         padding: 0 16px 30px;
         box-sizing: border-box;
         z-index: 12;
@@ -499,7 +503,7 @@
     </div>
 
     <!-- Scrollable Shop Items Content -->
-    <div class="shop-content-scroll">
+    <div class="shop-content-scroll scrollable">
         <!-- TAB 1: BELI KOIN -->
         <div id="tab-koin-content">
             <div class="cards-grid">

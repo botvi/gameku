@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel â€” Detail Pemain')
+@section('title', 'Pacu Jalur: The Pixel ” Detail Pemain')
 
 @section('content')
 <style>
@@ -109,10 +109,9 @@
     }
 
     #detail-pemain-dashboard .profile-container {
-        flex: 1;
+        flex: 1 1 0;
         min-height: 0;
-        display: flex;
-        flex-direction: column;
+        display: block;
         width: 100%;
         overflow-y: auto;
         overflow-x: hidden;
@@ -123,6 +122,7 @@
         scrollbar-width: thin;
         scrollbar-color: rgba(59, 130, 246, 0.4) rgba(255, 255, 255, 0.02);
         box-sizing: border-box;
+        padding-bottom: 24px;
     }
 
     #detail-pemain-dashboard .profile-container::-webkit-scrollbar {

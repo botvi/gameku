@@ -36,6 +36,18 @@
  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
  return;
  }
+ if (e.target.closest && (e.target.closest('.scrollable') || e.target.closest('[data-scrollable="true"]'))) {
+ return;
+ }
+ var scrollEl = e.target;
+ while (scrollEl && scrollEl !== document.body) {
+  var st = window.getComputedStyle(scrollEl);
+  var oy = st.overflowY;
+  if (oy === 'auto' || oy === 'scroll') {
+   return;
+  }
+  scrollEl = scrollEl.parentElement;
+ }
  const blocked = [' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
  'PageUp', 'PageDown', 'Home', 'End'];
  if (blocked.includes(e.key)) {

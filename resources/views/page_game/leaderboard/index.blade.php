@@ -1,6 +1,6 @@
 ﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel â€” Leaderboard')
+@section('title', 'Pacu Jalur: The Pixel ” Leaderboard')
 
 @section('content')
 <style>
@@ -364,7 +364,7 @@ $user = auth()->user();
     <div class="my-rank-banner">
         <div class="my-rank-left">
             <div class="my-rank-badge">
-                #{{ $myRank ?? 'â€”' }}
+                #{{ $myRank ?? '”' }}
             </div>
             <div>
                 <div class="my-rank-name">{{ $myUser->nama_jalur ?? $myUser->email }}</div>

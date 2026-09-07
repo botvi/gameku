@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel â€” Room Lobby')
+@section('title', 'Pacu Jalur: The Pixel ” Room Lobby')
 
 @section('content')
 <style>
@@ -25,9 +25,26 @@
         background: url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
-        padding-bottom: 20px;
+        padding-bottom: 0;
         box-sizing: border-box;
         overflow: hidden;
+    }
+
+    #game-ui .game-ui-scroll {
+        flex: 1 1 0;
+        min-height: 0;
+        width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        overscroll-behavior: contain;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+        padding-bottom: 24px;
+        z-index: 11;
     }
 
     /* --- Dynamic Backdrop Glow --- */
@@ -519,6 +536,7 @@
     <canvas id="ps5-particles"
         style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.5;"></canvas>
 
+    <div class="game-ui-scroll scrollable">
     <div class="title-banner">ROOM LOBBY</div>
 
     <!-- Panel Lobby -->
@@ -571,6 +589,7 @@
 
         <div class="connection-status" id="ws-status">Menghubungkan ke server...</div>
     </div>
+    </div>
 
 </div>
 
@@ -596,7 +615,7 @@
         <i class="bi bi-share-fill me-1"></i> BAGIKAN KODE ROOM INI KE CHAT
     </button>
     <div id="chat-messages" class="scrollable">
-        <div class="chat-system-msg">â€” Global Chat â€”</div>
+        <div class="chat-system-msg">” Global Chat ”</div>
     </div>
     <div class="chat-input-area">
         <input type="text" id="chat-input" placeholder="Ketik pesan..." maxlength="200" onkeydown="if(event.key==='Enter') sendChat()">

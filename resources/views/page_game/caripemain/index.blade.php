@@ -1,6 +1,6 @@
 ﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel â€” Cari Pemain')
+@section('title', 'Pacu Jalur: The Pixel ” Cari Pemain')
 
 @section('content')
 <style>
@@ -100,17 +100,20 @@
 
     #search-dashboard .search-container {
         flex: 1;
+        min-height: 0;
         display: flex;
         flex-direction: column;
         width: 100%;
         overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
+        overscroll-behavior: contain;
         z-index: 11;
         scrollbar-width: thin;
         scrollbar-color: rgba(239, 68, 68, 0.4) rgba(255, 255, 255, 0.02);
         box-sizing: border-box;
-        padding: 0 14px;
+        padding: 0 14px 20px;
     }
 
     #search-dashboard .search-container::-webkit-scrollbar {

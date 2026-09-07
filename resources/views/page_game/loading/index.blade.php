@@ -1,6 +1,6 @@
 ﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel â€” Sinkronisasi Data')
+@section('title', 'Pacu Jalur: The Pixel ” Sinkronisasi Data')
 
 @push('styles')
 <style>
@@ -177,7 +177,7 @@
     'use strict';
 
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // AUTO HARD RELOAD â€” Sekali per sesi saat player masuk loading
+    // AUTO HARD RELOAD ” Sekali per sesi saat player masuk loading
     // Membersihkan Service Worker & semua cache lama secara paksa,
     // lalu reload halaman dengan asset fresh dari server.
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -199,7 +199,7 @@
                     for (var k of keys) { await caches.delete(k); }
                 } catch (e) {}
             }
-            // 3. Hard reload â€” paksa browser ambil semua asset fresh dari server
+            // 3. Hard reload ” paksa browser ambil semua asset fresh dari server
             window.location.reload(true);
         })();
         return; // Hentikan eksekusi sisa skrip ini, reload akan menangani sisanya
@@ -380,7 +380,7 @@
         syncPlayerData();
     }
 
-    // Livewire SPA navigation â€” fire saat pindah halaman via Livewire
+    // Livewire SPA navigation ” fire saat pindah halaman via Livewire
     document.addEventListener('livewire:navigated', startSyncOnce);
 
     // Hard reload / full page load

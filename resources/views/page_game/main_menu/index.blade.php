@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel â€” Menu Utama')
+@section('title', 'Pacu Jalur: The Pixel ” Menu Utama')
 
 @section('content')
 <style>
@@ -1559,7 +1559,7 @@
         </div>
     </div>
     <div id="chat-messages" class="scrollable">
-        <div class="chat-system-msg">â€” Selamat datang di Global Chat â€”</div>
+        <div class="chat-system-msg">” Selamat datang di Global Chat ”</div>
     </div>
     <div class="chat-input-area">
         <input type="text" id="chat-input" placeholder="Ketik pesan..." maxlength="200" onkeydown="if(event.key==='Enter') sendChat()">
@@ -1781,7 +1781,7 @@
         window.updateSoundIcon();
     };
 
-    // Override updateSoundIcon â€” ganti ikon berdasarkan status BGM di localStorage
+    // Override updateSoundIcon ” ganti ikon berdasarkan status BGM di localStorage
     window.updateSoundIcon = function() {
         const soundIcon = document.getElementById('sound-icon');
         if (!soundIcon) return;
@@ -2461,7 +2461,7 @@
         const desc = document.getElementById('inbox-toast-desc');
         if (!toast || !desc) return;
 
-        desc.innerText = `${inboxItem.title} â€” ${inboxItem.content}`;
+        desc.innerText = `${inboxItem.title} ” ${inboxItem.content}`;
         toast.classList.add('show');
 
         if (inboxToastTimer) clearTimeout(inboxToastTimer);

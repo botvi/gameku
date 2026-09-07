@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel â€” Custom Room')
+@section('title', 'Pacu Jalur: The Pixel ” Custom Room')
 
 @section('content')
 <style>
@@ -25,9 +25,26 @@
         background: url('{{ asset_v('game_pacu/assets/image/bg/bgmenu.jpg') }}') no-repeat center center;
         background-size: cover;
         z-index: 10;
-        padding-bottom: 20px;
+        padding-bottom: 0;
         box-sizing: border-box;
         overflow: hidden;
+    }
+
+    #game-ui .game-ui-scroll {
+        flex: 1 1 0;
+        min-height: 0;
+        width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        overscroll-behavior: contain;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+        padding-bottom: 24px;
+        z-index: 11;
     }
 
     /* --- Dynamic Backdrop Glow --- */
@@ -143,8 +160,12 @@
     /* Daftar Room Scrollable */
     .room-list-container {
         flex: 1;
+        min-height: 0;
         max-height: 230px;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        overscroll-behavior: contain;
         padding-right: 6px;
         scrollbar-width: thin;
         scrollbar-color: #a855f7 rgba(15, 23, 42, 0.3);
@@ -576,6 +597,7 @@
         <img src="{{ asset_v('game_pacu/assets/image/ui/back.png') }}" alt="Back">
     </div>
 
+    <div class="game-ui-scroll scrollable">
     <div class="title-banner">CUSTOM ROOM</div>
 
     <!-- Panel Buat Room -->
@@ -593,7 +615,7 @@
     </div>
 
     <!-- Panel Room Tersedia -->
-    <div class="panel" style="flex: 1; max-height: 45%;">
+    <div class="panel" style="flex: 1; max-height: 45%; min-height: 0;">
         <div class="panel-title"><i class="bi bi-collection-fill me-1"></i> ROOM TERSEDIA</div>
 
         <!-- Cari Kode Room -->
@@ -614,6 +636,7 @@
         <div class="room-list-container scrollable" id="room-list-container">
             <div style="text-align: center; color: #ffaa00; font-size: 8px; padding: 20px; font-family: 'Press Start 2P', monospace; text-shadow: 0 1.5px 2px rgba(0,0,0,0.6);">MENCARI ROOM...</div>
         </div>
+    </div>
     </div>
 
 </div>
@@ -651,7 +674,7 @@
         </div>
     </div>
     <div id="chat-messages" class="scrollable">
-        <div class="chat-system-msg">â€” Global Chat â€”</div>
+        <div class="chat-system-msg">” Global Chat ”</div>
     </div>
     <div class="chat-input-area">
         <input type="text" id="chat-input" placeholder="Ketik pesan..." maxlength="200" onkeydown="if(event.key==='Enter') sendChat()">

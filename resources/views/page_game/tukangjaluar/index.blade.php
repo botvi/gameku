@@ -1,6 +1,6 @@
 ﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel â€” Kustomisasi Jalur')
+@section('title', 'Pacu Jalur: The Pixel ” Kustomisasi Jalur')
 
 @push('styles')
 <style>
@@ -9,9 +9,20 @@
         z-index: 1;
     }
 
+    /* Overlay HTML tipis — jangan cover canvas; pointer-events hanya pada kontrol */
+    #tukangjaluar-dashboard {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 15;
+        pointer-events: none;
+        box-sizing: border-box;
+    }
+
     /* Top Bar Header */
     #tukangjaluar-dashboard .top-bar {
-        position: absolute;
+        position: relative;
         top: 0;
         left: 0;
         display: flex;
@@ -101,7 +112,7 @@
     const GAME_HEIGHT = 760;
 
     // =====================================================
-    //  HELPER â€” Tombol Pixel 3D Rounded (Kembali ke Menu)
+    //  HELPER ” Tombol Pixel 3D Rounded (Kembali ke Menu)
     // =====================================================
     function makeBackButton(scene, cx, cy, bw, bh, radius, label, colors, onTap) {
         const halfW = bw / 2;
@@ -180,14 +191,14 @@
     }
 
     // =====================================================
-    //  HELPER â€” Shimmer pada PNG icon (Disabled for performance)
+    //  HELPER ” Shimmer pada PNG icon (Disabled for performance)
     // =====================================================
     function addIconShimmer(scene, img, delay) {
         return; 
     }
 
     // =====================================================
-    //  HELPER â€” Custom Modals (Confirm & Alert)
+    //  HELPER ” Custom Modals (Confirm & Alert)
     // =====================================================
     function showCustomConfirmModal(scene, text, onConfirm) {
         const W = scene.scale.width;
@@ -413,7 +424,7 @@
     }
 
     // =====================================================
-    //  HELPER â€” Dynamic Pixel Art Recoloring
+    //  HELPER ” Dynamic Pixel Art Recoloring
     // =====================================================
     function recolorCharacterImage(scene, sourceKey, customColors) {
         if (!scene.charCanvasCache) scene.charCanvasCache = {};
@@ -2120,7 +2131,8 @@
             pixelArt: true,
             scene: [CustomizeScene],
             scale: {
-                mode: Phaser.Scale.RESIZE,
+                // FIT: seluruh UI 360x760 selalu muat di frame (tanpa clip / tanpa scroll canvas)
+                mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH
             }
         });
