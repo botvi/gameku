@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Masuk Akun')
+@section('title', 'Pacu Jalur: The Pixel â€” Masuk Akun')
 
 @push('styles')
 <link rel="manifest" href="/manifest.json">
@@ -62,7 +62,7 @@
         margin-bottom: 6px;
     }
     .game-subtitle {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 13px;
         color: rgba(255,255,255,0.6);
         text-align: center;
@@ -137,7 +137,7 @@
     }
     /* Footer info */
     .card-footer {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 11px;
         color: rgba(255,255,255,0.4);
         text-align: center;
@@ -220,7 +220,7 @@
         margin: 0;
     }
     .pwa-alert-desc {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 12px;
         color: rgba(255, 255, 255, 0.8);
         margin: 0;
@@ -251,7 +251,7 @@
         color: #cbd5e1;
     }
     .pwa-ios-instructions {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 11px;
         color: rgba(255, 255, 255, 0.9);
         background: rgba(34, 197, 94, 0.1);

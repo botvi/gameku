@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Cari Pemain')
+@section('title', 'Pacu Jalur: The Pixel â€” Cari Pemain')
 
 @section('content')
 <style>
@@ -86,7 +86,7 @@
     }
 
     #search-dashboard .coin-amount {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 13px;
         font-weight: bold;
         color: #000000;

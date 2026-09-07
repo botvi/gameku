@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Arena Pacu Jalur')
+@section('title', 'Pacu Jalur: The Pixel â€” Arena Pacu Jalur')
 
 @push('styles')
 <style>
@@ -212,7 +212,7 @@
     }
 </style>
 <style>
-    /* ── ARENA LOADING SCREEN ── */
+    /* â”€â”€ ARENA LOADING SCREEN â”€â”€ */
     #arena-loading-screen {
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
@@ -284,7 +284,7 @@
 @endpush
 
 @section('content')
-{{-- ── ARENA LOADING SCREEN (tampil sebelum Phaser siap) ── --}}
+{{-- â”€â”€ ARENA LOADING SCREEN (tampil sebelum Phaser siap) â”€â”€ --}}
 <div id="arena-loading-screen">
     <div class="arena-loading-title">ARENA PACU</div>
     <div class="arena-loading-bar-wrap">
@@ -315,7 +315,7 @@ if ($winsCount >= 100) {
         style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
         <div class="audio-modal-title"
             style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">
-            ✦ PENGATURAN SUARA ✦</div>
+            âœ¦ PENGATURAN SUARA âœ¦</div>
 
         <!-- SFX Toggle Row -->
         <div
@@ -335,7 +335,7 @@ if ($winsCount >= 100) {
 
 <!-- ===== READY OVERLAY (Multiplayer only) ===== -->
 <div id="ready-overlay" style="display: none;">
-    <div class="ready-title">✦ ARENA PACU ✦</div>
+    <div class="ready-title">âœ¦ ARENA PACU âœ¦</div>
 
     <div class="vs-badge">
         <div class="vs-player">
@@ -365,7 +365,7 @@ if ($winsCount >= 100) {
     const GAME_HEIGHT = 760;
 
     // =====================================================
-    //  HELPER — Custom Modals (Confirm & Alert)
+    //  HELPER â€” Custom Modals (Confirm & Alert)
     // =====================================================
     function showCustomConfirmModal(scene, text, onConfirm) {
         const W = scene.scale.width;
@@ -393,7 +393,7 @@ if ($winsCount >= 100) {
         dialog.add(dBg);
 
         const dTxt = scene.add.text(0, -25, text, {
-            fontFamily: '"Pixelify Sans", monospace',
+            fontFamily: '"Press Start 2P", monospace',
             fontSize: '14px',
             fontStyle: 'bold',
             color: '#15803d',
@@ -492,7 +492,7 @@ if ($winsCount >= 100) {
         dialog.add(dBg);
 
         const dTxt = scene.add.text(0, -20, text, {
-            fontFamily: '"Pixelify Sans", monospace',
+            fontFamily: '"Press Start 2P", monospace',
             fontSize: '14px',
             fontStyle: 'bold',
             color: '#15803d',
@@ -595,7 +595,7 @@ if ($winsCount >= 100) {
     }
 
     // =====================================================
-    //  HELPER — Dynamic Pixel Art Recoloring
+    //  HELPER â€” Dynamic Pixel Art Recoloring
     // =====================================================
     function recolorCharacterImage(scene, sourceKey, customColors) {
         const sourceTexture = scene.textures.get(sourceKey);
@@ -659,7 +659,7 @@ if ($winsCount >= 100) {
     }
 
     // =====================================================
-    //  LOADING SCENE — preload semua assets dengan progress bar
+    //  LOADING SCENE â€” preload semua assets dengan progress bar
     // =====================================================
     class LoadingScene extends Phaser.Scene {
         constructor() { super({ key: 'LoadingScene' }); }
@@ -741,7 +741,7 @@ if ($winsCount >= 100) {
         constructor() { super({ key: 'ArenaScene' }); }
 
         preload() {
-            // Kosong — semua sudah di-load oleh LoadingScene
+            // Kosong â€” semua sudah di-load oleh LoadingScene
         }
 
         applyRecolor(isPlayer, customColors) {
@@ -1279,7 +1279,7 @@ if ($winsCount >= 100) {
             }).setOrigin(0.5);
             this.playerBoatGroup.add(this.playerNameText);
 
-            const pStatus = "⚡ {{ $statusText }} ⚡";
+            const pStatus = "âš¡ {{ $statusText }} âš¡";
             this.playerStatusText = this.add.text(0, -67, pStatus, {
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '7px',
@@ -1457,7 +1457,7 @@ if ($winsCount >= 100) {
             track.fillRect(-pbWidth / 2 + 10, -2, pbWidth - 20, 4);
             progressContainer.add(track);
 
-            const finishMarker = this.add.text(-pbWidth / 2 + 14, 0, '🏁', {
+            const finishMarker = this.add.text(-pbWidth / 2 + 14, 0, 'ðŸ', {
                 fontSize: '11px'
             }).setOrigin(0.5);
             progressContainer.add(finishMarker);
@@ -1736,7 +1736,7 @@ if ($winsCount >= 100) {
             this.coinImg = this.add.image(0, 0, 'koin').setDisplaySize(28, 28).setDepth(101);
             
             this.coinText = this.add.text(0, 0, '', {
-                fontFamily: '"Pixelify Sans", monospace',
+                fontFamily: '"Press Start 2P", monospace',
                 fontSize: '13px',
                 fontStyle: 'bold',
                 color: '#FFD700',
@@ -1888,7 +1888,7 @@ if ($winsCount >= 100) {
                         }
 
                         if (opponent.customizations && opponent.customizations.statusText) {
-                            this.oppStatusText.setText("⚡ " + opponent.customizations.statusText.toUpperCase() + " ⚡");
+                            this.oppStatusText.setText("âš¡ " + opponent.customizations.statusText.toUpperCase() + " âš¡");
                         }
 
                         if (this.gameState === 'racing' && this.ws && this.ws.readyState === WebSocket.OPEN) {
@@ -2451,7 +2451,7 @@ if ($winsCount >= 100) {
             modalBg.strokeRoundedRect(-modalW / 2, -modalH / 2, modalW, modalH, 16);
             modal.add(modalBg);
 
-            const titleStr = isWinner ? '✦ MENANG ✦' : '✦ KALAH ✦';
+            const titleStr = isWinner ? 'âœ¦ MENANG âœ¦' : 'âœ¦ KALAH âœ¦';
             const titleCol = isWinner ? '#16a34a' : '#dc2626';
             const strokeCol = isWinner ? '#dcfce7' : '#fee2e2';
 
@@ -2470,7 +2470,7 @@ if ($winsCount >= 100) {
                 : "Sayang sekali!\nLawan mendahuluimu.";
 
             const msgTxt = this.add.text(0, -25, msgStr, {
-                fontFamily: '"Pixelify Sans", monospace',
+                fontFamily: '"Press Start 2P", monospace',
                 fontSize: '14px',
                 fontStyle: 'bold',
                 color: '#374151',

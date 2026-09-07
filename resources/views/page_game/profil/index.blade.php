@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Profil Pamacu')
+@section('title', 'Pacu Jalur: The Pixel â€” Profil Pamacu')
 
 @section('content')
 <style>
@@ -92,7 +92,7 @@
     }
 
     #profile-dashboard .coin-amount {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 13px;
         font-weight: bold;
         color: #000000;
@@ -110,10 +110,15 @@
 
     #profile-dashboard .profile-container {
         flex: 1;
+        min-height: 0;
         display: flex;
         flex-direction: column;
         width: 100%;
         overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        overscroll-behavior: contain;
         z-index: 11;
         scrollbar-width: thin;
         scrollbar-color: rgba(59, 130, 246, 0.4) rgba(255, 255, 255, 0.02);
@@ -305,7 +310,7 @@
     #profile-dashboard .stat-value {
         font-size: 13px;
         font-weight: bold;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
     }
 
     #profile-dashboard .stat-card-gold .stat-value { color: #f59e0b; text-shadow: 0 0 6px rgba(245, 158, 11, 0.4); }
@@ -349,7 +354,7 @@
     }
 
     #profile-dashboard #jalur-name {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 13px;
         font-weight: bold;
         color: #f59e0b;
@@ -383,7 +388,7 @@
         scrollbar-width: thin;
         scrollbar-color: #3b82f6 rgba(15, 23, 42, 0.6);
         box-sizing: border-box;
-        touch-action: pan-x !important;
+        touch-action: pan-x pan-y !important;
     }
 
     #profile-dashboard .history-slider::-webkit-scrollbar {
@@ -454,7 +459,7 @@
     }
 
     #profile-dashboard .history-room-code {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Ubuntu', sans-serif !important;
         font-size: 6px;
         color: #64748b;
     }
@@ -479,7 +484,7 @@
 
     #profile-dashboard .history-date {
         font-size: 8px;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
     }
 
     #profile-dashboard .history-mode {
@@ -574,7 +579,7 @@
 
             <!-- Boat Preview Panel -->
             <div class="preview-panel">
-                <div class="preview-panel-title"><i class="bi bi-water me-1 text-info"></i> JALUR AKTIF</div>
+                <div class="preview-panel-title">JALUR AKTIF</div>
                 <div id="jalur-preview-container"></div>
                 <div id="jalur-name">Memuat Jalur...</div>
             </div>

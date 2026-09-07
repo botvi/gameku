@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Detail Pemain')
+@section('title', 'Pacu Jalur: The Pixel â€” Detail Pemain')
 
 @section('content')
 <style>
@@ -92,7 +92,7 @@
     }
 
     #detail-pemain-dashboard .coin-amount {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 13px;
         font-weight: bold;
         color: #000000;
@@ -110,10 +110,15 @@
 
     #detail-pemain-dashboard .profile-container {
         flex: 1;
+        min-height: 0;
         display: flex;
         flex-direction: column;
         width: 100%;
         overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        overscroll-behavior: contain;
         z-index: 11;
         scrollbar-width: thin;
         scrollbar-color: rgba(59, 130, 246, 0.4) rgba(255, 255, 255, 0.02);
@@ -304,7 +309,7 @@
     #detail-pemain-dashboard .stat-value {
         font-size: 13px;
         font-weight: bold;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
     }
 
     #detail-pemain-dashboard .stat-card-gold .stat-value { color: #f59e0b; text-shadow: 0 0 6px rgba(245, 158, 11, 0.4); }
@@ -353,7 +358,7 @@
     }
 
     #detail-pemain-dashboard #jalur-name {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 13px;
         font-weight: bold;
         color: #f59e0b;
@@ -387,7 +392,7 @@
         scrollbar-width: thin;
         scrollbar-color: #3b82f6 rgba(15, 23, 42, 0.6);
         box-sizing: border-box;
-        touch-action: pan-x !important;
+        touch-action: pan-x pan-y !important;
     }
 
     #detail-pemain-dashboard .history-slider::-webkit-scrollbar {
@@ -458,7 +463,7 @@
     }
 
     #detail-pemain-dashboard .history-room-code {
-        font-family: 'Press Start 2P', monospace;
+        font-family: 'Ubuntu', sans-serif !important;
         font-size: 6px;
         color: #64748b;
     }
@@ -483,7 +488,7 @@
 
     #detail-pemain-dashboard .history-date {
         font-size: 8px;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
     }
 
     #detail-pemain-dashboard .history-mode {
@@ -629,7 +634,7 @@ $lambaiDataUrl = ($modelJalur && ($modelJalur->model_jalur['lambai_unlocked'] ??
 
             <!-- Boat Preview Panel -->
             <div class="preview-panel">
-                <div class="preview-panel-title"><i class="bi bi-water me-1 text-info"></i> JALUR AKTIF</div>
+                <div class="preview-panel-title">JALUR AKTIF</div>
                 <div id="jalur-preview-container"></div>
                 <div id="jalur-name">{{ $targetUser->nama_jalur ?? 'Jalur Pacu' }}</div>
             </div>

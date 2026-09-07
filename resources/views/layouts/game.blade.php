@@ -11,8 +11,17 @@
     <link rel="apple-touch-icon" href="{{ asset_v('game_pacu/assets/image/ui/pwa-icon-192.png') }}">
     <link rel="stylesheet" href="{{ asset_v('game_pacu/assets/css/game-layout.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* Global Press Start 2P — jangan pakai #game-container * agar Ubuntu bisa menang */
+        html, body {
+            font-family: 'Press Start 2P', monospace !important;
+            font-size: 78%;
+        }
+        button, input, select, textarea, label, a, p, span, div, h1, h2, h3, h4, h5, h6 {
+            font-family: inherit;
+        }
+
         .sprint-icon {
             color: #f8a73c;
             text-shadow: 0 0 4px rgba(248, 167, 60, 0.5);
@@ -95,5 +104,59 @@
     @livewireScripts
     <script src="{{ asset_v('game_pacu/assets/js/game-layout.js') }}"></script>
     @stack('scripts')
+    {{-- Ubuntu override di akhir body agar mengalahkan style per-halaman --}}
+    <style id="font-ubuntu-overrides">
+        #game-container #chat-sidebar,
+        #game-container #chat-sidebar *:not(.bi):not(i),
+        #game-container #chat-toggle-btn,
+        #game-container #chat-toggle-btn *:not(.bi):not(i),
+        #game-container #chat-input,
+        #game-container #chat-send-btn,
+        #game-container #chat-messages,
+        #game-container #chat-messages *:not(.bi):not(i),
+        #game-container .chat-header,
+        #game-container .chat-header *:not(.bi):not(i),
+        #game-container .chat-msg,
+        #game-container .chat-msg *:not(.bi):not(i),
+        #game-container .chat-input-area,
+        #game-container .chat-input-area *:not(.bi):not(i),
+        #game-container .chat-system-msg,
+        #game-container .chat-share-btn,
+        #game-container .chat-online-badge,
+        #game-container .chat-online-badge *:not(.bi):not(i),
+        #game-container .chat-msg-bubble,
+        #game-container .chat-msg-name,
+        #game-container .chat-msg-time,
+        #game-container .chat-header-title,
+        #game-container #inbox-sidebar,
+        #game-container #inbox-sidebar *:not(.bi):not(i),
+        #game-container #inbox-toggle-btn,
+        #game-container #inbox-toggle-btn *:not(.bi):not(i),
+        #game-container #inbox-messages-list,
+        #game-container #inbox-messages-list *:not(.bi):not(i),
+        #game-container .inbox-header,
+        #game-container .inbox-header *:not(.bi):not(i),
+        #game-container .inbox-card,
+        #game-container .inbox-card *:not(.bi):not(i),
+        #game-container .inbox-card-title,
+        #game-container .inbox-card-content,
+        #game-container .inbox-reward-box,
+        #game-container .inbox-reward-box *:not(.bi):not(i),
+        #game-container .inbox-claim-btn,
+        #game-container .inbox-header-title,
+        #game-container .room-code-box,
+        #game-container .room-code-box *:not(.bi):not(i),
+        #game-container .room-code-value,
+        #game-container .room-code-label,
+        #game-container .room-code-copy,
+        #game-container .history-room-code,
+        #game-container #room-code-display,
+        #game-container #room-code-input,
+        #game-container #join-code-input,
+        #game-container #join-by-code-input {
+            font-family: 'Ubuntu', sans-serif !important;
+            letter-spacing: normal !important;
+        }
+    </style>
 </body>
 </html>

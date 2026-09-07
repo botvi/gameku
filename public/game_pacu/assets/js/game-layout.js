@@ -1,14 +1,34 @@
 (function () {
  'use strict';
  document.addEventListener('touchmove', function (e) {
- if (e.target.closest('.scrollable')) {
+ if (e.target.closest('.scrollable') || e.target.closest('[data-scrollable="true"]')) {
  return;
+ }
+ var el = e.target;
+ while (el && el !== document.body) {
+  var style = window.getComputedStyle(el);
+  var oy = style.overflowY;
+  var ox = style.overflowX;
+  if ((oy === 'auto' || oy === 'scroll') || (ox === 'auto' || ox === 'scroll')) {
+   return;
+  }
+  el = el.parentElement;
  }
  e.preventDefault();
  }, { passive: false });
  document.addEventListener('wheel', function (e) {
- if (e.target.closest('.scrollable')) {
+ if (e.target.closest('.scrollable') || e.target.closest('[data-scrollable="true"]')) {
  return;
+ }
+ var el = e.target;
+ while (el && el !== document.body) {
+  var style = window.getComputedStyle(el);
+  var oy = style.overflowY;
+  var ox = style.overflowX;
+  if ((oy === 'auto' || oy === 'scroll') || (ox === 'auto' || ox === 'scroll')) {
+   return;
+  }
+  el = el.parentElement;
  }
  e.preventDefault();
  }, { passive: false });

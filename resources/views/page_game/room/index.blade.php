@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Room Matchmaking')
+@section('title', 'Pacu Jalur: The Pixel â€” Room Matchmaking')
 
 @section('content')
 <style>
@@ -9,7 +9,7 @@
         padding: 0;
         background-color: #060d18;
         color: #e2e8f0;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         overflow: hidden;
     }
 
@@ -170,7 +170,7 @@
         position: absolute;
         bottom: 4px;
         right: 6px;
-        font-family: Arial, sans-serif;
+        font-family: 'Press Start 2P', monospace;
         font-size: 20px;
         font-weight: bold;
         color: rgba(255, 255, 255, 0.04);
@@ -247,7 +247,7 @@
     }
 
     .ps5-details-desc {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 12px;
         color: rgba(255, 255, 255, 0.8);
         margin-bottom: 12px;
@@ -716,8 +716,8 @@
         <div class="coming-soon-card"
             style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
             <div style="font-size: 10px; color: #a855f7; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">
-                ✦ SEGERA HADIR ✦</div>
-            <p style="font-family: 'Pixelify Sans', monospace; font-size: 13px; color: #374151; margin-bottom: 20px; line-height: 1.5;">
+                âœ¦ SEGERA HADIR âœ¦</div>
+            <p style="font-family: 'Press Start 2P', monospace; font-size: 13px; color: #374151; margin-bottom: 20px; line-height: 1.5;">
                 Fitur ini sedang dalam pengembangan dan akan segera hadir di masa mendatang. Terima kasih atas kesabaran Anda!</p>
             <button class="pixel-btn" onclick="closeComingSoon()"
                 style="margin-top: 0; background-color: #a855f7; border: 3px solid #000000; box-shadow: inset 0 2px 0px rgba(255,255,255,0.4), 0px 4px 0px #000000; color: white; padding: 12px; font-size: 9px; cursor: pointer; text-transform: uppercase; width: 100%; text-shadow: 1.5px 1.5px 0px #000000;">OKE</button>
@@ -750,7 +750,7 @@
 <script>
 {
     // Custom HTML Modals (Confirm & Alert) using existing game-layout.css styles
-    window.showHTMLAlert = function(message, title = "✦ INFORMASI ✦") {
+    window.showHTMLAlert = function(message, title = "âœ¦ INFORMASI âœ¦") {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.id = 'fullscreen-modal-overlay';
@@ -777,7 +777,7 @@
         });
     };
 
-    window.showHTMLConfirm = function(message, title = "✦ KONFIRMASI ✦") {
+    window.showHTMLConfirm = function(message, title = "âœ¦ KONFIRMASI âœ¦") {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.id = 'fullscreen-modal-overlay';

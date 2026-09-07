@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Sinkronisasi Data')
+@section('title', 'Pacu Jalur: The Pixel â€” Sinkronisasi Data')
 
 @push('styles')
 <style>
@@ -138,7 +138,7 @@
     .sub-detail {
         font-size: 6px;
         color: rgba(255, 255, 255, 0.4);
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         letter-spacing: 0.5px;
         text-align: center;
     }
@@ -176,11 +176,11 @@
 (function () {
     'use strict';
 
-    // ─────────────────────────────────────────────────────────────
-    // AUTO HARD RELOAD — Sekali per sesi saat player masuk loading
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // AUTO HARD RELOAD â€” Sekali per sesi saat player masuk loading
     // Membersihkan Service Worker & semua cache lama secara paksa,
     // lalu reload halaman dengan asset fresh dari server.
-    // ─────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     var HARD_RELOAD_KEY = 'hard_reloaded_v{{ config("app.version", "1.0.0") }}';
     if (!sessionStorage.getItem(HARD_RELOAD_KEY)) {
         sessionStorage.setItem(HARD_RELOAD_KEY, '1');
@@ -199,12 +199,12 @@
                     for (var k of keys) { await caches.delete(k); }
                 } catch (e) {}
             }
-            // 3. Hard reload — paksa browser ambil semua asset fresh dari server
+            // 3. Hard reload â€” paksa browser ambil semua asset fresh dari server
             window.location.reload(true);
         })();
         return; // Hentikan eksekusi sisa skrip ini, reload akan menangani sisanya
     }
-    // ─────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     var fill = document.getElementById('progress-fill');
     var percentEl = document.getElementById('percent-val');
@@ -380,7 +380,7 @@
         syncPlayerData();
     }
 
-    // Livewire SPA navigation — fire saat pindah halaman via Livewire
+    // Livewire SPA navigation â€” fire saat pindah halaman via Livewire
     document.addEventListener('livewire:navigated', startSyncOnce);
 
     // Hard reload / full page load

@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel Race — Loading')
+@section('title', 'Pacu Jalur: The Pixel Race â€” Loading')
 
 @push('styles')
 <style>
@@ -125,7 +125,7 @@
         color: rgba(255,255,255,0.3);
         letter-spacing: 1px;
         text-align: center;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
     }
 </style>
 @endpush
@@ -151,7 +151,7 @@
             <div class="progress-fill" id="progress-fill"></div>
         </div>
         <div class="status-text" id="status-text">INITIALIZING SYSTEM...</div>
-        <div class="splash-footer">© 2026 Nyx Studio. All Rights Reserved.</div>
+        <div class="splash-footer">Â© 2026 Nyx Studio. All Rights Reserved.</div>
     </div>
 </div>
 @endsection

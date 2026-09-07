@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Pilih Level VS AI')
+@section('title', 'Pacu Jalur: The Pixel â€” Pilih Level VS AI')
 
 @push('styles')
 <style>
@@ -9,7 +9,7 @@
         padding: 0;
         background-color: #060d18;
         color: #e2e8f0;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         overflow: hidden;
     }
 
@@ -98,7 +98,7 @@
     }
 
     #coin-count {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 13px;
         font-weight: bold;
         color: #000000;
@@ -263,7 +263,7 @@
     }
 
     .ps5-details-desc {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 12px;
         color: rgba(255, 255, 255, 0.9);
         margin-bottom: 6px;
@@ -272,7 +272,7 @@
     }
 
     .reward-badge {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 13px;
         color: #FFD700;
         display: flex;

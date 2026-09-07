@@ -1,6 +1,6 @@
 @extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Custom Room')
+@section('title', 'Pacu Jalur: The Pixel â€” Custom Room')
 
 @section('content')
 <style>
@@ -9,7 +9,7 @@
         padding: 0;
         background-color: #060d18;
         color: #e2e8f0;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         overflow: hidden;
     }
 
@@ -193,7 +193,7 @@
     }
 
     .room-name {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-weight: 700;
         font-size: 16px;
         color: #ffffff;
@@ -347,7 +347,7 @@
         border: 2px solid rgba(255, 255, 255, 0.15);
         border-radius: 8px;
         color: #ffffff;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 15px;
         font-weight: bold;
         padding: 12px 14px;
@@ -405,6 +405,166 @@
             opacity: 1;
         }
     }
+
+    /* ========= GLOBAL CHAT SIDEBAR ========= */
+    #chat-toggle-btn {
+        position: absolute;
+        top: 64px;
+        left: 0;
+        width: 34px;
+        height: 34px;
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border: 1.5px solid rgba(255,255,255,0.15);
+        border-left: none;
+        border-radius: 0 10px 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 97;
+        transition: all 0.2s ease;
+        box-shadow: 3px 0 12px rgba(0,0,0,0.4);
+    }
+    #chat-toggle-btn:hover { background: linear-gradient(135deg,#334155 0%,#1e293b 100%); width: 38px; }
+    #chat-toggle-btn .chat-icon { font-size: 16px; color: #fff; }
+    #chat-unread-dot {
+        position: absolute; top: 4px; right: 4px;
+        width: 8px; height: 8px;
+        background: #ef4444; border-radius: 50%; display: none;
+    }
+
+    #chat-backdrop {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 98;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.28s ease;
+    }
+    #chat-backdrop.show {
+        display: block;
+        opacity: 1;
+    }
+
+    #chat-sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        width: 260px;
+        max-width: 82vw;
+        height: 100%;
+        max-height: 100dvh;
+        background: rgba(8,15,30,0.96);
+        border-right: 1px solid rgba(255,255,255,0.12);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        z-index: 99;
+        display: flex; flex-direction: column;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), visibility 0.32s;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    #chat-sidebar.open {
+        transform: translateX(0);
+        visibility: visible;
+    }
+    #chat-sidebar::before {
+        content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
+        background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.03) 3px,rgba(0,0,0,0.03) 4px);
+        pointer-events: none; z-index: 0;
+    }
+    .chat-header {
+        padding: 12px 14px 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex; align-items: center; justify-content: space-between;
+        position: relative; z-index: 2; flex-shrink: 0;
+        background: rgba(8, 15, 30, 0.98);
+    }
+    .chat-header-title {
+        font-family: 'Ubuntu', sans-serif !important; font-size: 7px;
+        color: #22c55e; letter-spacing: 0.5px;
+    }
+    .chat-online-badge { display:flex; align-items:center; gap:5px; font-size:10px; color:rgba(255,255,255,0.4); font-family: 'Ubuntu', sans-serif !important; }
+    .chat-online-dot {
+        width:6px; height:6px; border-radius:50%; background:#22c55e;
+    }
+    #chat-messages {
+        flex: 1; overflow-y: auto; padding: 10px 12px;
+        display: flex; flex-direction: column; gap: 8px;
+        position: relative; z-index: 1;
+        scrollbar-width: thin; scrollbar-color: rgba(34,197,94,0.3) rgba(255,255,255,0.02);
+        -webkit-overflow-scrolling: touch; touch-action: pan-y;
+    }
+    #chat-messages::-webkit-scrollbar { width: 3px; }
+    #chat-messages::-webkit-scrollbar-thumb { background: rgba(34,197,94,0.3); border-radius: 3px; }
+    .chat-msg { display:flex; flex-direction:column; gap:2px; animation: msgSlideIn 0.2s ease; }
+    @keyframes msgSlideIn {
+        from { opacity:0; transform:translateY(6px); }
+        to   { opacity:1; transform:translateY(0); }
+    }
+    .chat-msg.is-me { align-items: flex-end; }
+    .chat-msg-name {
+        font-family: 'Ubuntu', sans-serif !important; font-size: 5.5px;
+        color: rgba(255,255,255,0.45); padding: 0 6px;
+    }
+    .chat-msg.is-me .chat-msg-name { color: rgba(34,197,94,0.7); }
+    .chat-msg-bubble {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 10px 10px 10px 2px;
+        padding: 7px 10px; font-size: 12px; color: #e2e8f0;
+        max-width: 86%; word-break: break-word; line-height: 1.4;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        font-family: 'Ubuntu', sans-serif !important;
+    }
+    .chat-msg.is-me .chat-msg-bubble {
+        background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.25);
+        border-radius: 10px 10px 2px 10px; color: #d1fae5;
+    }
+    .chat-msg-bubble.room-share {
+        background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.3);
+        color: #fef3c7;
+    }
+    .chat-msg-time { font-size: 9px; color: rgba(255,255,255,0.2); padding: 0 6px; font-family: 'Ubuntu', sans-serif !important; }
+    .chat-system-msg {
+        text-align: center; font-family: 'Ubuntu', sans-serif !important;
+        font-size: 5.5px; color: rgba(255,255,255,0.25); padding: 4px 0;
+    }
+    .chat-input-area {
+        padding: 10px 12px; border-top: 1px solid rgba(255,255,255,0.08);
+        display: flex; gap: 7px; position: relative; z-index: 2; flex-shrink: 0;
+        background: rgba(8, 15, 30, 0.98);
+    }
+    #chat-input {
+        flex: 1; background: rgba(255,255,255,0.05);
+        border: 1.5px solid rgba(255,255,255,0.12); border-radius: 8px;
+        padding: 8px 10px; font-family: 'Ubuntu', sans-serif !important;
+        font-size: 13px; color: #fff; outline: none; transition: all 0.2s;
+    }
+    #chat-input:focus {
+        border-color: rgba(34,197,94,0.5); background: rgba(255,255,255,0.08);
+        box-shadow: none;
+    }
+    #chat-input::placeholder { color: rgba(255,255,255,0.2); }
+    #chat-send-btn {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        border: none; border-radius: 8px; padding: 8px 10px;
+        font-size: 14px; cursor: pointer; transition: all 0.15s ease;
+        flex-shrink: 0; color: #fff;
+    }
+    #chat-send-btn:hover { transform: translateY(-1px); }
+    #chat-send-btn:active { transform: translateY(1px); }
+    .chat-msg-bubble,
+    #chat-input,
+    #room-code-input {
+        font-family: 'Ubuntu', sans-serif !important;
+    }
 </style>
 
 <div id="game-ui">
@@ -444,7 +604,7 @@
                 class="pixel-input"
                 placeholder="Masukkan kode room..."
                 maxlength="6"
-                style="flex:1; font-size:14px; letter-spacing:3px; text-transform:uppercase; padding:10px 12px;"
+                style="flex:1; font-size:14px; letter-spacing:3px; text-transform:uppercase; padding:10px 12px; font-family:'Ubuntu',sans-serif !important;"
                 oninput="this.value=this.value.toUpperCase()"
                 onkeydown="if(event.key==='Enter') joinByCode()"
             >
@@ -470,6 +630,32 @@
             <button class="pixel-btn btn-red" style="margin-top: 0;" onclick="hidePasswordModal()">BATAL</button>
             <button class="pixel-btn" style="margin-top: 0;" onclick="submitPassword()">MASUK</button>
         </div>
+    </div>
+</div>
+
+<!-- ===== GLOBAL CHAT SIDEBAR ===== -->
+<div id="chat-backdrop" onclick="handleChatBackdropClick(event)"></div>
+<div id="chat-toggle-btn" onclick="toggleChat()">
+    <span class="chat-icon"><i class="bi bi-chat-dots-fill"></i></span>
+    <span id="chat-unread-dot"></span>
+</div>
+<div id="chat-sidebar">
+    <div class="chat-header">
+        <div class="chat-header-title"><i class="bi bi-chat-fill me-1"></i> GLOBAL CHAT</div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="chat-online-badge">
+                <span class="chat-online-dot"></span>
+                <span id="chat-online-count">0</span> online
+            </div>
+            <button onclick="toggleChat()" style="background: none; border: none; color: rgba(255,255,255,0.6); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1;" title="Tutup"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div id="chat-messages" class="scrollable">
+        <div class="chat-system-msg">â€” Global Chat â€”</div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Ketik pesan..." maxlength="200" onkeydown="if(event.key==='Enter') sendChat()">
+        <button id="chat-send-btn" onclick="sendChat()" title="Kirim"><i class="bi bi-send-fill"></i></button>
     </div>
 </div>
 @endsection
@@ -505,7 +691,7 @@
         });
     };
 
-    window.showHTMLConfirm = function(message, title = "✦ KONFIRMASI ✦") {
+    window.showHTMLConfirm = function(message, title = "âœ¦ KONFIRMASI âœ¦") {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.id = 'fullscreen-modal-overlay';
@@ -545,7 +731,7 @@
 
     window.showPasswordModal = function(roomId, roomName) {
         selectedRoomId = roomId;
-        document.getElementById('modal-room-name').innerText = '✦ ROOM: ' + roomName.toUpperCase() + ' ✦';
+        document.getElementById('modal-room-name').innerText = 'âœ¦ ROOM: ' + roomName.toUpperCase() + ' âœ¦';
         document.getElementById('join-password').value = '';
         document.getElementById('password-modal').style.display = 'flex';
     };
@@ -713,11 +899,227 @@
     // Poll rooms every 4 seconds
     const fetchRoomsInterval = setInterval(fetchRooms, 4000);
 
+    // ============= GLOBAL CHAT =============
+    const chatCurrentUserId = {{ auth()->id() }};
+    const chatCurrentUser   = "{{ addslashes(auth()->user()->nama_jalur ?? auth()->user()->email) }}";
+    let chatWs     = null;
+    let chatOpen   = false;
+    let chatUnread = 0;
+    const MAX_CHAT_MESSAGES = 80;
+
+    window.initGlobalChat = function() {
+        if (chatWs) return;
+        if (!document.getElementById('room-list-container')) return;
+
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        let wsUrl;
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.')) {
+            wsUrl = `${protocol}//${window.location.hostname}:8080`;
+        } else {
+            wsUrl = `${protocol}//${window.location.hostname}/ws`;
+        }
+        chatWs = new WebSocket(wsUrl);
+
+        chatWs.onopen = () => {
+            if (chatWs) {
+                chatWs.send(JSON.stringify({
+                    type: 'join',
+                    roomId: 'global_chat',
+                    payload: { userId: chatCurrentUserId, userName: chatCurrentUser, customizations: {} }
+                }));
+            }
+        };
+
+        chatWs.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.type === 'global_chat') {
+                    appendChatMessage(data.payload);
+                } else if (data.type === 'chat_history') {
+                    const container = document.getElementById('chat-messages');
+                    if (container && Array.isArray(data.payload) && data.payload.length > 0) {
+                        container.innerHTML = '';
+                        data.payload.forEach(msg => appendChatMessage(msg));
+                    }
+                } else if (data.type === 'room_update' && data.payload && data.payload.players) {
+                    const el = document.getElementById('chat-online-count');
+                    if (el) el.textContent = data.payload.players.length;
+                }
+            } catch (e) {}
+        };
+
+        chatWs.onclose = () => {
+            chatWs = null;
+            if (document.getElementById('room-list-container')) {
+                setTimeout(initGlobalChat, 3000);
+            }
+        };
+        chatWs.onerror = () => {};
+    };
+
+    window.appendChatMessage = function(payload) {
+        const container = document.getElementById('chat-messages');
+        if (!container) return;
+        const isMe = parseInt(payload.userId) === chatCurrentUserId;
+        const d = new Date(payload.timestamp || Date.now());
+        const hh = String(d.getHours()).padStart(2, '0');
+        const mm = String(d.getMinutes()).padStart(2, '0');
+        const isRoomShare = payload.message && String(payload.message).includes('ROOM:') && String(payload.message).includes('KODE:');
+
+        const msgEl = document.createElement('div');
+        msgEl.className = 'chat-msg' + (isMe ? ' is-me' : '');
+        msgEl.innerHTML = `
+            <div class="chat-msg-name">${escapeHTML(payload.userName)}</div>
+            <div class="chat-msg-bubble${isRoomShare ? ' room-share' : ''}">${escapeHTML(payload.message)}</div>
+            <div class="chat-msg-time">${hh}:${mm}</div>
+        `;
+        container.appendChild(msgEl);
+        while (container.children.length > MAX_CHAT_MESSAGES) container.removeChild(container.firstChild);
+        container.scrollTop = container.scrollHeight;
+
+        if (!chatOpen && !isMe) {
+            chatUnread++;
+            const dot = document.getElementById('chat-unread-dot');
+            if (dot) dot.style.display = 'block';
+        }
+    };
+
+    function adaptChatSidebarViewport() {
+        const sidebar = document.getElementById('chat-sidebar');
+        if (!sidebar || !chatOpen) return;
+        if (window.visualViewport) {
+            sidebar.style.height = window.visualViewport.height + 'px';
+            sidebar.style.top = window.visualViewport.offsetTop + 'px';
+        }
+        window.scrollTo(0, 0);
+    }
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', adaptChatSidebarViewport);
+        window.visualViewport.addEventListener('scroll', adaptChatSidebarViewport);
+    }
+
+    window.handleChatBackdropClick = function(e) {
+        const inp = document.getElementById('chat-input');
+        if (inp && document.activeElement === inp) {
+            inp.blur();
+            return;
+        }
+        toggleChat();
+    };
+
+    window.sendChat = function() {
+        const input = document.getElementById('chat-input');
+        if (!input) return;
+        const msg = input.value.trim();
+        if (!msg || !chatWs || chatWs.readyState !== WebSocket.OPEN) return;
+        chatWs.send(JSON.stringify({
+            type: 'global_chat',
+            roomId: 'global_chat',
+            payload: { userId: chatCurrentUserId, userName: chatCurrentUser, message: msg }
+        }));
+        input.value = '';
+        chatOpen = true;
+        const container = document.getElementById('chat-messages');
+        if (container) container.scrollTop = container.scrollHeight;
+    };
+
+    window.toggleChat = function() {
+        chatOpen = !chatOpen;
+        const sidebar = document.getElementById('chat-sidebar');
+        const backdrop = document.getElementById('chat-backdrop');
+        const inp = document.getElementById('chat-input');
+        if (!sidebar) return;
+        if (chatOpen) {
+            sidebar.classList.add('open');
+            if (backdrop) backdrop.classList.add('show');
+            chatUnread = 0;
+            const dot = document.getElementById('chat-unread-dot');
+            if (dot) dot.style.display = 'none';
+            adaptChatSidebarViewport();
+            setTimeout(() => { if (inp) inp.focus(); }, 300);
+            const msgs = document.getElementById('chat-messages');
+            if (msgs) msgs.scrollTop = msgs.scrollHeight;
+        } else {
+            sidebar.classList.remove('open');
+            if (backdrop) backdrop.classList.remove('show');
+            if (inp) inp.blur();
+            if (document.activeElement) document.activeElement.blur();
+            sidebar.style.height = '100%';
+            sidebar.style.top = '0';
+            setTimeout(() => {
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }, 50);
+        }
+    };
+
+    window.escapeHTML = function(str) {
+        return String(str)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    };
+
+    const chatClickOutside = function(e) {
+        if (!chatOpen) return;
+        const sidebar = document.getElementById('chat-sidebar');
+        const btn = document.getElementById('chat-toggle-btn');
+        const inp = document.getElementById('chat-input');
+
+        if ((sidebar && sidebar.contains(e.target)) || (btn && btn.contains(e.target))) {
+            return;
+        }
+
+        if (inp && document.activeElement === inp) {
+            inp.blur();
+            return;
+        }
+
+        toggleChat();
+    };
+    document.addEventListener('click', chatClickOutside);
+
+    const chatInputEl = document.getElementById('chat-input');
+    if (chatInputEl) {
+        chatInputEl.addEventListener('focus', function() {
+            setTimeout(adaptChatSidebarViewport, 100);
+        });
+        chatInputEl.addEventListener('blur', function() {
+            setTimeout(() => {
+                const sidebar = document.getElementById('chat-sidebar');
+                if (sidebar && !sidebar.classList.contains('open')) {
+                    sidebar.style.height = '100%';
+                    sidebar.style.top = '0';
+                } else {
+                    adaptChatSidebarViewport();
+                }
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }, 100);
+        });
+    }
+
+    function initCreateOrJoinChat() {
+        if (!document.getElementById('room-list-container')) return;
+        initGlobalChat();
+    }
+
+    initCreateOrJoinChat();
+    document.addEventListener('game:page-ready', initCreateOrJoinChat);
+
     // Clean up interval on navigation to avoid memory leaks
     document.addEventListener('livewire:navigating', () => {
         clearInterval(fetchRoomsInterval);
+        document.removeEventListener('click', chatClickOutside);
+        if (chatWs) {
+            chatWs.close();
+            chatWs = null;
+            console.log('Create/Join global chat WebSocket closed.');
+        }
         console.log('Room list polling stopped.');
-    }, { once: true });
+    });
 }
 </script>
 @endpush

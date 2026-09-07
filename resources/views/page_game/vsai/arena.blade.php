@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Arena VS AI')
+@section('title', 'Pacu Jalur: The Pixel â€” Arena VS AI')
 
 @push('styles')
 <style>
@@ -72,7 +72,7 @@
     }
 </style>
 <style>
-    /* ── ARENA LOADING SCREEN (VS AI) ── */
+    /* â”€â”€ ARENA LOADING SCREEN (VS AI) â”€â”€ */
     #arena-loading-screen {
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
@@ -144,7 +144,7 @@
 @endpush
 
 @section('content')
-{{-- ── ARENA LOADING SCREEN (VS AI) ── --}}
+{{-- â”€â”€ ARENA LOADING SCREEN (VS AI) â”€â”€ --}}
 <div id="arena-loading-screen">
     <div class="arena-loading-title">VS AI ARENA</div>
     <div class="arena-loading-bar-wrap">
@@ -171,7 +171,7 @@ if ($winsCount >= 100) {
 <!-- Custom Audio Settings Modal -->
 <div id="audio-settings-modal" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 44, 34, 0.85); backdrop-filter: blur(6px); z-index: 200; align-items: center; justify-content: center; box-sizing: border-box;">
     <div class="audio-modal-card" style="background: #ffffff; border: 4px solid #000000; box-shadow: 6px 6px 0px #000000; border-radius: 12px; width: 85%; max-width: 300px; padding: 22px 18px; text-align: center; box-sizing: border-box; font-family: 'Press Start 2P', monospace;">
-        <div class="audio-modal-title" style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">✦ PENGATURAN SUARA ✦</div>
+        <div class="audio-modal-title" style="font-size: 10px; color: #0d9488; margin-bottom: 20px; border-bottom: 3px dashed #000000; padding-bottom: 12px; font-weight: bold; letter-spacing: 0.5px;">âœ¦ PENGATURAN SUARA âœ¦</div>
         
         <!-- SFX Toggle Row -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
@@ -194,7 +194,7 @@ if ($winsCount >= 100) {
     const GAME_HEIGHT = 760;
 
     // =====================================================
-    //  HELPER — Custom Modals (Confirm & Alert)
+    //  HELPER â€” Custom Modals (Confirm & Alert)
     // =====================================================
     function showCustomConfirmModal(scene, text, onConfirm) {
         const W = scene.scale.width;
@@ -222,7 +222,7 @@ if ($winsCount >= 100) {
         dialog.add(dBg);
 
         const dTxt = scene.add.text(0, -25, text, {
-            fontFamily: '"Pixelify Sans", monospace',
+            fontFamily: '"Press Start 2P", monospace',
             fontSize: '14px',
             fontStyle: 'bold',
             color: '#15803d',
@@ -321,7 +321,7 @@ if ($winsCount >= 100) {
         dialog.add(dBg);
 
         const dTxt = scene.add.text(0, -20, text, {
-            fontFamily: '"Pixelify Sans", monospace',
+            fontFamily: '"Press Start 2P", monospace',
             fontSize: '14px',
             fontStyle: 'bold',
             color: '#15803d',
@@ -424,7 +424,7 @@ if ($winsCount >= 100) {
     }
 
     // =====================================================
-    //  HELPER — Dynamic Pixel Art Recoloring
+    //  HELPER â€” Dynamic Pixel Art Recoloring
     // =====================================================
     function recolorCharacterImage(scene, sourceKey, customColors) {
         const sourceTexture = scene.textures.get(sourceKey);
@@ -488,7 +488,7 @@ if ($winsCount >= 100) {
     }
 
     // =====================================================
-    //  LOADING SCENE — preload semua assets dengan progress bar
+    //  LOADING SCENE â€” preload semua assets dengan progress bar
     // =====================================================
     class LoadingScene extends Phaser.Scene {
         constructor() { super({ key: 'LoadingScene' }); }
@@ -565,7 +565,7 @@ if ($winsCount >= 100) {
         constructor() { super({ key: 'ArenaScene' }); }
 
         preload() {
-            // Kosong — semua sudah di-load oleh LoadingScene
+            // Kosong â€” semua sudah di-load oleh LoadingScene
         }
 
         applyRecolor(isPlayer, customColors) {
@@ -1123,7 +1123,7 @@ if ($winsCount >= 100) {
             this.playerBoatGroup.add(this.playerNameText);
 
             // Teks Status Badge Pemain
-            const pStatus = "⚡ {{ $statusText }} ⚡";
+            const pStatus = "âš¡ {{ $statusText }} âš¡";
             this.playerStatusText = this.add.text(0, -67, pStatus, {
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '7px',
@@ -1135,20 +1135,20 @@ if ($winsCount >= 100) {
             this.playerBoatGroup.add(this.playerStatusText);
 
             let initialOppName = 'LAWAN';
-            let initialOppStatus = '⚡ PAMAIN SEWA ⚡';
+            let initialOppStatus = 'âš¡ PAMAIN SEWA âš¡';
             if (!this.isMultiplayer) {
                 if (AI_LEVEL > 80) {
                     initialOppName = 'AI MASTER';
-                    initialOppStatus = '⚡ TINGKAT MASTER ⚡';
+                    initialOppStatus = 'âš¡ TINGKAT MASTER âš¡';
                 } else if (AI_LEVEL > 50) {
                     initialOppName = 'AI HANDAL';
-                    initialOppStatus = '⚡ TINGKAT HANDAL ⚡';
+                    initialOppStatus = 'âš¡ TINGKAT HANDAL âš¡';
                 } else if (AI_LEVEL > 20) {
                     initialOppName = 'AI MENENGAH';
-                    initialOppStatus = '⚡ TINGKAT MENENGAH ⚡';
+                    initialOppStatus = 'âš¡ TINGKAT MENENGAH âš¡';
                 } else {
                     initialOppName = 'AI PEMULA';
-                    initialOppStatus = '⚡ TINGKAT PEMULA ⚡';
+                    initialOppStatus = 'âš¡ TINGKAT PEMULA âš¡';
                 }
             } else {
                 initialOppStatus = 'LOADING...';
@@ -1321,7 +1321,7 @@ if ($winsCount >= 100) {
             track.fillRect(-pbWidth / 2 + 10, -2, pbWidth - 20, 4);
             progressContainer.add(track);
 
-            const finishMarker = this.add.text(-pbWidth / 2 + 14, 0, '🏁', {
+            const finishMarker = this.add.text(-pbWidth / 2 + 14, 0, 'ðŸ', {
                 fontSize: '11px'
             }).setOrigin(0.5);
             progressContainer.add(finishMarker);
@@ -1600,7 +1600,7 @@ if ($winsCount >= 100) {
             this.coinImg = this.add.image(0, 0, 'koin').setDisplaySize(28, 28).setDepth(101);
             
             this.coinText = this.add.text(0, 0, '', {
-                fontFamily: '"Pixelify Sans", monospace',
+                fontFamily: '"Press Start 2P", monospace',
                 fontSize: '13px',
                 fontStyle: 'bold',
                 color: '#FFD700',
@@ -1782,7 +1782,7 @@ if ($winsCount >= 100) {
                         }
 
                         if (opponent.customizations && opponent.customizations.statusText) {
-                            this.oppStatusText.setText("⚡ " + opponent.customizations.statusText.toUpperCase() + " ⚡");
+                            this.oppStatusText.setText("âš¡ " + opponent.customizations.statusText.toUpperCase() + " âš¡");
                         }
                     }
                 }
@@ -2324,7 +2324,7 @@ if ($winsCount >= 100) {
 
             const titleStr = !this.isMultiplayer
                 ? (isWinner ? 'LEVEL SELESAI!' : 'COBA LAGI!')
-                : (isWinner ? '✦ KEMENANGAN ✦' : '✦ KEKALAHAN ✦');
+                : (isWinner ? 'âœ¦ KEMENANGAN âœ¦' : 'âœ¦ KEKALAHAN âœ¦');
             const titleCol = isWinner ? '#16a34a' : '#dc2626';
             const strokeCol = isWinner ? '#dcfce7' : '#fee2e2';
 
@@ -2343,7 +2343,7 @@ if ($winsCount >= 100) {
                 : "Sayang sekali!\nLawan mendahuluimu.";
 
             const msgTxt = this.add.text(0, -25, msgStr, {
-                fontFamily: '"Pixelify Sans", monospace',
+                fontFamily: '"Press Start 2P", monospace',
                 fontSize: '14px',
                 fontStyle: 'bold',
                 color: '#374151',

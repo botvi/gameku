@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Registrasi Jalur')
+@section('title', 'Pacu Jalur: The Pixel â€” Registrasi Jalur')
 
 @push('styles')
 <style>
@@ -63,7 +63,7 @@
         margin-bottom: 6px;
     }
     .reg-subtitle {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 12px;
         color: rgba(255,255,255,0.55);
         text-align: center;
@@ -126,12 +126,12 @@
         background: rgba(245, 158, 11, 0.15);
     }
     .avatar-slot.selected::after {
-        content: '✓';
+        content: 'âœ“';
         position: absolute;
         top: 2px; right: 4px;
         font-size: 10px;
         color: #f59e0b;
-        font-family: Arial, sans-serif;
+        font-family: 'Press Start 2P', monospace;
         font-weight: bold;
     }
     /* Divider */
@@ -154,7 +154,7 @@
     #jalur-name-input-visible {
         width: 100%;
         padding: 12px 16px;
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 16px;
         font-weight: bold;
         color: #ffffff;
@@ -179,7 +179,7 @@
         border-color: #ef4444;
     }
     .warning-txt {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 12px;
         color: #ef4444;
         text-align: center;

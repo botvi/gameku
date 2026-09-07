@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Leaderboard')
+@section('title', 'Pacu Jalur: The Pixel â€” Leaderboard')
 
 @section('content')
 <style>
@@ -57,7 +57,7 @@
     }
     #leaderboard-dashboard .coin-icon-wrapper img { width: 100%; height: 100%; image-rendering: pixelated; }
     #leaderboard-dashboard .coin-amount {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 13px; font-weight: bold;
         color: #000000; line-height: 1;
         text-shadow: 1px 1px 0px #ffffff, -1px -1px 0px #ffffff,
@@ -364,7 +364,7 @@ $user = auth()->user();
     <div class="my-rank-banner">
         <div class="my-rank-left">
             <div class="my-rank-badge">
-                #{{ $myRank ?? '—' }}
+                #{{ $myRank ?? 'â€”' }}
             </div>
             <div>
                 <div class="my-rank-name">{{ $myUser->nama_jalur ?? $myUser->email }}</div>

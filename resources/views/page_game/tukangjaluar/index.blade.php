@@ -1,6 +1,6 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
-@section('title', 'Pacu Jalur: The Pixel — Kustomisasi Jalur')
+@section('title', 'Pacu Jalur: The Pixel â€” Kustomisasi Jalur')
 
 @push('styles')
 <style>
@@ -63,7 +63,7 @@
     }
 
     #tukangjaluar-dashboard .coin-amount {
-        font-family: 'Pixelify Sans', monospace;
+        font-family: 'Press Start 2P', monospace;
         font-size: 13px;
         font-weight: bold;
         color: #000000;
@@ -101,7 +101,7 @@
     const GAME_HEIGHT = 760;
 
     // =====================================================
-    //  HELPER — Tombol Pixel 3D Rounded (Kembali ke Menu)
+    //  HELPER â€” Tombol Pixel 3D Rounded (Kembali ke Menu)
     // =====================================================
     function makeBackButton(scene, cx, cy, bw, bh, radius, label, colors, onTap) {
         const halfW = bw / 2;
@@ -135,7 +135,7 @@
         container.add(shineGfx);
 
         const lbl = scene.add.text(0, 0, label, {
-            fontFamily: '"Pixelify Sans", monospace',
+            fontFamily: '"Press Start 2P", monospace',
             fontSize: '22px',
             fontStyle: 'bold',
             color: colors.textColor,
@@ -180,14 +180,14 @@
     }
 
     // =====================================================
-    //  HELPER — Shimmer pada PNG icon (Disabled for performance)
+    //  HELPER â€” Shimmer pada PNG icon (Disabled for performance)
     // =====================================================
     function addIconShimmer(scene, img, delay) {
         return; 
     }
 
     // =====================================================
-    //  HELPER — Custom Modals (Confirm & Alert)
+    //  HELPER â€” Custom Modals (Confirm & Alert)
     // =====================================================
     function showCustomConfirmModal(scene, text, onConfirm) {
         const W = scene.scale.width;
@@ -213,7 +213,7 @@
         dialog.add(dBg);
 
         const dTxt = scene.add.text(0, -25, text, {
-            fontFamily: '"Pixelify Sans", monospace',
+            fontFamily: '"Press Start 2P", monospace',
             fontSize: '14px',
             fontStyle: 'bold',
             color: '#15803d',
@@ -310,7 +310,7 @@
         dialog.add(dBg);
 
         const dTxt = scene.add.text(0, -20, text, {
-            fontFamily: '"Pixelify Sans", monospace',
+            fontFamily: '"Press Start 2P", monospace',
             fontSize: '14px',
             fontStyle: 'bold',
             color: '#15803d',
@@ -413,7 +413,7 @@
     }
 
     // =====================================================
-    //  HELPER — Dynamic Pixel Art Recoloring
+    //  HELPER â€” Dynamic Pixel Art Recoloring
     // =====================================================
     function recolorCharacterImage(scene, sourceKey, customColors) {
         if (!scene.charCanvasCache) scene.charCanvasCache = {};
@@ -925,7 +925,7 @@
             boxBg.strokeRoundedRect(-boxWidth / 2, -boxHeight / 2, boxWidth, boxHeight, 16);
             boxContainer.add(boxBg);
 
-            const boxTitle = this.add.text(0, -boxHeight / 2 + 20, '✦ JALUAR PREVIEW ✦', {
+            const boxTitle = this.add.text(0, -boxHeight / 2 + 20, 'âœ¦ JALUAR PREVIEW âœ¦', {
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '10px',
                 color: '#38bdf8',
@@ -1078,7 +1078,7 @@
                 {
                     key: 'boat',
                     label: 'JALUR',
-                    icon: '🚣',
+                    icon: 'ðŸš£',
                     colors: [
                         '#8D6E63', 
                         '#6D4C41', 
@@ -1091,13 +1091,13 @@
                 {
                     key: 'lambai',
                     label: 'LAMBAI LAMBAI',
-                    icon: '🚩',
+                    icon: 'ðŸš©',
                     colors: [] 
                 },
                 {
                     key: 'hair',
                     label: 'RAMBUT',
-                    icon: '💇',
+                    icon: 'ðŸ’‡',
                     colors: [
                         '#111827', 
                         '#F59E0B', 
@@ -1110,7 +1110,7 @@
                 {
                     key: 'shirt',
                     label: 'BAJU',
-                    icon: '👕',
+                    icon: 'ðŸ‘•',
                     colors: [
                         '#2563EB', 
                         '#EF4444', 
@@ -1123,7 +1123,7 @@
                 {
                     key: 'pants',
                     label: 'CELANA',
-                    icon: '👖',
+                    icon: 'ðŸ‘–',
                     colors: [
                         '#1F2937', 
                         '#2563EB', 
@@ -1136,7 +1136,7 @@
                 {
                     key: 'paddle',
                     label: 'DAYUNG',
-                    icon: '🏏',
+                    icon: 'ðŸ',
                     colors: [
                         '#8D6E63', 
                         '#EF4444', 
@@ -1149,7 +1149,7 @@
                 {
                     key: 'splash',
                     label: 'BAKABUIK',
-                    icon: '💧',
+                    icon: 'ðŸ’§',
                     colors: [
                         '#38BDF8', 
                         '#22D3EE', 
@@ -1258,7 +1258,7 @@
                         : 'Upload gambar ekor\nuntuk hiasan melambai perahu';
 
                     const descTxt = this.add.text(0, -22, descText, {
-                        fontFamily: '"Pixelify Sans", monospace',
+                        fontFamily: '"Press Start 2P", monospace',
                         fontSize: '9.5px',
                         color: '#94a3b8',
                         fontStyle: 'bold',
@@ -2056,7 +2056,7 @@
             });
 
             this.add.text(cx, H - 22, 'v1.0.0  |  Kustomisasi Grid', {
-                fontFamily: '"Pixelify Sans", monospace',
+                fontFamily: '"Press Start 2P", monospace',
                 fontSize: '11px',
                 fontStyle: 'bold',
                 color: 'rgba(255, 255, 255, 0.3)'
