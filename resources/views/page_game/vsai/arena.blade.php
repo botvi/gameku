@@ -1123,7 +1123,7 @@ if ($winsCount >= 100) {
             this.playerBoatGroup.add(this.playerNameText);
 
             // Teks Status Badge Pemain
-            const pStatus = "âš¡ {{ $statusText }} âš¡";
+            const pStatus = " {{ $statusText }} ";
             this.playerStatusText = this.add.text(0, -67, pStatus, {
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '7px',
@@ -1135,20 +1135,20 @@ if ($winsCount >= 100) {
             this.playerBoatGroup.add(this.playerStatusText);
 
             let initialOppName = 'LAWAN';
-            let initialOppStatus = 'âš¡ PAMAIN SEWA âš¡';
+            let initialOppStatus = ' PAMAIN SEWA ';
             if (!this.isMultiplayer) {
                 if (AI_LEVEL > 80) {
                     initialOppName = 'AI MASTER';
-                    initialOppStatus = 'âš¡ TINGKAT MASTER âš¡';
+                    initialOppStatus = ' TINGKAT MASTER';
                 } else if (AI_LEVEL > 50) {
                     initialOppName = 'AI HANDAL';
-                    initialOppStatus = 'âš¡ TINGKAT HANDAL âš¡';
+                    initialOppStatus = ' TINGKAT HANDAL ';
                 } else if (AI_LEVEL > 20) {
                     initialOppName = 'AI MENENGAH';
-                    initialOppStatus = 'âš¡ TINGKAT MENENGAH âš¡';
+                    initialOppStatus = ' TINGKAT MENENGAH ';
                 } else {
                     initialOppName = 'AI PEMULA';
-                    initialOppStatus = 'âš¡ TINGKAT PEMULA âš¡';
+                    initialOppStatus = ' TINGKAT PEMULA ';
                 }
             } else {
                 initialOppStatus = 'LOADING...';
@@ -1321,7 +1321,7 @@ if ($winsCount >= 100) {
             track.fillRect(-pbWidth / 2 + 10, -2, pbWidth - 20, 4);
             progressContainer.add(track);
 
-            const finishMarker = this.add.text(-pbWidth / 2 + 14, 0, 'ðŸ', {
+            const finishMarker = this.add.text(-pbWidth / 2 + 14, 0, '🏁', {
                 fontSize: '11px'
             }).setOrigin(0.5);
             progressContainer.add(finishMarker);
@@ -1782,7 +1782,7 @@ if ($winsCount >= 100) {
                         }
 
                         if (opponent.customizations && opponent.customizations.statusText) {
-                            this.oppStatusText.setText("âš¡ " + opponent.customizations.statusText.toUpperCase() + " âš¡");
+                            this.oppStatusText.setText(" " + opponent.customizations.statusText.toUpperCase() + " ");
                         }
                     }
                 }

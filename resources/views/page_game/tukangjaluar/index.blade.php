@@ -936,7 +936,7 @@
             boxBg.strokeRoundedRect(-boxWidth / 2, -boxHeight / 2, boxWidth, boxHeight, 16);
             boxContainer.add(boxBg);
 
-            const boxTitle = this.add.text(0, -boxHeight / 2 + 20, 'âœ¦ JALUAR PREVIEW âœ¦', {
+            const boxTitle = this.add.text(0, -boxHeight / 2 + 20, ' JALUAR PREVIEW ', {
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '10px',
                 color: '#38bdf8',

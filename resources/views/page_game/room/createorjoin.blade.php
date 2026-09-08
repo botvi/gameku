@@ -602,7 +602,7 @@
 
     <!-- Panel Buat Room -->
     <div class="panel">
-        <div class="panel-title"><i class="bi bi-plus-circle-fill me-1"></i> BUAT ROOM BARU</div>
+        <div class="panel-title">BUAT ROOM BARU</div>
         <div class="input-group">
             <label class="input-label">Nama Room</label>
             <input type="text" id="room-name-input" class="pixel-input" placeholder="Masukkan nama room...">
@@ -616,7 +616,7 @@
 
     <!-- Panel Room Tersedia -->
     <div class="panel" style="flex: 1; max-height: 45%; min-height: 0;">
-        <div class="panel-title"><i class="bi bi-collection-fill me-1"></i> ROOM TERSEDIA</div>
+        <div class="panel-title">ROOM TERSEDIA</div>
 
         <!-- Cari Kode Room -->
         <div style="display:flex; gap:8px; margin-bottom:12px; position:relative; z-index:1;">

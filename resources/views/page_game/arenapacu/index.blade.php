@@ -1279,7 +1279,7 @@ if ($winsCount >= 100) {
             }).setOrigin(0.5);
             this.playerBoatGroup.add(this.playerNameText);
 
-            const pStatus = "âš¡ {{ $statusText }} âš¡";
+            const pStatus = " {{ $statusText }} ";
             this.playerStatusText = this.add.text(0, -67, pStatus, {
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '7px',
@@ -1457,10 +1457,10 @@ if ($winsCount >= 100) {
             track.fillRect(-pbWidth / 2 + 10, -2, pbWidth - 20, 4);
             progressContainer.add(track);
 
-            const finishMarker = this.add.text(-pbWidth / 2 + 14, 0, 'ðŸ', {
+            const 🏁Marker = this.add.text(-pbWidth / 2 + 14, 0, '🏁', {
                 fontSize: '11px'
             }).setOrigin(0.5);
-            progressContainer.add(finishMarker);
+            progressContainer.add(🏁Marker);
 
             this.playerMarker = this.add.text(pbWidth / 2 - 10, -1, 'P', {
                 fontFamily: '"Press Start 2P", monospace',
@@ -1888,7 +1888,7 @@ if ($winsCount >= 100) {
                         }
 
                         if (opponent.customizations && opponent.customizations.statusText) {
-                            this.oppStatusText.setText("âš¡ " + opponent.customizations.statusText.toUpperCase() + " âš¡");
+                            this.oppStatusText.setText(" " + opponent.customizations.statusText.toUpperCase() + " ");
                         }
 
                         if (this.gameState === 'racing' && this.ws && this.ws.readyState === WebSocket.OPEN) {
@@ -1971,8 +1971,8 @@ if ($winsCount >= 100) {
                     }
                 }
 
-                else if (type === 'game_finished') {
-                    if (this.gameState !== 'finished') {
+                else if (type === 'game_🏁ed') {
+                    if (this.gameState !== '🏁ed') {
                         this.showRaceResult(parseInt(payload.winnerId) === this.currentUserId);
                     }
                 }
@@ -2372,7 +2372,7 @@ if ($winsCount >= 100) {
         }
 
         showRaceResult(isWinner) {
-            this.gameState = 'finished';
+            this.gameState = '🏁ed';
             this.playerSpeed = 0;
             this.opponentSpeed = 0;
             if (this.isMultiplayer && this.roomId) {
@@ -2400,7 +2400,7 @@ if ($winsCount >= 100) {
             })
             .catch(err => console.error('Failed to update coins in DB:', err));
 
-            fetch('/room/finish', {
+            fetch('/room/🏁', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
