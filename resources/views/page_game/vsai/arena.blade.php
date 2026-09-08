@@ -1601,7 +1601,7 @@ if ($winsCount >= 100) {
             
             this.coinText = this.add.text(0, 0, '', {
                 fontFamily: '"Press Start 2P", monospace',
-                fontSize: '13px',
+                fontSize: '8px',
                 fontStyle: 'bold',
                 color: '#FFD700',
                 stroke: '#000000',

@@ -58,7 +58,7 @@
     #leaderboard-dashboard .coin-icon-wrapper img { width: 100%; height: 100%; image-rendering: pixelated; }
     #leaderboard-dashboard .coin-amount {
         font-family: 'Press Start 2P', monospace;
-        font-size: 13px; font-weight: bold;
+        font-size: 8px; font-weight: bold;
         color: #000000; line-height: 1;
         text-shadow: 1px 1px 0px #ffffff, -1px -1px 0px #ffffff,
                      1px -1px 0px #ffffff, -1px 1px 0px #ffffff;

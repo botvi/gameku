@@ -93,7 +93,7 @@
 
     #detail-pemain-dashboard .coin-amount {
         font-family: 'Press Start 2P', monospace;
-        font-size: 13px;
+        font-size: 8px;
         font-weight: bold;
         color: #000000;
         line-height: 1;
