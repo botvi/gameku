@@ -3,6 +3,7 @@
 
 <head>
     {{-- MONETAG --}}
+    <script>(function(s){s.dataset.zone='11753087',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <script>(function(s){s.dataset.zone='11752959',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <meta name="monetag" content="5d86190daeee506c68bbc447ed901024">
     {{-- MONETAG --}}
