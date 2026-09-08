@@ -25,13 +25,32 @@ class RoomController extends Controller
         return view('page_game.room.createorjoin');
     }
 
+    /**
+     * Hapus room yang sudah expired (lama & masih waiting, tanpa guest).
+     * Room yang sudah finished / sudah ada guest tidak dihapus.
+     */
+    protected function cleanupExpiredRooms()
+    {
+        // Room waiting yang sudah lebih dari 30 menita dan belum ada guest -> expired
+        Room::where('status', 'waiting')
+            ->whereNull('guest_id')
+            ->where('updated_at', '<', now()->subMinutes(30))
+            ->delete();
+    }
+
     public function list()
     {
+        // Hapus room yang sudah expired (lama & masih waiting)
+        $this->cleanupExpiredRooms();
+
         $rooms = Room::where('status', 'waiting')
             ->whereNull('guest_id')
             ->where('host_id', '!=', auth()->id())
             ->with('host')
-            ->get();
+            ->orderBy('created_at', 'desc')
+            ->get()
+            // Hanya tampilkan 1 room per host (room yang paling baru)
+            ->unique('host_id');
 
         return response()->json([
             'rooms' => $rooms->map(function($room) {
@@ -51,6 +70,24 @@ class RoomController extends Controller
             'name' => 'required|string|max:50',
             'password' => 'nullable|string|max:50',
         ]);
+
+        // Jika player sudah memiliki room aktif sebagai host, reuse room tersebut
+        // (tidak perlu hapus di database — room lama tetap ada tapi tidak diduplikat)
+        $existingRoom = Room::where('host_id', auth()->id())
+            ->where('status', 'waiting')
+            ->first();
+
+        if ($existingRoom) {
+            // Update nama & password room yang sudah ada
+            $existingRoom->name = $request->name;
+            $existingRoom->password = $request->password ? Hash::make($request->password) : null;
+            $existingRoom->save();
+
+            return response()->json([
+                'success' => true,
+                'redirect_url' => route('room.lobby', ['id' => $existingRoom->id])
+            ]);
+        }
 
         $room = Room::create([
             'room_code' => strtoupper(Str::random(6)),

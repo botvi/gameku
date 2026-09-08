@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pacu-jalur-the-pixel-v2.0.12';
+const CACHE_NAME = 'pacu-jalur-the-pixel-v2.0.13';
 const ASSETS_TO_CACHE = [
   '/',
   '/login',
