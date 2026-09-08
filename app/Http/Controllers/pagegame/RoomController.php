@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\User;
-use App\Models\ModelJalur;
 use App\Models\MatchmakingQueue;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -26,32 +25,13 @@ class RoomController extends Controller
         return view('page_game.room.createorjoin');
     }
 
-    /**
-     * Hapus room yang sudah expired (lama & masih waiting, tanpa guest).
-     * Room yang sudah finished / sudah ada guest tidak dihapus.
-     */
-    protected function cleanupExpiredRooms()
-    {
-        // Room waiting yang sudah lebih dari 30 menita dan belum ada guest -> expired
-        Room::where('status', 'waiting')
-            ->whereNull('guest_id')
-            ->where('updated_at', '<', now()->subMinutes(30))
-            ->delete();
-    }
-
     public function list()
     {
-        // Hapus room yang sudah expired (lama & masih waiting)
-        $this->cleanupExpiredRooms();
-
         $rooms = Room::where('status', 'waiting')
             ->whereNull('guest_id')
             ->where('host_id', '!=', auth()->id())
             ->with('host')
-            ->orderBy('created_at', 'desc')
-            ->get()
-            // Hanya tampilkan 1 room per host (room yang paling baru)
-            ->unique('host_id');
+            ->get();
 
         return response()->json([
             'rooms' => $rooms->map(function($room) {
@@ -71,24 +51,6 @@ class RoomController extends Controller
             'name' => 'required|string|max:50',
             'password' => 'nullable|string|max:50',
         ]);
-
-        // Jika player sudah memiliki room aktif sebagai host, reuse room tersebut
-        // (tidak perlu hapus di database — room lama tetap ada tapi tidak diduplikat)
-        $existingRoom = Room::where('host_id', auth()->id())
-            ->where('status', 'waiting')
-            ->first();
-
-        if ($existingRoom) {
-            // Update nama & password room yang sudah ada
-            $existingRoom->name = $request->name;
-            $existingRoom->password = $request->password ? Hash::make($request->password) : null;
-            $existingRoom->save();
-
-            return response()->json([
-                'success' => true,
-                'redirect_url' => route('room.lobby', ['id' => $existingRoom->id])
-            ]);
-        }
 
         $room = Room::create([
             'room_code' => strtoupper(Str::random(6)),
@@ -244,26 +206,7 @@ class RoomController extends Controller
                 'redirect_url' => route('room.lobby', ['id' => $room->id])
             ]);
         } else {
-            // Tidak ada lawan online -> match dengan bot AI random
-            $bot = $this->findRandomBot();
-
-            if ($bot) {
-                $room = Room::create([
-                    'room_code' => strtoupper(Str::random(6)),
-                    'name' => 'Quick Match',
-                    'host_id' => $userId,
-                    'guest_id' => $bot->id,
-                    'status' => 'waiting',
-                ]);
-
-                return response()->json([
-                    'success' => true,
-                    'status' => 'matched',
-                    'redirect_url' => route('room.lobby', ['id' => $room->id])
-                ]);
-            }
-
-            // Fallback: masuk queue dan wait (tidak ada bot)
+            // No opponent searching right now -> enter queue and wait!
             MatchmakingQueue::create([
                 'user_id' => $userId,
                 'status' => 'searching',
@@ -275,18 +218,6 @@ class RoomController extends Controller
                 'message' => 'Mencari lawan...'
             ]);
         }
-    }
-
-    /**
-     * Pilih bot AI random dari database.
-     */
-    protected function findRandomBot()
-    {
-        $bots = User::where('is_bot', true)->get();
-        if ($bots->isEmpty()) {
-            return null;
-        }
-        return $bots->random();
     }
 
     public function matchmakeStatus(Request $request)
@@ -351,26 +282,7 @@ class RoomController extends Controller
             return redirect()->route('room')->with('error', 'Anda tidak memiliki akses ke room ini.');
         }
 
-        // Bot customizations (if guest is a bot)
-        $botCustomizations = [];
-        if ($room->guest && $room->guest->is_bot) {
-            $modelJalur = ModelJalur::where('user_id', $room->guest_id)->first();
-            $modelJalurData = $modelJalur ? ($modelJalur->model_jalur ?? []) : [];
-            $botCustomizations = [
-                'colors' => $modelJalurData['customColors'] ?? [
-                    'boat' => '#d97706',
-                    'hair' => '#2563eb',
-                    'shirt' => '#ea580c',
-                    'pants' => '#4b5563',
-                    'paddle' => '#854d0e',
-                    'splash' => '#a5f3fc',
-                ],
-                'corak_data_url' => $modelJalurData['corak_data_url'] ?? null,
-                'lambai_data_url' => $modelJalurData['lambai_data_url'] ?? null,
-            ];
-        }
-
-        return view('page_game.room.lobby', compact('room', 'botCustomizations'));
+        return view('page_game.room.lobby', compact('room'));
     }
 
     public function ready(Request $request)
