@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     {{-- MONETAG --}}
     <meta name="monetag" content="5d86190daeee506c68bbc447ed901024">
-    <script>(function(s){s.dataset.zone='11752959',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <script>
+        (function(s) {
+            s.dataset.zone = '11752959', s.src = 'https://nap5k.com/tag.min.js'
+        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+    </script>
 
     {{-- MONETAG --}}
     <meta charset="UTF-8">
@@ -16,14 +21,31 @@
     <link rel="apple-touch-icon" href="{{ asset_v('game_pacu/assets/image/ui/pwa-icon-192.png') }}">
     <link rel="stylesheet" href="{{ asset_v('game_pacu/assets/css/game-layout.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Ubuntu:wght@400;500;700&display=swap"
+        rel="stylesheet">
     <style>
         /* Global Press Start 2P — jangan pakai #game-container * agar Ubuntu bisa menang */
-        html, body {
+        html,
+        body {
             font-family: 'Press Start 2P', monospace !important;
             font-size: 78%;
         }
-        button, input, select, textarea, label, a, p, span, div, h1, h2, h3, h4, h5, h6 {
+
+        button,
+        input,
+        select,
+        textarea,
+        label,
+        a,
+        p,
+        span,
+        div,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             font-family: inherit;
         }
 
@@ -36,6 +58,7 @@
             justify-content: center;
             vertical-align: middle;
         }
+
         .sprint-badge {
             display: inline-flex;
             align-items: center;
@@ -48,10 +71,17 @@
             color: #ffffff;
             font-weight: bold;
         }
+
         @keyframes spinIcon {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         .spin-icon {
             display: inline-block;
             animation: spinIcon 1.2s linear infinite;
@@ -65,13 +95,16 @@
     @livewireStyles
     @stack('styles')
 </head>
+
 <body>
     <div id="desktop-wrapper">
         <div id="mobile-frame">
             <div id="status-bar">
                 <span id="clock">00:00</span>
                 <span class="status-dots">
-                    <button id="fullscreen-toggle-btn" onclick="toggleFullscreenManual()" style="background: none; border: none; color: #ffffff; cursor: pointer; padding: 0 4px; font-size: 11px; line-height: 1; vertical-align: middle;" title="Layar Penuh">
+                    <button id="fullscreen-toggle-btn" onclick="toggleFullscreenManual()"
+                        style="background: none; border: none; color: #ffffff; cursor: pointer; padding: 0 4px; font-size: 11px; line-height: 1; vertical-align: middle;"
+                        title="Layar Penuh">
                         <i class="bi bi-fullscreen" id="fullscreen-icon"></i>
                     </button>
                     <i class="bi bi-wifi"></i> <i class="bi bi-battery-full ms-1"></i>
@@ -99,10 +132,11 @@
         window.autoFullscreenEnabled = {{ \App\Models\GameSetting::isFullscreenEnabled() ? 'true' : 'false' }};
         window.assetV = function(path) {
             if (!path || typeof path !== 'string') return path;
-            if (path.indexOf('?v=') !== -1 || path.indexOf('&v=') !== -1 || path.startsWith('data:') || path.startsWith('blob:') || path.startsWith('http://') || path.startsWith('https://')) {
+            if (path.indexOf('?v=') !== -1 || path.indexOf('&v=') !== -1 || path.startsWith('data:') || path.startsWith(
+                    'blob:') || path.startsWith('http://') || path.startsWith('https://')) {
                 return path;
             }
-            const v = window.GAME_VERSION || '{{ config("app.version", "2.0.2") }}';
+            const v = window.GAME_VERSION || '{{ config('app.version', '2.0.2') }}';
             return path + (path.includes('?') ? '&v=' : '?v=') + v;
         };
     </script>
@@ -164,4 +198,5 @@
         }
     </style>
 </body>
+
 </html>
