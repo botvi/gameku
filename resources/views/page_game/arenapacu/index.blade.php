@@ -985,8 +985,8 @@ if ($winsCount >= 100) {
             this.isMultiplayer = !!rawRoomId;
             this.roomId = rawRoomId;
             this.currentUserId = {{ auth()->id() }};
-            this.currentUserName = {!! json_encode(auth()->user()->nama_jalur ?? auth()->user()->email) !!};
-            this.currentUserPhoto = {!! json_encode(auth()->user()->foto_profile ?? '') !!};
+            this.currentUserName = "{!! addslashes(auth()->user()->nama_jalur ?? auth()->user()->email) !!}";
+            this.currentUserPhoto = "{!! addslashes(auth()->user()->foto_profile ?? '') !!}";
             this.opponentId = null;
             this.lastSyncTime = 0;
 
@@ -1457,10 +1457,11 @@ if ($winsCount >= 100) {
             track.fillRect(-pbWidth / 2 + 10, -2, pbWidth - 20, 4);
             progressContainer.add(track);
 
-            const 🏁Marker = this.add.text(-pbWidth / 2 + 14, 0, '🏁', {
+           
+            const finishMarker = this.add.text(-pbWidth / 2 + 14, 0, '🏁', {
                 fontSize: '11px'
             }).setOrigin(0.5);
-            progressContainer.add(🏁Marker);
+            progressContainer.add(finishMarker);
 
             this.playerMarker = this.add.text(pbWidth / 2 - 10, -1, 'P', {
                 fontFamily: '"Press Start 2P", monospace',
@@ -1971,8 +1972,8 @@ if ($winsCount >= 100) {
                     }
                 }
 
-                else if (type === 'game_🏁ed') {
-                    if (this.gameState !== '🏁ed') {
+                 else if (type === 'game_finished') {
+                    if (this.gameState !== 'finished') {
                         this.showRaceResult(parseInt(payload.winnerId) === this.currentUserId);
                     }
                 }
@@ -2372,7 +2373,7 @@ if ($winsCount >= 100) {
         }
 
         showRaceResult(isWinner) {
-            this.gameState = '🏁ed';
+            this.gameState = 'finished';
             this.playerSpeed = 0;
             this.opponentSpeed = 0;
             if (this.isMultiplayer && this.roomId) {
@@ -2400,7 +2401,8 @@ if ($winsCount >= 100) {
             })
             .catch(err => console.error('Failed to update coins in DB:', err));
 
-            fetch('/room/🏁', {
+           
+            fetch('/room/finish', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
