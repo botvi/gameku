@@ -1186,7 +1186,7 @@
     /* ========= INBOX TOAST ALERT ========= */
     .inbox-toast-alert {
         position: absolute;
-        top: -120px;
+        top: -200px;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
@@ -1204,11 +1204,17 @@
         align-items: center;
         gap: 10px;
         cursor: pointer;
-        transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease, visibility 0.4s;
     }
 
     .inbox-toast-alert.show {
         top: 60px;
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
     }
 
     .inbox-toast-icon {

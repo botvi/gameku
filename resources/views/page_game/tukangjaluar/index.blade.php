@@ -2131,8 +2131,8 @@
             pixelArt: true,
             scene: [CustomizeScene],
             scale: {
-                // FIT: seluruh UI 360x760 selalu muat di frame (tanpa clip / tanpa scroll canvas)
-                mode: Phaser.Scale.FIT,
+                // RESIZE: full screen seperti halaman lain (arena, etc.)
+                mode: Phaser.Scale.RESIZE,
                 autoCenter: Phaser.Scale.CENTER_BOTH
             }
         });
