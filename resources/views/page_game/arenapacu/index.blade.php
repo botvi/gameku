@@ -1,4 +1,4 @@
-﻿@extends('layouts.game')
+@extends('layouts.game')
 
 @section('title', 'Pacu Jalur: The Pixel ” Arena Pacu Jalur')
 
@@ -985,8 +985,8 @@ if ($winsCount >= 100) {
             this.isMultiplayer = !!rawRoomId;
             this.roomId = rawRoomId;
             this.currentUserId = {{ auth()->id() }};
-            this.currentUserName = "{!! addslashes(auth()->user()->nama_jalur ?? auth()->user()->email) !!}";
-            this.currentUserPhoto = "{!! addslashes(auth()->user()->foto_profile ?? '') !!}";
+            this.currentUserName = {!! json_encode(auth()->user()->nama_jalur ?? auth()->user()->email) !!};
+            this.currentUserPhoto = {!! json_encode(auth()->user()->foto_profile ?? '') !!};
             this.opponentId = null;
             this.lastSyncTime = 0;
 
