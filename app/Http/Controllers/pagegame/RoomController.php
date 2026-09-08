@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\ModelJalur;
 use App\Models\MatchmakingQueue;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -243,7 +244,26 @@ class RoomController extends Controller
                 'redirect_url' => route('room.lobby', ['id' => $room->id])
             ]);
         } else {
-            // No opponent searching right now -> enter queue and wait!
+            // Tidak ada lawan online -> match dengan bot AI random
+            $bot = $this->findRandomBot();
+
+            if ($bot) {
+                $room = Room::create([
+                    'room_code' => strtoupper(Str::random(6)),
+                    'name' => 'Quick Match',
+                    'host_id' => $userId,
+                    'guest_id' => $bot->id,
+                    'status' => 'waiting',
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'status' => 'matched',
+                    'redirect_url' => route('room.lobby', ['id' => $room->id])
+                ]);
+            }
+
+            // Fallback: masuk queue dan wait (tidak ada bot)
             MatchmakingQueue::create([
                 'user_id' => $userId,
                 'status' => 'searching',
@@ -255,6 +275,18 @@ class RoomController extends Controller
                 'message' => 'Mencari lawan...'
             ]);
         }
+    }
+
+    /**
+     * Pilih bot AI random dari database.
+     */
+    protected function findRandomBot()
+    {
+        $bots = User::where('is_bot', true)->get();
+        if ($bots->isEmpty()) {
+            return null;
+        }
+        return $bots->random();
     }
 
     public function matchmakeStatus(Request $request)
@@ -319,7 +351,26 @@ class RoomController extends Controller
             return redirect()->route('room')->with('error', 'Anda tidak memiliki akses ke room ini.');
         }
 
-        return view('page_game.room.lobby', compact('room'));
+        // Bot customizations (if guest is a bot)
+        $botCustomizations = [];
+        if ($room->guest && $room->guest->is_bot) {
+            $modelJalur = ModelJalur::where('user_id', $room->guest_id)->first();
+            $modelJalurData = $modelJalur ? ($modelJalur->model_jalur ?? []) : [];
+            $botCustomizations = [
+                'colors' => $modelJalurData['customColors'] ?? [
+                    'boat' => '#d97706',
+                    'hair' => '#2563eb',
+                    'shirt' => '#ea580c',
+                    'pants' => '#4b5563',
+                    'paddle' => '#854d0e',
+                    'splash' => '#a5f3fc',
+                ],
+                'corak_data_url' => $modelJalurData['corak_data_url'] ?? null,
+                'lambai_data_url' => $modelJalurData['lambai_data_url'] ?? null,
+            ];
+        }
+
+        return view('page_game.room.lobby', compact('room', 'botCustomizations'));
     }
 
     public function ready(Request $request)

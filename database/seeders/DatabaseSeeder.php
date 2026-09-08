@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SuperadminSeeder::class,
             KlikQrisSeeder::class,
+            BotSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 
