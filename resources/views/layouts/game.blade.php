@@ -23,7 +23,7 @@
         html,
         body {
             font-family: 'Press Start 2P', monospace !important;
-            font-size: 78%;
+            font-size: 60%;
         }
 
         button,
