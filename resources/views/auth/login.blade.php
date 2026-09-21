@@ -1,4 +1,4 @@
-﻿@extends('layouts.game')
+@extends('layouts.game')
 
 @section('title', 'Pacu Jalur: The Pixel ” Masuk Akun')
 
@@ -331,6 +331,19 @@
         // Show connecting overlay
         var overlay = document.getElementById('connecting-overlay');
         if (overlay) overlay.classList.add('show');
+
+        // Deteksi apakah dijalankan di Mobile, PWA, atau Flutter WebView
+        var ua = navigator.userAgent || navigator.vendor || window.opera;
+        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+        var isWebView = /wv|WebView|Flutter|MobileApp/i.test(ua) || (window.Flutter !== undefined) || (window.flutter_inappwebview !== undefined);
+        var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+        // Pada Mobile / WebView (Flutter) / PWA Standalone, langsung redirect di window yang sama
+        // Agar tidak membuka popup / browser eksternal yang menyebabkan keluar dari aplikasi Flutter!
+        if (isMobile || isWebView || isStandalone) {
+            window.location.href = '{{ route('google.login') }}';
+            return;
+        }
 
         var width = 500, height = 650;
         var left = (window.screen.width / 2) - (width / 2);

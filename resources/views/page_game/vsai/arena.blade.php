@@ -1,4 +1,4 @@
-﻿@extends('layouts.game')
+@extends('layouts.game')
 
 @section('title', 'Pacu Jalur: The Pixel ” Arena VS AI')
 

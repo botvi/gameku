@@ -256,21 +256,42 @@ class GoogleController extends Controller
             <html>
             <head>
                 <title>Authenticating...</title>
+                <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
             </head>
-            <body>
+            <body style=\"background:#0f172a; color:#fff; display:flex; align-items:center; justify-content:center; height:100vh; font-family:sans-serif;\">
+                <div style=\"text-align:center;\">
+                    <p style=\"font-size:14px; color:#22c55e;\">Memproses login Google...</p>
+                </div>
                 <script>
                     const status = {$statusJson};
                     const redirectUrl = {$redirectUrlJson};
                     const errorMessage = {$errorMessageJson};
 
-                    if (window.opener) {
-                        window.opener.postMessage({
-                            type: 'google-login-response',
-                            status: status,
-                            redirect: redirectUrl,
-                            message: errorMessage
-                        }, window.location.origin);
-                        window.close();
+                    let hasValidOpener = false;
+                    try {
+                        hasValidOpener = window.opener && 
+                                         !window.opener.closed && 
+                                         window.opener.location.origin === window.location.origin;
+                    } catch (e) {
+                        hasValidOpener = false;
+                    }
+
+                    if (hasValidOpener) {
+                        try {
+                            window.opener.postMessage({
+                                type: 'google-login-response',
+                                status: status,
+                                redirect: redirectUrl,
+                                message: errorMessage
+                            }, window.location.origin);
+                            window.close();
+                            // Fallback jika window.close() tidak didukung oleh browser/webview
+                            setTimeout(function() {
+                                window.location.href = status === 'success' ? redirectUrl : '/login';
+                            }, 1000);
+                        } catch (err) {
+                            window.location.href = status === 'success' ? redirectUrl : '/login';
+                        }
                     } else {
                         if (status === 'success') {
                             window.location.href = redirectUrl;
