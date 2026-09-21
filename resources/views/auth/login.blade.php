@@ -1,4 +1,4 @@
-@extends('layouts.game')
+﻿@extends('layouts.game')
 
 @section('title', 'Pacu Jalur: The Pixel ” Masuk Akun')
 
@@ -323,6 +323,7 @@
 @endsection
 
 @push('scripts')
+{{-- yOVI ARDIANSYAH --}}
 <script>
     // ---- Google Login Handler ----
     function handleGoogleLogin(e) {
