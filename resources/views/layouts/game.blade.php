@@ -6,7 +6,7 @@
     <script>(function(s){s.dataset.zone='11752959',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <meta name="monetag" content="5d86190daeee506c68bbc447ed901024">
 
-    <script>(function(s){s.dataset.zone='11888179',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    {{-- <script>(function(s){s.dataset.zone='11888179',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script> --}}
     {{-- MONETAG --}}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
