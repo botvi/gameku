@@ -77,7 +77,7 @@ class TournamentController extends Controller
         $userId = auth()->id();
         $match = TournamentMatch::findOrFail($matchId);
 
-        if ($match->status !== 'ready_check') {
+        if ($match->status !== 'ready_check' && $match->status !== 'in_progress') {
             return response()->json(['success' => false, 'message' => 'Pertandingan belum dalam fase siap.']);
         }
 
@@ -89,24 +89,17 @@ class TournamentController extends Controller
             return response()->json(['success' => false, 'message' => 'Anda bukan pemain di pertandingan ini.']);
         }
 
-        $match->save();
-
         // Check if both ready
         if ($match->ready_p1 && $match->ready_p2) {
             $match->status = 'in_progress';
-            $match->save();
-
-            return response()->json([
-                'success' => true,
-                'status' => 'start',
-                'redirect_url' => route('arena-pacu', ['tournament_match_id' => $match->id])
-            ]);
         }
+
+        $match->save();
 
         return response()->json([
             'success' => true,
-            'status' => 'waiting_opponent',
-            'message' => 'Menunggu lawan menekan tombol SIAP...'
+            'status' => ($match->ready_p1 && $match->ready_p2) ? 'start' : 'ready',
+            'redirect_url' => route('arena-pacu', ['tournament_match_id' => $match->id])
         ]);
     }
 

@@ -459,13 +459,8 @@
         })
         .then(res => res.json())
         .then(data => {
-            if (data.success) {
-                if (data.status === 'start' && data.redirect_url) {
-                    window.navigateToPage(data.redirect_url);
-                } else {
-                    if (btn) btn.innerText = 'MENUNGGU LAWAN...';
-                    setTimeout(() => window.location.reload(), 2000);
-                }
+            if (data.success && data.redirect_url) {
+                window.navigateToPage(data.redirect_url);
             } else {
                 alert(data.message || 'Gagal memproses status siap.');
                 if (btn) btn.disabled = false;
