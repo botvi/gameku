@@ -154,6 +154,8 @@ Route::middleware(['auth', 'check.blocked'])->group(function () {
     // Tournament Game User Routes
     Route::get('/tournament', [TournamentController::class, 'index'])->name('tournament.index');
     Route::get('/tournament/hall-of-fame', [TournamentController::class, 'hallOfFame'])->name('tournament.hall-of-fame');
+    Route::get('/tournament/arena/{matchId}', [TournamentController::class, 'arena'])->name('tournament.arena');
+    Route::get('/tournament/spectate/{matchId}', [TournamentController::class, 'spectate'])->name('tournament.spectate');
     Route::get('/tournament/{id}', [TournamentController::class, 'show'])->name('tournament.show');
     Route::post('/tournament/match/{matchId}/ready', [TournamentController::class, 'readyMatch'])->name('tournament.match.ready');
     Route::post('/tournament/match/{matchId}/finish', [TournamentController::class, 'finishMatch'])->name('tournament.match.finish');

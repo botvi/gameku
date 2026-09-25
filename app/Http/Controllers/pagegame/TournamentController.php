@@ -9,6 +9,8 @@ use App\Models\TournamentParticipant;
 use App\Models\TournamentMatch;
 use App\Models\TournamentWinner;
 use App\Models\User;
+use App\Models\ModelJalur;
+use App\Models\Sponsor;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -72,6 +74,61 @@ class TournamentController extends Controller
         ));
     }
 
+    public function arena($matchId)
+    {
+        $userId = auth()->id();
+        $tournamentMatch = TournamentMatch::with([
+            'tournament',
+            'player1.modelJalur',
+            'player2.modelJalur'
+        ])->findOrFail($matchId);
+
+        if ($tournamentMatch->player1_id != $userId && $tournamentMatch->player2_id != $userId) {
+            return redirect()->route('tournament.spectate', $matchId);
+        }
+
+        $user = auth()->user();
+        $modelJalur = ModelJalur::where('user_id', $user->id)->first();
+        $modelJalurData = $modelJalur ? ($modelJalur->model_jalur ?? []) : [];
+
+        $customColors = $modelJalurData['customColors'] ?? [
+            'boat' => '#8b4513',
+            'hair' => '#e53e3e',
+            'shirt' => '#a0aec0',
+            'pants' => '#38a169',
+            'paddle' => '#3182ce',
+            'splash' => '#a5f3fc'
+        ];
+        $corakDataUrl = $modelJalurData['corak_data_url'] ?? null;
+        $lambaiDataUrl = $modelJalurData['lambai_data_url'] ?? null;
+
+        $sponsors = Sponsor::where('is_active', true)->pluck('image_path')->map(fn($p) => asset($p))->toArray();
+
+        return view('page_game.tournament.arena', compact(
+            'tournamentMatch',
+            'customColors',
+            'corakDataUrl',
+            'lambaiDataUrl',
+            'sponsors'
+        ));
+    }
+
+    public function spectate($matchId)
+    {
+        $tournamentMatch = TournamentMatch::with([
+            'tournament',
+            'player1.modelJalur',
+            'player2.modelJalur'
+        ])->findOrFail($matchId);
+
+        $sponsors = Sponsor::where('is_active', true)->pluck('image_path')->map(fn($p) => asset($p))->toArray();
+
+        return view('page_game.tournament.spectate', compact(
+            'tournamentMatch',
+            'sponsors'
+        ));
+    }
+
     public function readyMatch(Request $request, $matchId)
     {
         $userId = auth()->id();
@@ -99,7 +156,7 @@ class TournamentController extends Controller
         return response()->json([
             'success' => true,
             'status' => ($match->ready_p1 && $match->ready_p2) ? 'start' : 'ready',
-            'redirect_url' => route('arena-pacu', ['tournament_match_id' => $match->id])
+            'redirect_url' => route('tournament.arena', $match->id)
         ]);
     }
 

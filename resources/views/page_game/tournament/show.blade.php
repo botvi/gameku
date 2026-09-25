@@ -336,7 +336,7 @@
                         @endif
                     @elseif($activeMatch->status === 'in_progress')
                         <div style="font-size: 9px; color: #22c55e;">PERTANDINGAN TELAH DIMULAI!</div>
-                        <a href="{{ route('arena-pacu', ['tournament_match_id' => $activeMatch->id]) }}" class="pixel-btn-green" style="text-decoration:none; margin-top:6px; display:inline-block;">
+                        <a href="{{ route('tournament.arena', $activeMatch->id) }}" class="pixel-btn-green" style="text-decoration:none; margin-top:6px; display:inline-block;">
                             MASUK ARENA BERTANDING
                         </a>
                     @endif
@@ -347,10 +347,13 @@
                         <div style="font-size: 7px; color: rgba(255,255,255,0.8); margin-top: 4px;">
                             MENUNGGU KEDUA PLAYER SIAP (TIMER: <span id="ready-timer-display" style="color: #fbbf24;">03:00</span>)
                         </div>
+                        <a href="{{ route('tournament.spectate', $activeMatch->id) }}" class="pixel-btn-spectate" style="text-decoration:none; margin-top:6px; padding: 8px 16px; font-size: 8px; display:inline-block;">
+                            TONTON LIVE PREVIEW
+                        </a>
                     @elseif($activeMatch->status === 'in_progress')
                         <div style="font-size: 8px; color: #ef4444;">PERTANDINGAN SEDANG BERLANGSUNG!</div>
                         <div style="font-size: 7px; color: #ffffff; margin-top: 2px;">{{ $activeMatch->player1 ? $activeMatch->player1->nama_jalur : 'TBD' }} VS {{ $activeMatch->player2 ? $activeMatch->player2->nama_jalur : 'TBD' }}</div>
-                        <a href="{{ route('arena-pacu', ['tournament_match_id' => $activeMatch->id, 'mode' => 'spectator']) }}" class="pixel-btn-spectate" style="text-decoration:none; margin-top:6px; padding: 8px 16px; font-size: 8px; display:inline-block;">
+                        <a href="{{ route('tournament.spectate', $activeMatch->id) }}" class="pixel-btn-spectate" style="text-decoration:none; margin-top:6px; padding: 8px 16px; font-size: 8px; display:inline-block;">
                             TONTON LIVE PREVIEW
                         </a>
                     @endif
@@ -407,8 +410,8 @@
                                     @if($m->ready_p2) <span class="tag-ready">SIAP</span> @endif
                                 </div>
 
-                                @if($m->status === 'in_progress')
-                                    <a href="{{ route('arena-pacu', ['tournament_match_id' => $m->id, 'mode' => 'spectator']) }}" class="pixel-btn-spectate">
+                                @if($m->status === 'in_progress' || $m->status === 'ready_check')
+                                    <a href="{{ route('tournament.spectate', $m->id) }}" class="pixel-btn-spectate">
                                         TONTON LIVE PREVIEW
                                     </a>
                                 @endif
