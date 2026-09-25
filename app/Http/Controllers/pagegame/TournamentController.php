@@ -43,16 +43,33 @@ class TournamentController extends Controller
         // Group matches by round
         $matchesByRound = $tournament->matches->groupBy('round');
 
-        // Check if logged in user has an active match
+        // Get current active match in tournament (ready_check or in_progress)
         $currentUserId = auth()->id();
-        $activeMatch = TournamentMatch::where('tournament_id', $tournament->id)
-            ->where('status', 'ready_check')
-            ->where(function ($q) use ($currentUserId) {
-                $q->where('player1_id', $currentUserId)
-                  ->orWhere('player2_id', $currentUserId);
-            })->first();
+        $activeMatch = TournamentMatch::with(['player1', 'player2'])
+            ->where('tournament_id', $tournament->id)
+            ->whereIn('status', ['ready_check', 'in_progress'])
+            ->orderBy('id', 'asc')
+            ->first();
 
-        return view('page_game.tournament.show', compact('tournament', 'matchesByRound', 'activeMatch'));
+        $isUserPlayingInMatch = false;
+        $userHasReadied = false;
+
+        if ($activeMatch) {
+            $isUserPlayingInMatch = ($activeMatch->player1_id == $currentUserId || $activeMatch->player2_id == $currentUserId);
+            if ($activeMatch->player1_id == $currentUserId) {
+                $userHasReadied = (bool) $activeMatch->ready_p1;
+            } else if ($activeMatch->player2_id == $currentUserId) {
+                $userHasReadied = (bool) $activeMatch->ready_p2;
+            }
+        }
+
+        return view('page_game.tournament.show', compact(
+            'tournament',
+            'matchesByRound',
+            'activeMatch',
+            'isUserPlayingInMatch',
+            'userHasReadied'
+        ));
     }
 
     public function readyMatch(Request $request, $matchId)

@@ -317,14 +317,44 @@
         @endif
 
         @if($activeMatch)
-            <div class="ready-check-card">
-                <div style="font-size: 9px; color: #4ade80;">GILIRAN ANDA BERTANDING!</div>
-                <div style="font-size: 7px; color: rgba(255,255,255,0.8);">
-                    BATAS WAKTU SIAP: <span id="ready-timer-display" style="color: #fbbf24;">03:00</span>
-                </div>
-                <button class="pixel-btn-green" id="btn-ready-match" onclick="submitMatchReady({{ $activeMatch->id }})">
-                    SIAP BERTANDING
-                </button>
+            <div class="ready-check-card" style="border-color: {{ $isUserPlayingInMatch ? '#22c55e' : '#3b82f6' }};">
+                @if($isUserPlayingInMatch)
+                    @if($activeMatch->status === 'ready_check')
+                        @if($userHasReadied)
+                            <div style="font-size: 9px; color: #fbbf24;">ANDA SUDAH SIAP!</div>
+                            <div style="font-size: 7px; color: rgba(255,255,255,0.8); margin-top: 4px;">
+                                MENUNGGU LAWAN MENEKAN SIAP... (WAKTU: <span id="ready-timer-display" style="color: #fbbf24;">03:00</span>)
+                            </div>
+                        @else
+                            <div style="font-size: 9px; color: #4ade80;">GILIRAN ANDA BERTANDING!</div>
+                            <div style="font-size: 7px; color: rgba(255,255,255,0.8); margin-top: 4px;">
+                                BATAS WAKTU SIAP: <span id="ready-timer-display" style="color: #fbbf24;">03:00</span>
+                            </div>
+                            <button class="pixel-btn-green" id="btn-ready-match" onclick="submitMatchReady({{ $activeMatch->id }})">
+                                SIAP BERTANDING
+                            </button>
+                        @endif
+                    @elseif($activeMatch->status === 'in_progress')
+                        <div style="font-size: 9px; color: #22c55e;">PERTANDINGAN TELAH DIMULAI!</div>
+                        <a href="{{ route('arena-pacu', ['tournament_match_id' => $activeMatch->id]) }}" class="pixel-btn-green" style="text-decoration:none; margin-top:6px; display:inline-block;">
+                            MASUK ARENA BERTANDING
+                        </a>
+                    @endif
+                @else
+                    {{-- Mode Penonton / Spectator Banner --}}
+                    @if($activeMatch->status === 'ready_check')
+                        <div style="font-size: 8px; color: #60a5fa;">LAGA AKTIF: {{ $activeMatch->player1 ? $activeMatch->player1->nama_jalur : 'TBD' }} VS {{ $activeMatch->player2 ? $activeMatch->player2->nama_jalur : 'TBD' }}</div>
+                        <div style="font-size: 7px; color: rgba(255,255,255,0.8); margin-top: 4px;">
+                            MENUNGGU KEDUA PLAYER SIAP (TIMER: <span id="ready-timer-display" style="color: #fbbf24;">03:00</span>)
+                        </div>
+                    @elseif($activeMatch->status === 'in_progress')
+                        <div style="font-size: 8px; color: #ef4444;">PERTANDINGAN SEDANG BERLANGSUNG!</div>
+                        <div style="font-size: 7px; color: #ffffff; margin-top: 2px;">{{ $activeMatch->player1 ? $activeMatch->player1->nama_jalur : 'TBD' }} VS {{ $activeMatch->player2 ? $activeMatch->player2->nama_jalur : 'TBD' }}</div>
+                        <a href="{{ route('arena-pacu', ['tournament_match_id' => $activeMatch->id, 'mode' => 'spectator']) }}" class="pixel-btn-spectate" style="text-decoration:none; margin-top:6px; padding: 8px 16px; font-size: 8px; display:inline-block;">
+                            TONTON LIVE PREVIEW
+                        </a>
+                    @endif
+                @endif
             </div>
         @endif
 
