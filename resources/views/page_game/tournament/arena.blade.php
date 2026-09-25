@@ -288,7 +288,21 @@
                 const message = JSON.parse(event.data);
                 const { type, payload } = message;
 
-                if (type === 'start_countdown') {
+                if (type === 'arena_ready_update') {
+                    const readyStates = payload.readyStates || {};
+                    const isOpponentReady = Object.keys(readyStates).some(id => parseInt(id) !== this.currentUserId && readyStates[id]);
+                    const isMeReady = readyStates[this.currentUserId];
+                    const statusEl = document.getElementById('ready-status-text');
+                    if (statusEl) {
+                        if (isMeReady && isOpponentReady) {
+                            statusEl.innerHTML = '<span style="color:#4ade80;">KEDUA PLAYER SUDAH SIAP!</span><br>Memulai pertandingan...';
+                        } else if (isMeReady) {
+                            statusEl.innerHTML = 'Kamu sudah siap!<br><span class="ready-waiting-dots">Menunggu lawan</span>';
+                        } else if (isOpponentReady) {
+                            statusEl.innerHTML = '<span style="color:#fbbf24;">Lawan sudah siap!</span><br>Tekan SIAP sekarang!';
+                        }
+                    }
+                } else if (type === 'start_countdown') {
                     const overlay = document.getElementById('ready-overlay');
                     if (overlay) overlay.style.display = 'none';
                     this.startCountdownSequence();

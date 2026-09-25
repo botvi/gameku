@@ -257,13 +257,28 @@
                 this.ws.send(JSON.stringify({
                     type: 'join',
                     roomId: this.roomId,
-                    payload: { userId: 999999, userName: 'SPECTATOR', customizations: {} }
+                    payload: { userId: 999999, userName: 'SPECTATOR', isSpectator: true, customizations: {} }
                 }));
             };
 
             this.ws.onmessage = (event) => {
                 const message = JSON.parse(event.data);
                 const { type, payload } = message;
+
+                if (type === 'arena_ready_update') {
+                    const readyStates = payload.readyStates || {};
+                    const readyCount = Object.values(readyStates).filter(Boolean).length;
+                    const statusText = document.querySelector('.spectator-status-text');
+                    if (statusText) {
+                        if (readyCount >= 2) {
+                            statusText.innerHTML = '<span style="color:#4ade80;">KEDUA PLAYER SUDAH SIAP!</span><br>Memulai pacuan...';
+                        } else if (readyCount === 1) {
+                            statusText.innerHTML = '<span style="color:#fbbf24;">1 PLAYER SUDAH SIAP!</span><br><span class="ready-waiting-dots">Menunggu 1 player lagi</span>';
+                        } else {
+                            statusText.innerHTML = '<span class="ready-waiting-dots">MENUNGGU KEDUA PLAYER SIAP BERTANDING</span>';
+                        }
+                    }
+                }
 
                 if (type === 'start_countdown' || type === 'game_in_progress' || type === 'opponent_sync' || type === 'game_state_sync') {
                     this.hideSpectatorLoading();

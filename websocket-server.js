@@ -25,6 +25,7 @@ wss.on('connection', (ws) => {
                 userId = payload.userId;
                 ws.userId = userId;
                 ws.userName = payload.userName;
+                ws.isSpectator = payload.isSpectator || false;
 
                 if (!rooms.has(roomId)) {
                     rooms.set(roomId, {
@@ -55,7 +56,7 @@ wss.on('connection', (ws) => {
                     room.cleanupTimer = null;
                 }
 
-                console.log(`User ${payload.userName} (ID: ${userId}) joined room ${roomId}`);
+                console.log(`User ${payload.userName} (ID: ${userId}, Spectator: ${ws.isSpectator}) joined room ${roomId}`);
 
                 // Register bot opponent if this room has one (only once)
                 if (payload.botId && !room.players.has(payload.botId)) {
@@ -77,6 +78,16 @@ wss.on('connection', (ws) => {
                     type: 'room_update',
                     payload: getRoomPlayersData(roomId)
                 });
+
+                // Send current arena ready states
+                if (room.arenaReadyStates.size > 0 && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        type: 'arena_ready_update',
+                        payload: {
+                            readyStates: Object.fromEntries(room.arenaReadyStates)
+                        }
+                    }));
+                }
 
                 // If game is already in progress, send current race states to the joining player
                 if (room.gameStarted && room.raceStates.size > 0) {
@@ -134,6 +145,20 @@ wss.on('connection', (ws) => {
                     room.arenaReadyStates.set(userId, true);
                     console.log(`User (ID: ${userId}) arena ready status set to: true`);
 
+                    // Broadcast arena_ready_update to everyone (including spectators)
+                    broadcastToRoom(currentRoomId, {
+                        type: 'arena_ready_update',
+                        payload: {
+                            userId: userId,
+                            readyStates: Object.fromEntries(room.arenaReadyStates)
+                        }
+                    });
+
+                    // Check non-spectator active players
+                    const activePlayerIds = Array.from(room.players.entries())
+                        .filter(([pId, pWs]) => !pWs || !pWs.isSpectator)
+                        .map(([pId]) => pId);
+
                     // If there's a bot, make it arena-ready too (after a short delay)
                     if (room.botId && !room.arenaReadyStates.get(room.botId)) {
                         setTimeout(() => {
@@ -142,13 +167,16 @@ wss.on('connection', (ws) => {
                             r.arenaReadyStates.set(r.botId, true);
                             console.log(`Bot (ID: ${r.botId}) arena ready status set to: true`);
 
-                            const playersArray = Array.from(r.players.keys());
-                            if (playersArray.length === 2 &&
-                                r.arenaReadyStates.get(playersArray[0]) === true &&
-                                r.arenaReadyStates.get(playersArray[1]) === true) {
+                            const botActivePlayers = Array.from(r.players.entries())
+                                .filter(([pId, pWs]) => !pWs || !pWs.isSpectator)
+                                .map(([pId]) => pId);
+
+                            if (botActivePlayers.length >= 2 &&
+                                r.arenaReadyStates.get(botActivePlayers[0]) === true &&
+                                r.arenaReadyStates.get(botActivePlayers[1]) === true) {
 
                                 r.gameStarted = true;
-                                console.log(`Both players arena-ready in room ${currentRoomId}. Broadcasting countdown start...`);
+                                console.log(`Both active players arena-ready in room ${currentRoomId}. Broadcasting countdown start...`);
                                 broadcastToRoom(currentRoomId, {
                                     type: 'start_countdown',
                                     payload: {}
@@ -159,13 +187,12 @@ wss.on('connection', (ws) => {
                             }
                         }, 800);
                     } else {
-                        const playersArray = Array.from(room.players.keys());
-                        if (playersArray.length === 2 &&
-                            room.arenaReadyStates.get(playersArray[0]) === true &&
-                            room.arenaReadyStates.get(playersArray[1]) === true) {
+                        if (activePlayerIds.length >= 2 &&
+                            room.arenaReadyStates.get(activePlayerIds[0]) === true &&
+                            room.arenaReadyStates.get(activePlayerIds[1]) === true) {
 
                             room.gameStarted = true;
-                            console.log(`Both players arena-ready in room ${currentRoomId}. Broadcasting countdown start...`);
+                            console.log(`Both active players arena-ready in room ${currentRoomId}. Broadcasting countdown start...`);
                             broadcastToRoom(currentRoomId, {
                                 type: 'start_countdown',
                                 payload: {}
