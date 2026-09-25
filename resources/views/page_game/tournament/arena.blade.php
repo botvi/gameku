@@ -282,11 +282,6 @@
                         customizations: {}
                     }
                 }));
-
-                // Auto send arena_ready if user readied on bracket page
-                @if(($tournamentMatch->player1_id == auth()->id() && $tournamentMatch->ready_p1) || ($tournamentMatch->player2_id == auth()->id() && $tournamentMatch->ready_p2))
-                    window.pressArenaReady();
-                @endif
             };
 
             this.ws.onmessage = (event) => {
