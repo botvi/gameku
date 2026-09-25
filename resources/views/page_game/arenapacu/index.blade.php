@@ -210,62 +210,6 @@
         66% { content: '..'; }
         100% { content: '...'; }
     }
-
-    /* ===== SPECTATOR LOADING OVERLAY ===== */
-    #spectator-loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(6, 13, 24, 0.94);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        z-index: 550;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 18px;
-        font-family: 'Press Start 2P', monospace;
-    }
-
-    .spectator-title {
-        font-size: 10px;
-        color: #38bdf8;
-        text-shadow: 0 0 15px rgba(56, 189, 248, 0.8), 0 0 30px rgba(56, 189, 248, 0.4);
-        letter-spacing: 1.5px;
-        text-align: center;
-        animation: specTitleGlow 1.5s ease-in-out infinite alternate;
-    }
-
-    @keyframes specTitleGlow {
-        from { text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
-        to { text-shadow: 0 0 25px rgba(56, 189, 248, 1); }
-    }
-
-    .radar-spinner {
-        width: 44px;
-        height: 44px;
-        border: 4px solid rgba(56, 189, 248, 0.2);
-        border-top: 4px solid #38bdf8;
-        border-radius: 50%;
-        animation: spinRadar 1s linear infinite;
-        box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-    }
-
-    @keyframes spinRadar {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .spectator-status-text {
-        font-size: 7px;
-        color: #fef08a;
-        text-align: center;
-        letter-spacing: 0.5px;
-        line-height: 1.8;
-    }
 </style>
 <style>
     /* â”€â”€ ARENA LOADING SCREEN â”€â”€ */
@@ -391,7 +335,7 @@ if ($winsCount >= 100) {
 
 <!-- ===== READY OVERLAY (Multiplayer only) ===== -->
 <div id="ready-overlay" style="display: none;">
-    <div class="ready-title">ARENA PACU</div>
+    <div class="ready-title">âœ¦ ARENA PACU âœ¦</div>
 
     <div class="vs-badge">
         <div class="vs-player">
@@ -409,28 +353,6 @@ if ($winsCount >= 100) {
 
     <div id="ready-btn-container">
         <button id="arena-ready-btn" onclick="pressArenaReady()">SIAP!</button>
-    </div>
-</div>
-
-<!-- ===== SPECTATOR LOADING OVERLAY ===== -->
-<div id="spectator-loading-overlay" style="display: none;">
-    <div class="spectator-title">LIVE PREVIEW TURNAMEN</div>
-    <div class="radar-spinner"></div>
-    <div class="vs-badge">
-        <div class="vs-player">
-            <div class="vs-player-name" id="spec-p1-name">
-                {{ strtoupper(isset($tournamentMatch) && $tournamentMatch->player1 ? $tournamentMatch->player1->nama_jalur : 'PLAYER 1') }}
-            </div>
-        </div>
-        <div class="vs-label" style="color:#38bdf8;">VS</div>
-        <div class="vs-player">
-            <div class="vs-player-name" id="spec-p2-name">
-                {{ strtoupper(isset($tournamentMatch) && $tournamentMatch->player2 ? $tournamentMatch->player2->nama_jalur : 'PLAYER 2') }}
-            </div>
-        </div>
-    </div>
-    <div class="spectator-status-text">
-        <span class="ready-waiting-dots">MENUNGGU KEDUA PLAYER SIAP BERTANDING</span>
     </div>
 </div>
 @endsection
@@ -1059,15 +981,7 @@ if ($winsCount >= 100) {
 
             // Multiplay setup
             const urlParams = new URLSearchParams(window.location.search);
-            let rawRoomId = urlParams.get('room_id');
-            const tournamentMatchId = urlParams.get('tournament_match_id');
-            @if(isset($tournamentMatch) && $tournamentMatch)
-                rawRoomId = "{{ $tournamentMatch->room_id }}";
-            @endif
-            this.isSpectator = urlParams.get('mode') === 'spectator' || {{ isset($isSpectator) && $isSpectator ? 'true' : 'false' }};
-            this.tournamentMatchId = tournamentMatchId || {{ isset($tournamentMatch) && $tournamentMatch ? $tournamentMatch->id : 'null' }};
-            this.tournamentId = {{ isset($tournamentMatch) && $tournamentMatch ? $tournamentMatch->tournament_id : 'null' }};
-
+            const rawRoomId = urlParams.get('room_id');
             this.isMultiplayer = !!rawRoomId;
             this.roomId = rawRoomId;
             this.currentUserId = {{ auth()->id() }};
@@ -1930,21 +1844,10 @@ if ($winsCount >= 100) {
                 }));
 
                 const overlay = document.getElementById('ready-overlay');
-                const specOverlay = document.getElementById('spectator-loading-overlay');
-
-                if (this.isSpectator) {
+                if (this.isRestoredMatch) {
                     if (overlay) overlay.style.display = 'none';
-                    if (specOverlay) specOverlay.style.display = 'flex';
-                } else if (this.isRestoredMatch) {
-                    if (overlay) overlay.style.display = 'none';
-                    if (specOverlay) specOverlay.style.display = 'none';
                 } else {
                     if (overlay) overlay.style.display = 'flex';
-                    if (specOverlay) specOverlay.style.display = 'none';
-
-                    @if(isset($tournamentMatch) && (($tournamentMatch->player1_id == auth()->id() && $tournamentMatch->ready_p1) || ($tournamentMatch->player2_id == auth()->id() && $tournamentMatch->ready_p2)))
-                        setTimeout(() => pressArenaReady(), 300);
-                    @endif
                 }
             };
 
@@ -2009,13 +1912,6 @@ if ($winsCount >= 100) {
                 }
 
                 else if (type === 'start_countdown') {
-                    const specOverlay = document.getElementById('spectator-loading-overlay');
-                    if (specOverlay) {
-                        specOverlay.style.transition = 'opacity 0.5s ease';
-                        specOverlay.style.opacity = '0';
-                        setTimeout(() => { specOverlay.style.display = 'none'; specOverlay.style.opacity = '1'; }, 500);
-                    }
-
                     if (this.isWaitingForOpponentToLoad && !this.isRestoredMatch) {
                         this.isWaitingForOpponentToLoad = false;
                         const overlay = document.getElementById('ready-overlay');
@@ -2029,9 +1925,6 @@ if ($winsCount >= 100) {
                 }
 
                 else if (type === 'game_in_progress') {
-                    const specOverlay = document.getElementById('spectator-loading-overlay');
-                    if (specOverlay) specOverlay.style.display = 'none';
-
                     this.isWaitingForOpponentToLoad = false;
                     const overlay = document.getElementById('ready-overlay');
                     if (overlay) overlay.style.display = 'none';
@@ -2067,11 +1960,6 @@ if ($winsCount >= 100) {
                 }
 
                 else if (type === 'opponent_sync') {
-                    const specOverlay = document.getElementById('spectator-loading-overlay');
-                    if (specOverlay && specOverlay.style.display !== 'none') {
-                        specOverlay.style.display = 'none';
-                    }
-
                     if (this.gameState === 'racing') {
                         this.opponentSpeed = payload.speed;
                         this.opponentDistance = payload.distance;
@@ -2514,40 +2402,22 @@ if ($winsCount >= 100) {
             .catch(err => console.error('Failed to update coins in DB:', err));
 
            
-            if (this.tournamentMatchId) {
-                fetch('/tournament/match/' + this.tournamentMatchId + '/finish', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        winner_id: isWinner ? this.currentUserId : this.opponentId
-                    })
+            fetch('/room/finish', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    room_id: this.roomId.replace('room_', ''),
+                    winner_id: isWinner ? this.currentUserId : this.opponentId
                 })
-                .then(res => res.json())
-                .then(data => {
-                    console.log('Tournament match finish saved:', data);
-                })
-                .catch(err => console.error('Failed to save tournament match:', err));
-            } else {
-                fetch('/room/finish', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        room_id: this.roomId ? this.roomId.replace('room_', '') : '',
-                        winner_id: isWinner ? this.currentUserId : this.opponentId
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    console.log('Match successfully stored in DB:', data);
-                })
-                .catch(err => console.error('Failed to save match to DB:', err));
-            }
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('Match successfully stored in DB:', data);
+            })
+            .catch(err => console.error('Failed to save match to DB:', err));
 
             const W = this.scale.width;
             const H = this.scale.height;
@@ -2718,11 +2588,7 @@ if ($winsCount >= 100) {
                         this.allowExit = true;
                         this.cameras.main.fadeOut(300, 240, 253, 244);
                         this.cameras.main.once('camerafadeoutcomplete', () => {
-                            if (this.tournamentId) {
-                                window.navigateToPage('/tournament/' + this.tournamentId);
-                            } else {
-                                window.navigateToPage('/main-menu');
-                            }
+                            window.navigateToPage('/main-menu');
                         });
                     }
                 });
