@@ -31,7 +31,9 @@ use App\Http\Controllers\pagegame\{
     LeaderboardController,
     InboxGameController,
     LoadingController,
+    TournamentController,
 };
+use App\Http\Controllers\superadmin\TournamentAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +116,15 @@ Route::group(['middleware' => ['auth', 'role:admin', 'check.blocked']], function
     Route::post('/dashboard-superadmin/inbox/{id}/update', [InboxController::class, 'update'])->name('superadmin.inbox.update');
     Route::post('/dashboard-superadmin/inbox/{id}/delete', [InboxController::class, 'destroy'])->name('superadmin.inbox.delete');
     Route::post('/dashboard-superadmin/inbox/{id}/toggle', [InboxController::class, 'toggleActive'])->name('superadmin.inbox.toggle');
+
+    // Tournament Management Superadmin
+    Route::get('/dashboard-superadmin/tournaments', [TournamentAdminController::class, 'index'])->name('superadmin.tournaments');
+    Route::post('/dashboard-superadmin/tournaments/store', [TournamentAdminController::class, 'store'])->name('superadmin.tournaments.store');
+    Route::get('/dashboard-superadmin/tournaments/{id}', [TournamentAdminController::class, 'detail'])->name('superadmin.tournaments.detail');
+    Route::post('/dashboard-superadmin/tournaments/{id}/participants', [TournamentAdminController::class, 'addParticipants'])->name('superadmin.tournaments.add-participants');
+    Route::post('/dashboard-superadmin/tournaments/{id}/generate-bracket', [TournamentAdminController::class, 'generateBracket'])->name('superadmin.tournaments.generate-bracket');
+    Route::post('/dashboard-superadmin/tournaments/{id}/start', [TournamentAdminController::class, 'startTournament'])->name('superadmin.tournaments.start');
+    Route::post('/dashboard-superadmin/tournaments/{id}/delete', [TournamentAdminController::class, 'destroy'])->name('superadmin.tournaments.delete');
 });
 
 // Webhook KlikQRIS (no CSRF, public)
@@ -139,6 +150,13 @@ Route::middleware(['auth', 'check.blocked'])->group(function () {
     Route::post('/room/leave', [RoomController::class, 'leave'])->name('room.leave');
     Route::post('/room/finish', [RoomController::class, 'finish'])->name('room.finish');
     Route::get('/room/list', [RoomController::class, 'list'])->name('room.list');
+
+    // Tournament Game User Routes
+    Route::get('/tournament', [TournamentController::class, 'index'])->name('tournament.index');
+    Route::get('/tournament/hall-of-fame', [TournamentController::class, 'hallOfFame'])->name('tournament.hall-of-fame');
+    Route::get('/tournament/{id}', [TournamentController::class, 'show'])->name('tournament.show');
+    Route::post('/tournament/match/{matchId}/ready', [TournamentController::class, 'readyMatch'])->name('tournament.match.ready');
+    Route::post('/tournament/match/{matchId}/finish', [TournamentController::class, 'finishMatch'])->name('tournament.match.finish');
     Route::get('/shop', [ShopController::class, 'index'])->name('shop');
     Route::post('/shop/add-points', [ShopController::class, 'addPoints'])->name('shop.add-points');
     Route::post('/shop/buy-item', [ShopController::class, 'buyItem'])->name('shop.buy-item');

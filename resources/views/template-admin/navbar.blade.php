@@ -35,6 +35,12 @@
                             <span class="pc-mtext">Daftar Player</span>
                         </a>
                     </li>
+                    <li class="pc-item {{ request()->routeIs('superadmin.tournaments*') ? 'active' : '' }}">
+                        <a href="{{ route('superadmin.tournaments') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-trophy"></i></span>
+                            <span class="pc-mtext">Kelola Turnamen</span>
+                        </a>
+                    </li>
 
                     <!-- Manajemen Koin & Topup -->
                     <li class="pc-item pc-caption">

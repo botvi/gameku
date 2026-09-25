@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ModelJalur;
 use App\Models\Sponsor;
+use App\Models\TournamentMatch;
 
 class ArenaPacuController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         $modelJalur = ModelJalur::where('user_id', $user->id)->first();
@@ -28,7 +29,24 @@ class ArenaPacuController extends Controller
 
         $sponsors = Sponsor::where('is_active', true)->pluck('image_path')->map(fn($p) => asset($p))->toArray();
 
-        return view('page_game.arenapacu.index', compact('customColors', 'corakDataUrl', 'lambaiDataUrl', 'sponsors'));
+        // Check if tournament match
+        $tournamentMatch = null;
+        $isSpectator = false;
+        if ($request->filled('tournament_match_id')) {
+            $tournamentMatch = TournamentMatch::with(['player1.modelJalur', 'player2.modelJalur'])->find($request->tournament_match_id);
+            if ($request->input('mode') === 'spectator') {
+                $isSpectator = true;
+            }
+        }
+
+        return view('page_game.arenapacu.index', compact(
+            'customColors', 
+            'corakDataUrl', 
+            'lambaiDataUrl', 
+            'sponsors',
+            'tournamentMatch',
+            'isSpectator'
+        ));
     }
 
     public function addCoins(Request $request)

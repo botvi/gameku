@@ -1,4 +1,4 @@
-﻿@extends('layouts.game')
+@extends('layouts.game')
 
 @section('title', 'Pacu Jalur: The Pixel ” Room Matchmaking')
 
@@ -920,7 +920,7 @@
         { title: 'CARI LAWAN', desc: 'Cari musuh secara online sekarang', url: '#', glow: 'rgba(34, 197, 94, 0.6)', action: 'search' },
         { title: 'CUSTOM ROOM', desc: 'Buat atau masuk room kustom', url: '/room/create-or-join', glow: 'rgba(59, 130, 246, 0.6)', action: 'link' },
         { title: 'VS AI', desc: 'Latihan balapan melawan bot AI', url: '/vsai/level', glow: 'rgba(249, 115, 22, 0.6)', action: 'link' },
-        { title: 'TOURNAMENT', desc: 'Ikuti turnamen balapan pacu jalur', url: '#', glow: 'rgba(168, 85, 247, 0.6)', action: 'coming_soon' }
+        { title: 'TOURNAMENT', desc: 'Ikuti turnamen balapan pacu jalur', url: '/tournament', glow: 'rgba(168, 85, 247, 0.6)', action: 'link' }
     ];
     let currentSlide = 0;
 

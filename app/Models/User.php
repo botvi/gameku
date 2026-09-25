@@ -97,4 +97,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserInboxStatus::class, 'user_id');
     }
+
+    public function tournamentWinners()
+    {
+        return $this->hasMany(TournamentWinner::class, 'user_id');
+    }
 }

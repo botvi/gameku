@@ -981,7 +981,15 @@ if ($winsCount >= 100) {
 
             // Multiplay setup
             const urlParams = new URLSearchParams(window.location.search);
-            const rawRoomId = urlParams.get('room_id');
+            let rawRoomId = urlParams.get('room_id');
+            const tournamentMatchId = urlParams.get('tournament_match_id');
+            @if(isset($tournamentMatch) && $tournamentMatch)
+                rawRoomId = "{{ $tournamentMatch->room_id }}";
+            @endif
+            this.isSpectator = urlParams.get('mode') === 'spectator' || {{ isset($isSpectator) && $isSpectator ? 'true' : 'false' }};
+            this.tournamentMatchId = tournamentMatchId || {{ isset($tournamentMatch) && $tournamentMatch ? $tournamentMatch->id : 'null' }};
+            this.tournamentId = {{ isset($tournamentMatch) && $tournamentMatch ? $tournamentMatch->tournament_id : 'null' }};
+
             this.isMultiplayer = !!rawRoomId;
             this.roomId = rawRoomId;
             this.currentUserId = {{ auth()->id() }};
@@ -2402,22 +2410,40 @@ if ($winsCount >= 100) {
             .catch(err => console.error('Failed to update coins in DB:', err));
 
            
-            fetch('/room/finish', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    room_id: this.roomId.replace('room_', ''),
-                    winner_id: isWinner ? this.currentUserId : this.opponentId
+            if (this.tournamentMatchId) {
+                fetch('/tournament/match/' + this.tournamentMatchId + '/finish', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        winner_id: isWinner ? this.currentUserId : this.opponentId
+                    })
                 })
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log('Match successfully stored in DB:', data);
-            })
-            .catch(err => console.error('Failed to save match to DB:', err));
+                .then(res => res.json())
+                .then(data => {
+                    console.log('Tournament match finish saved:', data);
+                })
+                .catch(err => console.error('Failed to save tournament match:', err));
+            } else {
+                fetch('/room/finish', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        room_id: this.roomId ? this.roomId.replace('room_', '') : '',
+                        winner_id: isWinner ? this.currentUserId : this.opponentId
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log('Match successfully stored in DB:', data);
+                })
+                .catch(err => console.error('Failed to save match to DB:', err));
+            }
 
             const W = this.scale.width;
             const H = this.scale.height;
@@ -2588,7 +2614,11 @@ if ($winsCount >= 100) {
                         this.allowExit = true;
                         this.cameras.main.fadeOut(300, 240, 253, 244);
                         this.cameras.main.once('camerafadeoutcomplete', () => {
-                            window.navigateToPage('/main-menu');
+                            if (this.tournamentId) {
+                                window.navigateToPage('/tournament/' + this.tournamentId);
+                            } else {
+                                window.navigateToPage('/main-menu');
+                            }
                         });
                     }
                 });
